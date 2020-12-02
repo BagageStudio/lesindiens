@@ -3,25 +3,20 @@
         <div>
             <Logo />
             <h1 class="title">lesindiens</h1>
-            <div class="links">
-                <a href="https://nuxtjs.org/" target="_blank" rel="noopener noreferrer" class="button--green">
-                    Documentation
-                </a>
-                <a
-                    href="https://github.com/nuxt/nuxt.js"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="button--grey"
-                >
-                    GitHub
-                </a>
-            </div>
+            <div v-html="$prismic.asHtml(intro)" />
         </div>
     </div>
 </template>
 
 <script>
-export default {};
+export default {
+    async asyncData({ $prismic }) {
+        const document = await $prismic.api
+            .query($prismic.predicates.at('document.type', 'home'))
+            .then(doc => doc.results[0].data);
+        return document;
+    }
+};
 </script>
 
 <style>
