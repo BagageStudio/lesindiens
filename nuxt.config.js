@@ -49,8 +49,7 @@ export default {
         htmlSerializer: '~/prismic/html-serializer.js',
         linkResolver: '~/prismic/link-resolver.js',
         components: false,
-        disableGenerator: true,
-        preview: false
+        disableGenerator: true
     },
 
     // Modules (https://go.nuxtjs.dev/config-modules)

@@ -8,7 +8,7 @@ export default function (doc) {
     }
 
     if (doc.type === 'project') {
-        return '/project/' + doc.uid;
+        return '/projet/' + doc.uid;
     }
 
     return '/not-found';
