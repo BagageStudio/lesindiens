@@ -1,53 +1,38 @@
 <template>
     <div class="container">
-        <div>
-            <Logo />
-            <h1 class="title">lesindiens</h1>
-            <div v-html="$prismic.asHtml(intro)" />
+        <h1 v-html="$storyapi.richTextResolver.render(story.content.title)" />
+        <div class="projects">
+            <div v-for="p in story.content.projects" :key="p.id" class="project">
+                <nuxt-link :to="p.full_slug">
+                    {{ p.content.song_title }}
+                </nuxt-link>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    async asyncData({ $prismic }) {
-        const document = await $prismic.api
-            .query($prismic.predicates.at('document.type', 'home'))
-            .then(doc => doc.results[0].data);
-        return document;
+    asyncData({ app, $config, error }) {
+        return app.$storyapi
+            .get('cdn/stories/home', {
+                version: $config.sBlokVersion,
+                resolve_relations: 'home.projects'
+            })
+            .then(res => {
+                return res.data;
+            })
+            .catch(res => {
+                if (!res.response) {
+                    console.error(res);
+                    error({ statusCode: 404, message: 'Failed to receive content form api' });
+                } else {
+                    console.error(res.response.data);
+                    error({ statusCode: res.response.status, message: res.response.data });
+                }
+            });
     }
 };
 </script>
 
-<style>
-.container {
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.title {
-    font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-        Arial, sans-serif;
-    display: block;
-    font-weight: 300;
-    font-size: 100px;
-    color: #35495e;
-    letter-spacing: 1px;
-}
-
-.subtitle {
-    font-weight: 300;
-    font-size: 42px;
-    color: #526488;
-    word-spacing: 5px;
-    padding-bottom: 15px;
-}
-
-.links {
-    padding-top: 15px;
-}
-</style>
+<style></style>

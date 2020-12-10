@@ -13,13 +13,14 @@
 
 html {
     font-size: 62.5%; /* sets the base font to 10px for easier math */
-    background: $white;
+    background: $black;
 }
 
 body {
-    font: #{$text-size-mobile * 0.1}em / 1.5 sans-serif;
-    color: $txt;
+    font: 1.2em / 1.5 $telegraf;
+    color: $white;
     font-kerning: normal;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }

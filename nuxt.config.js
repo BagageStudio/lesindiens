@@ -16,6 +16,11 @@ export default {
     // Target (https://go.nuxtjs.dev/config-target)
     target: 'static',
 
+    publicRuntimeConfig: {
+        sBlokVersion: netlifyEnv === 'development' ? 'draft' : 'published',
+        netlifyEnv: process.env.NETLIFY_ENV
+    },
+
     // Global page headers (https://go.nuxtjs.dev/config-head)
     head: {
         title: 'lesindiens',
@@ -31,7 +36,7 @@ export default {
     css: ['~assets/scss/main.scss'],
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-    plugins: [{ src: '~/plugins/prismicLinks', ssr: false }],
+    plugins: [],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,
@@ -41,16 +46,14 @@ export default {
         // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         '@nuxtjs/style-resources',
-        '@nuxtjs/prismic'
+        [
+            'storyblok-nuxt',
+            {
+                accessToken: process.env.SBLOK_PREVIEW_TOKEN,
+                cacheProvider: 'memory'
+            }
+        ]
     ],
-
-    prismic: {
-        endpoint: 'https://lesindiens.cdn.prismic.io/api/v2',
-        htmlSerializer: '~/prismic/html-serializer.js',
-        linkResolver: '~/prismic/link-resolver.js',
-        components: false,
-        disableGenerator: true
-    },
 
     // Modules (https://go.nuxtjs.dev/config-modules)
     modules: [],

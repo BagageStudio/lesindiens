@@ -1,55 +1,50 @@
-// @font-face {
-//     font-family: 'EuclidCircularB';
-//     src: url('~static/fonts/euclidcircularb-regular.woff2') format('woff2'),
-//         url('~static/fonts/euclidcircularb-regular.woff') format('woff');
-//     font-display: swap;
-//     font-style: normal;
-//     font-weight: 400;
-//     unicode-range: U+000-5FF; /* Latin glyphs */
-// }
-// @font-face {
-//     font-family: 'EuclidCircularB';
-//     src: url('~static/fonts/euclidcircularb-semibold.woff2') format('woff2'),
-//         url('~static/fonts/euclidcircularb-semibold.woff') format('woff');
-//     font-display: swap;
-//     font-style: normal;
-//     font-weight: 600;
-//     unicode-range: U+000-5FF; /* Latin glyphs */
-// }
-// @font-face {
-//     font-family: 'EuclidCircularB';
-//     src: url('~static/fonts/euclidcircularb-light.woff2') format('woff2'),
-//         url('~static/fonts/euclidcircularb-light.woff') format('woff');
-//     font-display: swap;
-//     font-style: normal;
-//     font-weight: 300;
-//     unicode-range: U+000-5FF; /* Latin glyphs */
-// }
+// Fonts
+@font-face {
+    font-family: 'Telegraf';
+    src: local('Telegraf Regular'),
+        url('~static/fonts/Telegraf-Regular.woff2') format('woff2'),
+        url('~static/fonts/Telegraf-Regular.woff') format('woff');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
 
-// @font-face {
-//     font-family: 'EuclidFlex';
-//     src: url('~static/fonts/euclidflex-regular.woff2') format('woff2'),
-//         url('~static/fonts/euclidflex-regular.woff') format('woff');
-//     font-display: swap;
-//     font-style: normal;
-//     font-weight: 400;
-//     unicode-range: U+000-5FF; /* Latin glyphs */
-// }
-// @font-face {
-//     font-family: 'EuclidFlex';
-//     src: url('~static/fonts/euclidflex-regularitalic.woff2') format('woff2'),
-//         url('~static/fonts/euclidflex-regularitalic.woff') format('woff');
-//     font-display: swap;
-//     font-style: italic;
-//     font-weight: 400;
-//     unicode-range: U+000-5FF; /* Latin glyphs */
-// }
-// @font-face {
-//     font-family: 'EuclidFlex';
-//     src: url('~static/fonts/euclidflex-medium.woff2') format('woff2'),
-//         url('~static/fonts/euclidflex-medium.woff') format('woff');
-//     font-display: swap;
-//     font-style: normal;
-//     font-weight: 500;
-//     unicode-range: U+000-5FF; /* Latin glyphs */
-// }
+@font-face {
+    font-family: 'Telegraf';
+    src: local('Telegraf SemiBold'),
+        url('~static/fonts/Telegraf-SemiBold.woff2') format('woff2'),
+        url('~static/fonts/Telegraf-SemiBold.woff') format('woff');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Telegraf';
+    src: local('Telegraf UltraLight'),
+        url('~static/fonts/Telegraf-UltraLight.woff2') format('woff2'),
+        url('~static/fonts/Telegraf-UltraLight.woff') format('woff');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: local('Graphik Regular'),
+        url('~static/fonts/Graphik-Regular.woff2') format('woff2'),
+        url('~static/fonts/Graphik-Regular.woff') format('woff');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: local('Graphik Italic'),
+        url('~static/fonts/Graphik-RegularItalic.woff2') format('woff2'),
+        url('~static/fonts/Graphik-RegularItalic.woff') format('woff');
+    font-display: swap;
+    font-style: italic;
+    font-weight: 400;
+}
