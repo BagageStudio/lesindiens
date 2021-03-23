@@ -18,112 +18,92 @@ import {
 export default {
     data() {
         return {
-            gl: null,
             renderer: null,
+            gl: null,
             camera: null,
-            plane: null,
-            cylinder: null,
-            sphere: null,
-            cube: null,
-            controls: null,
-            vertex: /* glsl */ `
-            precision highp float;
-            precision highp int;
-            attribute vec3 position;
-            attribute vec3 normal;
-            uniform mat4 modelViewMatrix;
-            uniform mat4 projectionMatrix;
-            uniform mat3 normalMatrix;
-            varying vec3 vNormal;
-            void main() {
-                vNormal = normalize(normalMatrix * normal);
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-
-            fragment: /* glsl */ `
-            precision highp float;
-            precision highp int;
-            varying vec3 vNormal;
-            void main() {
-                vec3 normal = normalize(vNormal);
-                float lighting = dot(normal, normalize(vec3(-0.3, 0.8, 0.6)));
-                gl_FragColor.rgb = vec3(0.2, 0.8, 1.0) + lighting * 0.2;
-                gl_FragColor.a = 1.0;
-            }
-        `
+            scene: null,
+            screen: {},
+            viewport: {}
         };
     },
     mounted() {
-        this.initGL();
+        this.init();
     },
     methods: {
-        initGL() {
-            this.renderer = new Renderer({ dpr: 2 });
+        init() {
+            this.createRenderer();
+            this.createCamera();
+            this.createScene();
+
+            this.onResize();
+
+            this.update();
+
+            this.addEventListeners();
+        },
+        createRenderer() {
+            this.renderer = new Renderer();
+
             this.gl = this.renderer.gl;
+            this.gl.clearColor(0.79607843137, 0.79215686274, 0.74117647058, 1);
+
             this.$refs.glWrapper.appendChild(this.gl.canvas);
-            this.gl.clearColor(1, 1, 1, 1);
-
-            const camera = new Camera(this.gl, { fov: 35 });
-            this.camera = new Camera(this.gl, { fov: 35 });
-            console.log(camera, this.camera);
-
-            // camera.position.set(0, 1, 7);
-            this.camera.position.y = 1;
-            this.camera.position.z = 7;
-            this.controls = new Orbit(this.camera);
-
-            this.resize();
-
+        },
+        createCamera() {
+            this.camera = new Camera(this.gl);
+            this.camera.fov = 45;
+            this.camera.position.z = 20;
+        },
+        createScene() {
             this.scene = new Transform();
+        },
+        onResize() {
+            this.screen = {
+                height: window.innerHeight,
+                width: window.innerWidth
+            };
 
-            const planeGeometry = new Plane(this.gl);
-            const sphereGeometry = new Sphere(this.gl);
-            const cubeGeometry = new Box(this.gl);
-            const cylinderGeometry = new Cylinder(this.gl);
+            this.renderer.setSize(this.screen.width, this.screen.height);
 
-            const program = new Program(this.gl, {
-                vertex: this.vertex,
-                fragment: this.fragment,
-
-                // Don't cull faces so that plane is double sided - default is gl.BACK
-                cullFace: null
+            this.camera.perspective({
+                aspect: this.gl.canvas.width / this.gl.canvas.height
             });
 
-            this.plane = new Mesh(this.gl, { geometry: planeGeometry, program });
-            this.plane.position.set(0, 1.3, 0);
-            this.plane.setParent(this.scene);
+            const fov = this.camera.fov * (Math.PI / 180);
+            const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
+            const width = height * this.camera.aspect;
 
-            this.sphere = new Mesh(this.gl, { geometry: sphereGeometry, program });
-            this.sphere.position.set(1.3, 0, 0);
-            this.sphere.setParent(this.scene);
-
-            this.cube = new Mesh(this.gl, { geometry: cubeGeometry, program });
-            this.cube.position.set(0, -1.3, 0);
-            this.cube.setParent(this.scene);
-
-            this.cylinder = new Mesh(this.gl, { geometry: cylinderGeometry, program });
-            this.cylinder.position.set(-1.3, 0, 0);
-            this.cylinder.setParent(this.scene);
-
-            requestAnimationFrame(this.update);
+            this.viewport = {
+                height,
+                width
+            };
         },
         update() {
-            requestAnimationFrame(this.update);
-            this.controls.update();
+            this.renderer.render({
+                scene: this.scene,
+                camera: this.camera
+            });
 
-            this.plane.rotation.y -= 0.02;
-            this.sphere.rotation.y -= 0.03;
-            this.cube.rotation.y -= 0.04;
-            this.cylinder.rotation.y -= 0.02;
-
-            this.renderer.render({ scene: this.scene, camera: this.camera });
+            window.requestAnimationFrame(this.update.bind(this));
         },
-        resize() {
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            console.log(this.camera.projectionMatrix);
-            this.camera.perspective({ aspect: this.gl.canvas.width / this.gl.canvas.height });
-        }
+        addEventListeners() {
+            window.addEventListener('resize', this.onResize.bind(this));
+
+            window.addEventListener('mousewheel', this.onWheel.bind(this));
+            window.addEventListener('wheel', this.onWheel.bind(this));
+
+            window.addEventListener('mousedown', this.onTouchDown.bind(this));
+            window.addEventListener('mousemove', this.onTouchMove.bind(this));
+            window.addEventListener('mouseup', this.onTouchUp.bind(this));
+
+            window.addEventListener('touchstart', this.onTouchDown.bind(this));
+            window.addEventListener('touchmove', this.onTouchMove.bind(this));
+            window.addEventListener('touchend', this.onTouchUp.bind(this));
+        },
+        onTouchDown(event) {},
+        onTouchMove(event) {},
+        onTouchUp(event) {},
+        onWheel(event) {}
     }
 };
 </script>
