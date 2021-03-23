@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Ogl />
         <Nuxt />
     </div>
 </template>
