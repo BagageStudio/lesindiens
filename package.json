@@ -12,20 +12,23 @@
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.0.0",
-    "core-js": "^3.6.5",
-    "nuxt": "^2.14.6",
-    "sass": "^1.29.0",
+    "core-js": "^3.9.1",
+    "normalize-wheel": "^1.0.1",
+    "nuxt": "^2.15.3",
+    "ogl": "0.0.65",
+    "sass": "^1.32.8",
     "storyblok-nuxt": "^1.3.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.10.0",
+    "eslint": "^7.22.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-nuxt": "^1.0.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^3.3.1",
     "prettier": "^2.1.2",
-    "sass-loader": "^10.1.0"
+    "sass-loader": "^10.1.1",
+    "webpack-glsl-loader": "^1.0.1"
   }
 }
