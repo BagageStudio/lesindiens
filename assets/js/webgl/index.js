@@ -14,7 +14,7 @@ class WebglApp {
         this.medias = [];
 
         this.scroll = {
-            ease: 0.15,
+            ease: 0.1,
             current: 0,
             target: 0,
             last: 0
@@ -56,7 +56,7 @@ class WebglApp {
         const normalized = NormalizeWheel(event);
         const speed = normalized.pixelY;
 
-        this.scroll.target += speed * 0.005;
+        this.scroll.target += speed * 0.003;
     }
 
     createRenderer() {
