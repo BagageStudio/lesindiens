@@ -1,51 +1,7 @@
 import { Texture, Program, Mesh } from 'ogl';
 
-// import fragment from './shaders/fragment';
-// import vertex from './shaders/vertex';
-
-const fragment = `
-    precision highp float;
-
-    uniform vec2 uImageSizes;
-    uniform vec2 uPlaneSizes;
-    uniform sampler2D tMap;
-
-    varying vec2 vUv;
-
-    void main(){
-        vec2 ratio=vec2(
-            min((uPlaneSizes.x/uPlaneSizes.y)/(uImageSizes.x/uImageSizes.y),1.),
-            min((uPlaneSizes.y/uPlaneSizes.x)/(uImageSizes.y/uImageSizes.x),1.)
-        );
-        
-        vec2 uv=vec2(
-            vUv.x*ratio.x+(1.-ratio.x)*.5,
-            vUv.y*ratio.y+(1.-ratio.y)*.5
-        );
-        
-        gl_FragColor.rgb = texture2D(tMap, uv).rgb;
-        gl_FragColor.a = 1.0;
-    }
-`;
-const vertex = `
-    precision highp float;
-
-    attribute vec3 position;
-    attribute vec2 uv;
-
-    uniform mat4 modelViewMatrix;
-    uniform mat4 projectionMatrix;
-
-    varying vec2 vUv;
-
-    void main(){
-        vUv=uv;
-        
-        vec3 p=position;
-        
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);
-    }
-`;
+import fragment from './shaders/fragment.glsl';
+import vertex from './shaders/vertex.glsl';
 
 export class Media {
     constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport }) {

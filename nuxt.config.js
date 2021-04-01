@@ -67,8 +67,8 @@ export default {
         transpile: ['ogl'],
         extend(config) {
             config.module.rules.push({
-                test: /\.glsl$/,
-                loader: 'webpack-glsl'
+                test: /\.(vert|frag|glsl)$/,
+                use: 'raw-loader'
             });
         }
     },
