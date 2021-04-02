@@ -2,6 +2,7 @@ precision highp float;
 
 uniform vec2 uImageSizes;
 uniform vec2 uPlaneSizes;
+uniform float uHorizontalPos;
 uniform sampler2D tMap;
 
 varying vec2 vUv;
@@ -17,6 +18,10 @@ void main(){
         vUv.y*ratio.y+(1.-ratio.y)*.5
     );
 
-    gl_FragColor.rgb = texture2D(tMap, uv).rgb;
-    gl_FragColor.a = 1.0;
+    vec4 backgroundColor = vec4(0.063,0.063,0.067, 1.);
+
+    vec4 final = mix(texture2D(tMap, uv), backgroundColor, uHorizontalPos);
+
+    gl_FragColor = final;
+
 }

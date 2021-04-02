@@ -3,6 +3,19 @@ import { Texture, Program, Mesh } from 'ogl';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
+function map(num, min1, max1, min2, max2, round = false) {
+    const num1 = (num - min1) / (max1 - min1);
+    const num2 = num1 * (max2 - min2) + min2;
+
+    if (round) return Math.round(num2);
+
+    return num2;
+}
+
+function clamp(num, min, max) {
+    return Math.min(Math.max(num, min), max);
+}
+
 export class Media {
     constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport }) {
         this.extra = 0;
@@ -36,6 +49,7 @@ export class Media {
                 tMap: { value: texture },
                 uPlaneSizes: { value: [0, 0] },
                 uImageSizes: { value: [0, 0] },
+                uHorizontalPos: { value: 0 },
                 uViewportSizes: { value: [this.viewport.width, this.viewport.height] }
             },
             transparent: true
@@ -66,6 +80,21 @@ export class Media {
 
         const planeOffset = this.plane.scale.x / 2;
         const viewportOffset = this.viewport.width / 2;
+
+        const horizontalHalf = viewportOffset;
+
+        const fullHorizontal = horizontalHalf * 2;
+
+        const unclampedHorizontalPos = (this.plane.position.x + horizontalHalf) / fullHorizontal;
+        const horizontalPos = clamp(unclampedHorizontalPos, 0, 1);
+
+        // 1 - horizontalPos is to reverse to horizontalPos value
+
+        this.plane.position.z = (1 - horizontalPos) * 10;
+
+        // console.log(horizontalPos);
+
+        this.plane.program.uniforms.uHorizontalPos.value = horizontalPos;
 
         this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
         this.isAfter = this.plane.position.x - planeOffset > viewportOffset;
@@ -98,12 +127,12 @@ export class Media {
 
         this.scale = this.screen.height / 1500;
 
-        this.plane.scale.y = (this.viewport.height * (700 * this.scale)) / this.screen.height;
-        this.plane.scale.x = (this.viewport.width * (700 * this.scale)) / this.screen.width;
+        this.plane.scale.y = (this.viewport.height * (400 * this.scale)) / this.screen.height;
+        this.plane.scale.x = (this.viewport.width * (400 * this.scale)) / this.screen.width;
 
         this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
 
-        this.padding = 2;
+        this.padding = -1;
 
         this.width = this.plane.scale.x + this.padding;
 

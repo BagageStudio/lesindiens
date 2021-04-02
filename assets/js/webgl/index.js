@@ -7,6 +7,8 @@ const lerp = (start, end, ease) => {
     return start * (1 - ease) + end * ease;
 };
 
+const count = 0;
+
 class WebglApp {
     init({ dom }) {
         this.dom = dom;
@@ -56,7 +58,7 @@ class WebglApp {
         const normalized = NormalizeWheel(event);
         const speed = normalized.pixelY;
 
-        this.scroll.target += speed * 0.003;
+        this.scroll.target += speed * 0.004;
     }
 
     createRenderer() {
@@ -64,7 +66,7 @@ class WebglApp {
 
         this.gl = this.renderer.gl;
 
-        this.gl.clearColor(0.79607843137, 0.79215686274, 0.74117647058, 1);
+        this.gl.clearColor(0.063, 0.063, 0.067, 1);
 
         this.dom.appendChild(this.gl.canvas);
     }
@@ -155,6 +157,9 @@ class WebglApp {
         });
 
         window.requestAnimationFrame(this.update.bind(this));
+
+        // if (count < 5)
+        // count += 1;
     }
 
     addEventListeners() {
