@@ -4,10 +4,12 @@ import NormalizeWheel from 'normalize-wheel';
 import { Media } from './Media';
 
 const lerp = (start, end, ease) => {
-    return start * (1 - ease) + end * ease;
+    return start + (end - start) * ease;
 };
 
-const count = 0;
+const round = n => {
+    return Math.round(n * 1000000) / 1000000;
+};
 
 class WebglApp {
     init({ dom }) {
@@ -16,10 +18,15 @@ class WebglApp {
         this.medias = [];
 
         this.scroll = {
-            ease: 0.1,
+            ease: 0.05,
             current: 0,
             target: 0,
-            last: 0
+            last: 0,
+            speed: {
+                ease: 0.08,
+                current: 0,
+                target: 0
+            }
         };
 
         this.createRenderer();
@@ -138,6 +145,12 @@ class WebglApp {
 
     update() {
         this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
+
+        this.scroll.speed.target = round(this.scroll.current - this.scroll.last);
+
+        this.scroll.speed.current = round(
+            lerp(this.scroll.speed.current, this.scroll.speed.target, this.scroll.speed.ease)
+        );
 
         if (this.scroll.current > this.scroll.last) {
             this.direction = 'right';

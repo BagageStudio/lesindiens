@@ -50,7 +50,9 @@ export class Media {
                 uPlaneSizes: { value: [0, 0] },
                 uImageSizes: { value: [0, 0] },
                 uHorizontalPos: { value: 0 },
-                uViewportSizes: { value: [this.viewport.width, this.viewport.height] }
+                uViewportSizes: { value: [this.viewport.width, this.viewport.height] },
+                uSpeed: { value: 0 },
+                uTime: { value: 0 }
             },
             transparent: true
         });
@@ -92,9 +94,8 @@ export class Media {
 
         this.plane.position.z = (1 - horizontalPos) * 10;
 
-        // console.log(horizontalPos);
-
         this.plane.program.uniforms.uHorizontalPos.value = horizontalPos;
+        this.plane.program.uniforms.uSpeed.value = scroll.speed.current;
 
         this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
         this.isAfter = this.plane.position.x - planeOffset > viewportOffset;
