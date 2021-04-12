@@ -5,7 +5,33 @@
 }
 
 .container {
-    max-width: $desktop-xxl;
-    padding: 0 $gutter;
+    padding: 0 $grid-gutter-s;
     margin: 0 auto;
+}
+
+.content-pad {
+    padding-left: $gutter;
+    padding-right: $gutter;
+}
+
+@media (min-width: $desktop-small) {
+    .container-small {
+        width: percentage(6/8);
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: $desktop) {
+    .container {
+        padding: 0 $grid-gutter-l;
+    }
+    .container-small {
+        width: percentage(8/12);
+    }
+}
+
+@media (min-width: $desktop-large) {
+    .container-small {
+        width: percentage(10/12);
+    }
 }

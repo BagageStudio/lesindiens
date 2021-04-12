@@ -6,17 +6,17 @@ $white: #fff;
 $txt: #000;
 
 // Fonts ✍
-$telegraf: 'Telegraf',
-sans-serif;
-$graphik: 'Graphik',
-$telegraf;
+$telegraf: 'Telegraf', sans-serif;
+$graphik: 'Graphik', $telegraf;
 
 // Texts variables 🖌
 $text-size-mobile: 13;
 $text-size-desktop: 15;
 
 // Grids variables 📐
-$gutter: 35px;
+$grid-gutter-s: 20px;
+$grid-gutter-l: 50px;
+$gutter: 10px;
 $line-height: 22px;
 
 // Mediaqueries 📱

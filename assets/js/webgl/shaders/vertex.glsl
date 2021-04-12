@@ -29,10 +29,10 @@ void main(){
     float speed=abs(uSpeed);
     
     // Juste un facteur de mult
-    speed=speed*10.;
+    speed=speed*20.;
     
     // On borne la speed, elle ne sera jamais plus grande que 2
-    speed=min(speed,2.);
+    speed=min(speed,6.);
     
     //Applique la deformation en Z en fonction de la speed
     p.z=-x*speed;

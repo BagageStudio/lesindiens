@@ -74,6 +74,7 @@ class WebglApp {
         this.gl = this.renderer.gl;
 
         this.gl.clearColor(0.063, 0.063, 0.067, 1);
+        // this.gl.clearColor(1, 0, 0, 1);
 
         this.dom.appendChild(this.gl.canvas);
     }

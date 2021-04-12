@@ -1,3 +1,9 @@
+import Sass from 'sass';
+
+const customSass = {
+    implementation: Sass
+};
+
 /*
  ** NOTE:
  ** The NODE_ENV will always be equal to 'production' when we generate
@@ -35,12 +41,12 @@ export default {
     // Global CSS (https://go.nuxtjs.dev/config-css)
     css: ['~assets/scss/main.scss'],
 
+    server: {
+        host: '0.0.0.0' // pour accèder au site depuis le réseau lan
+    },
+
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-    plugins: [
-        {
-            src: '~/plugins/webgl'
-        }
-    ],
+    plugins: ['~/plugins/webgl', '~/plugins/breakpoints', '~/plugins/stereorepo'],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,
@@ -64,7 +70,10 @@ export default {
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
     build: {
-        transpile: ['ogl'],
+        transpile: ['ogl', /@stereorepo/, 'gsap'],
+        loaders: {
+            scss: customSass
+        },
         extend(config) {
             config.module.rules.push({
                 test: /\.(vert|frag|glsl)$/,
@@ -73,7 +82,21 @@ export default {
         }
     },
 
+    vue: {
+        config: {
+            // Giving access to performances in the inspector
+            devtools: process.env.NETLIFY_ENV === 'development',
+            performance: process.env.NETLIFY_ENV === 'development'
+        }
+    },
+
     styleResources: {
-        scss: ['~/assets/scss/abstracts/_variables.scss']
+        scss: [
+            '~/assets/scss/abstracts/_variables.scss',
+            '~/assets/scss/abstracts/_animations.scss',
+            '~/assets/scss/abstracts/_functions.scss',
+            '~/assets/scss/abstracts/_mixins.scss',
+            '~/assets/scss/abstracts/_placeholders.scss'
+        ]
     }
 };

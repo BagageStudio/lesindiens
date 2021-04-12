@@ -18,6 +18,9 @@ function clamp(num, min, max) {
 
 export class Media {
     constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport }) {
+        this.gridPadding = 0.85;
+        this.columnPadding = 0.15;
+
         this.extra = 0;
 
         this.geometry = geometry;
@@ -49,7 +52,8 @@ export class Media {
                 tMap: { value: texture },
                 uPlaneSizes: { value: [0, 0] },
                 uImageSizes: { value: [0, 0] },
-                uHorizontalPos: { value: 0 },
+                uDark: { value: 0 },
+                uTransparency: { value: 0 },
                 uViewportSizes: { value: [this.viewport.width, this.viewport.height] },
                 uSpeed: { value: 0 },
                 uTime: { value: 0 }
@@ -77,24 +81,42 @@ export class Media {
         this.plane.setParent(this.scene);
     }
 
+    computeDepth() {}
+
+    computeDark(horizontalPos) {
+        // We substract half the width to have the zero starts on the left of the plane
+
+        return clamp(horizontalPos, 0, 1);
+    }
+
+    computeTransparency(horizontalPos) {
+        const transparencyThreshold = this.viewport.width * 0.005;
+
+        let transparency = clamp(horizontalPos, -transparencyThreshold, 1);
+
+        transparency = transparency < 0 ? (Math.abs(transparency) * 1) / transparencyThreshold : 0;
+
+        return transparency;
+    }
+
     update(scroll, direction) {
         this.plane.position.x = this.x - scroll.current * 1.5 - this.extra;
 
         const planeOffset = this.plane.scale.x / 2;
         const viewportOffset = this.viewport.width / 2;
+        const horizontalHalf = viewportOffset - this.gridPadding - this.columnWidth - this.columnPadding;
 
-        const horizontalHalf = viewportOffset;
+        // We substract half the width to have the zero starts on the left of the plane
+        const horizontalPos = map(this.plane.position.x - planeOffset, -horizontalHalf, horizontalHalf, 0, 1);
 
-        const fullHorizontal = horizontalHalf * 2;
+        const depth = horizontalPos * -10;
+        const dark = this.computeDark(horizontalPos);
+        const transparency = this.computeTransparency(horizontalPos);
 
-        const unclampedHorizontalPos = (this.plane.position.x + horizontalHalf) / fullHorizontal;
-        const horizontalPos = clamp(unclampedHorizontalPos, 0, 1);
+        this.plane.position.z = depth;
 
-        // 1 - horizontalPos is to reverse to horizontalPos value
-
-        this.plane.position.z = (1 - horizontalPos) * 10;
-
-        this.plane.program.uniforms.uHorizontalPos.value = horizontalPos;
+        this.plane.program.uniforms.uDark.value = dark;
+        this.plane.program.uniforms.uTransparency.value = transparency;
         this.plane.program.uniforms.uSpeed.value = scroll.speed.current;
 
         this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
@@ -126,19 +148,25 @@ export class Media {
             this.plane.program.uniforms.uViewportSizes.value = [this.viewport.width, this.viewport.height];
         }
 
-        this.scale = this.screen.height / 1500;
+        this.scale = this.screen.width / 3000;
 
-        this.plane.scale.y = (this.viewport.height * (400 * this.scale)) / this.screen.height;
-        this.plane.scale.x = (this.viewport.width * (400 * this.scale)) / this.screen.width;
+        this.plane.scale.y = (this.viewport.height * (700 * this.scale)) / this.screen.height;
+        this.plane.scale.x = (this.viewport.width * (700 * this.scale)) / this.screen.width;
 
         this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
 
-        this.padding = -1;
+        this.padding = -3;
 
         this.width = this.plane.scale.x + this.padding;
 
         this.widthTotal = this.width * this.length;
 
-        this.x = this.width * this.index;
+        this.columnWidth = (this.viewport.width - this.gridPadding * 2) / 12;
+
+        // To start the placement at the left of the screen instead of the center
+        const offset =
+            this.viewport.width / 2 - this.plane.scale.x / 2 - this.gridPadding - this.columnWidth - this.columnPadding;
+
+        this.x = this.width * this.index - offset;
     }
 }
