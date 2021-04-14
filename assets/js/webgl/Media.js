@@ -18,9 +18,6 @@ function clamp(num, min, max) {
 
 export class Media {
     constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport }) {
-        this.gridPadding = 0.85;
-        this.columnPadding = 0.15;
-
         this.extra = 0;
 
         this.geometry = geometry;
@@ -100,7 +97,7 @@ export class Media {
     }
 
     update(scroll, direction) {
-        this.plane.position.x = this.x - scroll.current * 1.5 - this.extra;
+        this.plane.position.x = this.x - scroll.current - this.extra;
 
         const planeOffset = this.plane.scale.x / 2;
         const viewportOffset = this.viewport.width / 2;
@@ -160,6 +157,9 @@ export class Media {
         this.width = this.plane.scale.x + this.padding;
 
         this.widthTotal = this.width * this.length;
+
+        this.gridPadding = 50 * (this.viewport.width / this.screen.width);
+        this.columnPadding = 10 * (this.viewport.width / this.screen.width);
 
         this.columnWidth = (this.viewport.width - this.gridPadding * 2) / 12;
 

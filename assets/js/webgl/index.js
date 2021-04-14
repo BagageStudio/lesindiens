@@ -11,8 +11,27 @@ const round = n => {
     return Math.round(n * 1000000) / 1000000;
 };
 
+function debounce(func, wait, immediate) {
+    let timeout;
+    return function () {
+        const context = this;
+        const args = arguments;
+        const later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
 class WebglApp {
     init({ dom }) {
+        this.gridPadding = 0.85;
+        this.columnPadding = 0.15;
+
         this.dom = dom;
 
         this.medias = [];
@@ -28,6 +47,8 @@ class WebglApp {
                 target: 0
             }
         };
+
+        this.onCheckDebounce = debounce(this.onCheck, 200);
 
         this.createRenderer();
         this.createCamera();
@@ -52,20 +73,37 @@ class WebglApp {
         if (!this.isDown) return;
 
         const x = event.touches ? event.touches[0].clientX : event.clientX;
-        const distance = (this.start - x) * 0.01;
+        const distance = (this.start - x) * 0.015;
 
         this.scroll.target = this.scroll.position + distance;
     }
 
     onTouchUp(event) {
         this.isDown = false;
+
+        this.onCheck();
     }
 
     onWheel(event) {
         const normalized = NormalizeWheel(event);
         const speed = normalized.pixelY;
 
-        this.scroll.target += speed * 0.004;
+        this.scroll.target += speed * 0.006;
+        this.onCheckDebounce();
+    }
+
+    onCheck() {
+        const { width } = this.medias[0];
+
+        const itemIndex = Math.round(Math.abs(this.scroll.target / width));
+
+        const item = width * itemIndex;
+
+        if (this.scroll.target < 0) {
+            this.scroll.target = -item;
+        } else {
+            this.scroll.target = item;
+        }
     }
 
     createRenderer() {
@@ -116,6 +154,8 @@ class WebglApp {
             height,
             width
         };
+
+        this.columnWidth = (this.viewport.width - this.gridPadding * 2) / 12;
 
         if (this.medias) {
             this.medias.forEach(media =>
