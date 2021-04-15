@@ -1,5 +1,7 @@
 import { Texture, Program, Mesh } from 'ogl';
 
+import { gsap } from 'gsap';
+
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
@@ -16,8 +18,13 @@ function clamp(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
 
+const lerp = (start, end, ease) => {
+    return start + (end - start) * ease;
+};
+
 export class Media {
     constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport }) {
+        this.hoverValue = 0;
         this.extra = 0;
 
         this.geometry = geometry;
@@ -97,6 +104,18 @@ export class Media {
     }
 
     update(scroll, direction) {
+        if (this.plane.isHit) {
+            gsap.to(this, {
+                duration: 0.6,
+                hoverValue: 0.15
+            });
+        } else {
+            gsap.to(this, {
+                duration: 0.6,
+                hoverValue: 0
+            });
+        }
+
         this.plane.position.x = this.x - scroll.current - this.extra;
 
         const planeOffset = this.plane.scale.x / 2;
@@ -114,7 +133,7 @@ export class Media {
 
         this.plane.program.uniforms.uDark.value = dark;
         this.plane.program.uniforms.uTransparency.value = transparency;
-        this.plane.program.uniforms.uSpeed.value = scroll.speed.current;
+        this.plane.program.uniforms.uSpeed.value = this.hoverValue + scroll.speed.current;
 
         this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
         this.isAfter = this.plane.position.x - planeOffset > viewportOffset;

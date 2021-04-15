@@ -14,6 +14,7 @@
     "@nuxtjs/style-resources": "^1.0.0",
     "@stereorepo/sac": "^3.2.5",
     "core-js": "^3.9.1",
+    "gsap": "^3.6.1",
     "normalize-wheel": "^1.0.1",
     "nuxt": "^2.15.3",
     "ogl": "0.0.65",

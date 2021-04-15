@@ -1,4 +1,4 @@
-import { Renderer, Camera, Transform, Plane } from 'ogl';
+import { Renderer, Camera, Transform, Plane, Vec2, Raycast } from 'ogl';
 
 import NormalizeWheel from 'normalize-wheel';
 import { Media } from './Media';
@@ -54,12 +54,52 @@ class WebglApp {
         this.createCamera();
         this.createScene();
         this.createGeometry();
+        this.createRaycast();
 
         this.onResize();
 
         this.update();
 
         this.addEventListeners();
+    }
+
+    createRaycast() {
+        this.mouse = new Vec2();
+
+        // Create a raycast object
+        this.raycast = new Raycast(this.gl);
+    }
+
+    updateRay(e) {
+        this.mouse.set(2.0 * (e.x / this.renderer.width) - 1.0, 2.0 * (1.0 - e.y / this.renderer.height) - 1.0);
+
+        // Update the ray's origin and direction using the camera and mouse
+        this.raycast.castMouse(this.camera, this.mouse);
+
+        const meshes = this.medias.map(m => m.plane);
+
+        // Just for the feedback in this example - reset each mesh's hit to false
+        meshes.forEach(mesh => (mesh.isHit = false));
+
+        // raycast.intersectBounds will test against the bounds of each mesh, and
+        // return an array of intersected meshes in order of closest to farthest
+        const hits = this.raycast.intersectBounds(meshes);
+
+        // Can intersect with geometry if the bounds aren't enough, or if you need
+        // to find out the uv or normal value at the hit point.
+        // Optional arguments include backface culling `cullFace`, and `maxDistance`
+        // Both useful for doing early exits to help optimise.
+        // const hits = raycast.intersectMeshes(meshes, {
+        //     cullFace: true,
+        //     maxDistance: 10,
+        //     includeUV: true,
+        //     includeNormal: true,
+        // });
+        // if (hits.length) console.log(hits[0].hit.uv);
+
+        // Update our feedback using this array
+        // hits.forEach(mesh => (mesh.isHit = true));
+        if (hits[0]) hits[0].isHit = true;
     }
 
     onTouchDown(event) {
@@ -70,6 +110,8 @@ class WebglApp {
     }
 
     onTouchMove(event) {
+        this.updateRay(event);
+
         if (!this.isDown) return;
 
         const x = event.touches ? event.touches[0].clientX : event.clientX;
