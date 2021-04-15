@@ -1,9 +1,11 @@
-import { Renderer, Camera, Transform, Plane, Vec2, Raycast } from 'ogl';
+import { Renderer, Camera, Transform, Plane, Vec2, Raycast, Post } from 'ogl';
 
 import NormalizeWheel from 'normalize-wheel';
 import { BREAKPOINTS } from '../constants';
 
 import { Media } from './Media';
+
+import fxaa from './shaders/fxaa.glsl';
 
 const lerp = (start, end, ease) => {
     return start + (end - start) * ease;
@@ -47,6 +49,8 @@ class WebglApp {
             }
         };
 
+        this.resolution = { value: new Vec2() };
+
         this.onCheckDebounce = debounce(this.onCheck, 200);
 
         this.createRenderer();
@@ -54,6 +58,7 @@ class WebglApp {
         this.createScene();
         this.createGeometry();
         this.createRaycast();
+        this.createFXAA();
 
         this.onResize();
 
@@ -62,10 +67,18 @@ class WebglApp {
         this.addEventListeners();
     }
 
+    createFXAA() {
+        this.post = new Post(this.gl);
+        this.fxaa = this.post.addPass({
+            fragment: fxaa,
+            uniforms: {
+                uResolution: this.resolution
+            }
+        });
+    }
+
     createRaycast() {
         this.mouse = new Vec2();
-
-        // Create a raycast object
         this.raycast = new Raycast(this.gl);
     }
 
@@ -217,6 +230,8 @@ class WebglApp {
             width
         };
 
+        this.resolution.value.set(this.gl.canvas.width, this.gl.canvas.height);
+
         const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
 
         if (this.medias.length) {
@@ -230,6 +245,8 @@ class WebglApp {
             });
             this.onCheckDebounce();
         }
+
+        this.post.resize();
     }
 
     addMedias(medias) {
@@ -274,15 +291,12 @@ class WebglApp {
 
         this.scroll.last = this.scroll.current;
 
-        this.renderer.render({
+        this.post.render({
             scene: this.scene,
             camera: this.camera
         });
 
         window.requestAnimationFrame(this.update.bind(this));
-
-        // if (count < 5)
-        // count += 1;
     }
 
     addEventListeners() {
