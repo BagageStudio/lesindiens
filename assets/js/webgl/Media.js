@@ -23,7 +23,7 @@ const lerp = (start, end, ease) => {
 };
 
 export class Media {
-    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport }) {
+    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height }) {
         this.hoverValue = 0;
         this.extra = 0;
 
@@ -41,7 +41,7 @@ export class Media {
         this.createShader();
         this.createMesh();
 
-        this.onResize();
+        this.onResize({ width, height });
     }
 
     createShader() {
@@ -85,8 +85,6 @@ export class Media {
         this.plane.setParent(this.scene);
     }
 
-    computeDepth() {}
-
     computeDark(horizontalPos) {
         // We substract half the width to have the zero starts on the left of the plane
 
@@ -94,7 +92,8 @@ export class Media {
     }
 
     computeTransparency(horizontalPos) {
-        const transparencyThreshold = this.viewport.width * 0.005;
+        const offset = this.gridPadding + this.columnWidth + this.columnPadding;
+        const transparencyThreshold = (offset / this.viewport.width) * 1.4;
 
         let transparency = clamp(horizontalPos, -transparencyThreshold, 1);
 
@@ -153,21 +152,19 @@ export class Media {
         }
     }
 
-    onResize({ screen, viewport } = {}) {
+    onResize({ screen, viewport, width, height } = {}) {
+        this.extra = 0;
         if (screen) {
             this.screen = screen;
         }
 
         if (viewport) {
             this.viewport = viewport;
-
             this.plane.program.uniforms.uViewportSizes.value = [this.viewport.width, this.viewport.height];
         }
 
-        this.scale = this.screen.width / 3000;
-
-        this.plane.scale.y = (this.viewport.height * (800 * this.scale)) / this.screen.height;
-        this.plane.scale.x = (this.viewport.width * (800 * this.scale)) / this.screen.width;
+        this.plane.scale.y = height;
+        this.plane.scale.x = width;
 
         this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
 

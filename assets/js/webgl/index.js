@@ -176,6 +176,17 @@ class WebglApp {
         });
     }
 
+    computePlaneSize() {
+        this.scale = this.screen.width / 3000;
+
+        const height = (this.viewport.height * 500) / this.screen.height;
+        const width = (this.viewport.width * 500) / this.screen.width;
+        return {
+            height,
+            width
+        };
+    }
+
     onResize() {
         this.screen = {
             height: window.innerHeight,
@@ -199,17 +210,24 @@ class WebglApp {
 
         this.columnWidth = (this.viewport.width - this.gridPadding * 2) / 12;
 
-        if (this.medias) {
-            this.medias.forEach(media =>
+        const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
+
+        if (this.medias.length) {
+            this.medias.forEach(media => {
                 media.onResize({
                     screen: this.screen,
-                    viewport: this.viewport
-                })
-            );
+                    viewport: this.viewport,
+                    height: planeHeight,
+                    width: planeWidth
+                });
+            });
+            this.onCheckDebounce();
         }
     }
 
     addMedias(medias) {
+        const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
+
         this.medias = medias.map((image, index) => {
             const media = new Media({
                 geometry: this.planeGeometry,
@@ -219,7 +237,9 @@ class WebglApp {
                 length: medias.length,
                 scene: this.scene,
                 screen: this.screen,
-                viewport: this.viewport
+                viewport: this.viewport,
+                height: planeHeight,
+                width: planeWidth
             });
 
             return media;
