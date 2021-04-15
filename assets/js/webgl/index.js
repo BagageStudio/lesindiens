@@ -1,6 +1,8 @@
 import { Renderer, Camera, Transform, Plane, Vec2, Raycast } from 'ogl';
 
 import NormalizeWheel from 'normalize-wheel';
+import { BREAKPOINTS } from '../constants';
+
 import { Media } from './Media';
 
 const lerp = (start, end, ease) => {
@@ -29,9 +31,6 @@ function debounce(func, wait, immediate) {
 
 class WebglApp {
     init({ dom }) {
-        this.gridPadding = 0.85;
-        this.columnPadding = 0.15;
-
         this.dom = dom;
 
         this.medias = [];
@@ -177,10 +176,20 @@ class WebglApp {
     }
 
     computePlaneSize() {
-        this.scale = this.screen.width / 3000;
+        let size = 500;
 
-        const height = (this.viewport.height * 500) / this.screen.height;
-        const width = (this.viewport.width * 500) / this.screen.width;
+        if (this.screen.width < BREAKPOINTS.s) {
+            size = 280;
+        } else if (this.screen.width < BREAKPOINTS.m) {
+            size = 300;
+        } else if (this.screen.width < BREAKPOINTS.xl) {
+            size = 350;
+        } else if (this.screen.width < BREAKPOINTS.threexl) {
+            size = 450;
+        }
+
+        const height = (this.viewport.height * size) / this.screen.height;
+        const width = (this.viewport.width * size) / this.screen.width;
         return {
             height,
             width
@@ -207,8 +216,6 @@ class WebglApp {
             height,
             width
         };
-
-        this.columnWidth = (this.viewport.width - this.gridPadding * 2) / 12;
 
         const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
 

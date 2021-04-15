@@ -2,6 +2,7 @@ import { Texture, Program, Mesh } from 'ogl';
 
 import { gsap } from 'gsap';
 
+import { BREAKPOINTS } from '../constants';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
@@ -119,7 +120,7 @@ export class Media {
 
         const planeOffset = this.plane.scale.x / 2;
         const viewportOffset = this.viewport.width / 2;
-        const horizontalHalf = viewportOffset - this.gridPadding - this.columnWidth - this.columnPadding;
+        const horizontalHalf = viewportOffset - this.gridOffset;
 
         // We substract half the width to have the zero starts on the left of the plane
         const horizontalPos = map(this.plane.position.x - planeOffset, -horizontalHalf, horizontalHalf, 0, 1);
@@ -174,14 +175,21 @@ export class Media {
 
         this.widthTotal = this.width * this.length;
 
-        this.gridPadding = 50 * (this.viewport.width / this.screen.width);
+        const gridPadding = this.screen.width < BREAKPOINTS.xl ? 20 : 50;
+
+        this.gridPadding = gridPadding * (this.viewport.width / this.screen.width);
         this.columnPadding = 10 * (this.viewport.width / this.screen.width);
 
         this.columnWidth = (this.viewport.width - this.gridPadding * 2) / 12;
 
+        if (this.screen.width < BREAKPOINTS.xl) {
+            this.gridOffset = this.gridPadding + this.columnPadding;
+        } else {
+            this.gridOffset = this.gridPadding + this.columnWidth + this.columnPadding;
+        }
+
         // To start the placement at the left of the screen instead of the center
-        const offset =
-            this.viewport.width / 2 - this.plane.scale.x / 2 - this.gridPadding - this.columnWidth - this.columnPadding;
+        const offset = this.viewport.width / 2 - this.plane.scale.x / 2 - this.gridOffset;
 
         this.x = this.width * this.index - offset;
     }
