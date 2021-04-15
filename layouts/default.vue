@@ -3,7 +3,7 @@
         <Header />
         <div ref="glWrapper" class="gl-wrapper" />
         <Nuxt />
-        <Grid v-show="true" />
+        <Grid v-show="false" />
     </div>
 </template>
 <script>
