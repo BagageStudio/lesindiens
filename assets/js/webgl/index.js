@@ -1,4 +1,4 @@
-import { Renderer, Camera, Transform, Program, Mesh, Plane, Sphere, Box, Cylinder, Orbit, Mat4 } from 'ogl';
+import { Renderer, Camera, Transform, Plane } from 'ogl';
 
 import NormalizeWheel from 'normalize-wheel';
 import { Media } from './Media';
