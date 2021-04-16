@@ -31,14 +31,6 @@ export default {
                     error({ statusCode: res.response.status, message: res.response.data });
                 }
             });
-    },
-    mounted() {
-        this.$nextTick(() => {
-            const projects = this.story.content.projects.map(p =>
-                p.content.image.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
-            );
-            this.$webgl.addMedias([...projects, ...projects, ...projects]);
-        });
     }
 };
 </script>
