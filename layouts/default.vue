@@ -2,7 +2,7 @@
     <div>
         <Header />
         <Nuxt />
-        <Grid v-show="false" />
+        <Grid v-show="true" />
     </div>
 </template>
 <script>
