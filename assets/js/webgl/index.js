@@ -122,7 +122,7 @@ class WebglApp {
         const normalized = NormalizeWheel(event);
         const speed = normalized.pixelY;
 
-        this.scroll.target += speed * 0.006;
+        this.scroll.target += speed * 0.009;
         this.onCheckDebounce();
     }
 
