@@ -30,6 +30,9 @@ class WebglApp {
 
         this.onCheckDebounce = debounce(this.onCheck, 200);
 
+        this.onSelected = null;
+        this.onScrollChange = null;
+
         this.createRenderer();
         this.createCamera();
         this.createScene();
@@ -135,6 +138,10 @@ class WebglApp {
         } else {
             this.scroll.target = item;
         }
+
+        const projectIndex = itemIndex % this.medias.length;
+
+        this.onSelected(projectIndex);
     }
 
     createRenderer() {
@@ -229,8 +236,9 @@ class WebglApp {
     addMedias(medias) {
         const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
 
-        this.medias = medias.map((image, index) => {
+        this.medias = medias.map(({ image, id }, index) => {
             const media = new Media({
+                id,
                 geometry: this.planeGeometry,
                 gl: this.gl,
                 image,
@@ -248,13 +256,17 @@ class WebglApp {
     }
 
     update() {
-        this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
+        this.scroll.current = round(lerp(this.scroll.current, this.scroll.target, this.scroll.ease));
 
         this.scroll.speed.target = round(this.scroll.current - this.scroll.last);
 
         this.scroll.speed.current = round(
             lerp(this.scroll.speed.current, this.scroll.speed.target, this.scroll.speed.ease)
         );
+
+        if (this.scroll.current !== this.scroll.last) {
+            this.onScrollChange(this.scroll.current, this.medias[0].widthTotal);
+        }
 
         if (this.scroll.current > this.scroll.last) {
             this.direction = 'right';
