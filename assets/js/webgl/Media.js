@@ -2,26 +2,10 @@ import { Texture, Program, Mesh } from 'ogl';
 
 import { gsap } from 'gsap';
 
+import { clamp, map } from '../utils';
 import { BREAKPOINTS } from '../constants';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
-
-function map(num, min1, max1, min2, max2, round = false) {
-    const num1 = (num - min1) / (max1 - min1);
-    const num2 = num1 * (max2 - min2) + min2;
-
-    if (round) return Math.round(num2);
-
-    return num2;
-}
-
-function clamp(num, min, max) {
-    return Math.min(Math.max(num, min), max);
-}
-
-const lerp = (start, end, ease) => {
-    return start + (end - start) * ease;
-};
 
 export class Media {
     constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height }) {

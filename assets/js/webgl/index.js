@@ -3,33 +3,10 @@ import { Renderer, Camera, Transform, Plane, Vec2, Raycast, Post } from 'ogl';
 import NormalizeWheel from 'normalize-wheel';
 import { BREAKPOINTS } from '../constants';
 
+import { debounce, lerp, round } from '../utils';
 import { Media } from './Media';
 
 import fxaa from './shaders/fxaa.glsl';
-
-const lerp = (start, end, ease) => {
-    return start + (end - start) * ease;
-};
-
-const round = n => {
-    return Math.round(n * 1000000) / 1000000;
-};
-
-function debounce(func, wait, immediate) {
-    let timeout;
-    return function () {
-        const context = this;
-        const args = arguments;
-        const later = function () {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        const callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-}
 
 class WebglApp {
     init({ dom }) {
