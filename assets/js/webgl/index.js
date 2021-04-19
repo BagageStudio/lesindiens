@@ -26,12 +26,16 @@ class WebglApp {
             }
         };
 
+        this.scrolling = false;
+
         this.resolution = { value: new Vec2() };
 
         this.onCheckDebounce = debounce(this.onCheck, 200);
 
         this.onSelected = null;
         this.onScrollChange = null;
+        this.onScrollEnd = null;
+        this.onScrollStart = null;
 
         this.createRenderer();
         this.createCamera();
@@ -106,6 +110,11 @@ class WebglApp {
 
         if (!this.isDown) return;
 
+        if (!this.scrolling) {
+            this.scrolling = true;
+            this.onScrollStart();
+        }
+
         const x = event.touches ? event.touches[0].clientX : event.clientX;
         const distance = (this.start - x) * 0.015;
 
@@ -119,6 +128,11 @@ class WebglApp {
     }
 
     onWheel(event) {
+        if (!this.scrolling) {
+            this.scrolling = true;
+            this.onScrollStart();
+        }
+
         const normalized = NormalizeWheel(event);
         const speed = normalized.pixelY;
 
@@ -127,6 +141,7 @@ class WebglApp {
     }
 
     onCheck() {
+        this.scrolling = false;
         const { width } = this.medias[0];
 
         const itemIndex = Math.round(Math.abs(this.scroll.target / width));
@@ -266,6 +281,8 @@ class WebglApp {
 
         if (this.scroll.current !== this.scroll.last) {
             this.onScrollChange(this.scroll.current, this.medias[0].widthTotal);
+        } else if (this.onScrollEnd) {
+            this.onScrollEnd();
         }
 
         if (this.scroll.current > this.scroll.last) {

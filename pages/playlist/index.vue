@@ -1,7 +1,7 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div class="content">
+        <div class="content-pgb" :class="{ show: scrolling }">
             <div class="container">
                 <div class="container-small">
                     <div class="content-pad">
@@ -21,6 +21,15 @@
                                 }"
                             />
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="container">
+                <div class="container-small">
+                    <div class="content-pad">
+                        <h1>Oui bonjour</h1>
                     </div>
                 </div>
             </div>
@@ -50,7 +59,8 @@ export default {
             });
     },
     data: () => ({
-        percentage: 0
+        percentage: 0,
+        scrolling: false
     }),
     computed: {
         projectWidthPercent() {
@@ -77,12 +87,17 @@ export default {
 
         this.$webgl.onSelected = this.onSelected;
         this.$webgl.onScrollChange = this.onScrollChange;
+        this.$webgl.onScrollStart = this.onScrollStart;
         this.$nextTick(() => {
             this.$webgl.addMedias([...projects, ...projects, ...projects]);
         });
     },
     methods: {
+        onScrollStart() {
+            this.scrolling = true;
+        },
         onSelected(s) {
+            this.scrolling = false;
             const projectIndex = s % this.projects.length;
             const project = this.projects[projectIndex];
             console.log(project);
@@ -90,7 +105,8 @@ export default {
         onScrollChange(progress, widthTotal) {
             const maxScroll = widthTotal / 3;
             const scroll = (progress * 100) / maxScroll;
-            this.percentage = scroll % 100;
+            const move = scroll % 100;
+            this.percentage = move < 0 ? 100 + move : move;
         }
     }
 };
@@ -110,11 +126,17 @@ export default {
     height: 100%;
     z-index: -1;
 }
-.content {
+.content-pgb {
     position: absolute;
     left: 0;
     width: 100%;
     bottom: 10vh;
+    opacity: 0;
+    transition: 0.4s ease-in-out 0.5s;
+    &.show {
+        opacity: 1;
+        transition: 0.2s ease-in-out;
+    }
 }
 .progress-bar {
     position: relative;
