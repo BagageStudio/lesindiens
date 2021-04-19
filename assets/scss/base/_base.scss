@@ -17,7 +17,7 @@ html {
 }
 
 body {
-    font: 1.2em / 1.5 $telegraf;
+    font: 1.6em / 1.88 $graphik;
     color: $white;
     font-kerning: normal;
     font-weight: 400;
@@ -193,9 +193,6 @@ a {
 }
 
 @media (min-width: $phone) {
-    body {
-        font-size: #{$text-size-desktop * 0.1}rem;
-    }
     .wysiwyg h1,
     .h1 {
         font-size: 4rem;

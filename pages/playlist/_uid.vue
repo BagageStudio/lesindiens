@@ -61,6 +61,7 @@ export default {
     margin-top: 10px;
 }
 .project-title {
+    font-family: $telegraf;
     font-size: 6.5rem;
     line-height: 1;
     font-weight: 100;
