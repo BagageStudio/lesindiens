@@ -1,25 +1,28 @@
 <template>
-    <div class="project-hero">
-        <div class="container">
-            <div class="container-small">
-                <div class="wrapper-project-title">
-                    <h1 class="project-title content-pad">{{ story.content.song_title }}</h1>
-                </div>
-                <div class="project-details">
-                    <div class="project-infos content-pad">
-                        <div class="project-info">
-                            <span class="info-title">Client</span>
-                            <span class="info-content">{{ story.content.name }}</span>
-                        </div>
-                        <div class="project-info">
-                            <span class="info-title">Expertise</span>
-                            <Tags :tags="story.content.expertises" />
-                        </div>
+    <div>
+        <div class="project-hero">
+            <div class="container">
+                <div class="container-small">
+                    <div class="wrapper-project-title">
+                        <h1 class="project-title content-pad">{{ story.content.song_title }}</h1>
                     </div>
-                    <div class="project-song" />
+                    <div class="project-details">
+                        <div class="project-infos content-pad">
+                            <div class="project-info">
+                                <span class="info-title">Client</span>
+                                <span class="info-content">{{ story.content.name }}</span>
+                            </div>
+                            <div class="project-info">
+                                <span class="info-title">Expertise</span>
+                                <Tags :tags="story.content.expertises" />
+                            </div>
+                        </div>
+                        <div class="project-song" />
+                    </div>
                 </div>
             </div>
         </div>
+        <component :is="module.component" v-for="module in story.content.modules" :key="module.id" :data="module" />
     </div>
 </template>
 
