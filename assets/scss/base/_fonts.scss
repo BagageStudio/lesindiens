@@ -1,8 +1,7 @@
 // Fonts
 @font-face {
     font-family: 'Telegraf';
-    src: local('Telegraf Regular'),
-        url('~static/fonts/Telegraf-Regular.woff2') format('woff2'),
+    src: local('Telegraf Regular'), url('~static/fonts/Telegraf-Regular.woff2') format('woff2'),
         url('~static/fonts/Telegraf-Regular.woff') format('woff');
     font-display: swap;
     font-style: normal;
@@ -11,8 +10,7 @@
 
 @font-face {
     font-family: 'Telegraf';
-    src: local('Telegraf SemiBold'),
-        url('~static/fonts/Telegraf-SemiBold.woff2') format('woff2'),
+    src: local('Telegraf SemiBold'), url('~static/fonts/Telegraf-SemiBold.woff2') format('woff2'),
         url('~static/fonts/Telegraf-SemiBold.woff') format('woff');
     font-display: swap;
     font-style: normal;
@@ -21,18 +19,16 @@
 
 @font-face {
     font-family: 'Telegraf';
-    src: local('Telegraf UltraLight'),
-        url('~static/fonts/Telegraf-UltraLight.woff2') format('woff2'),
+    src: local('Telegraf UltraLight'), url('~static/fonts/Telegraf-UltraLight.woff2') format('woff2'),
         url('~static/fonts/Telegraf-UltraLight.woff') format('woff');
     font-display: swap;
     font-style: normal;
-    font-weight: 200;
+    font-weight: 100;
 }
 
 @font-face {
     font-family: 'Graphik';
-    src: local('Graphik Regular'),
-        url('~static/fonts/Graphik-Regular.woff2') format('woff2'),
+    src: local('Graphik Regular'), url('~static/fonts/Graphik-Regular.woff2') format('woff2'),
         url('~static/fonts/Graphik-Regular.woff') format('woff');
     font-display: swap;
     font-style: normal;
@@ -41,8 +37,7 @@
 
 @font-face {
     font-family: 'Graphik';
-    src: local('Graphik Italic'),
-        url('~static/fonts/Graphik-RegularItalic.woff2') format('woff2'),
+    src: local('Graphik Italic'), url('~static/fonts/Graphik-RegularItalic.woff2') format('woff2'),
         url('~static/fonts/Graphik-RegularItalic.woff') format('woff');
     font-display: swap;
     font-style: italic;
