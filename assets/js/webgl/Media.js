@@ -8,7 +8,8 @@ import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
 export class Media {
-    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height }) {
+    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height, id }) {
+        this.id = id;
         this.hoverValue = 0;
         this.extra = 0;
 

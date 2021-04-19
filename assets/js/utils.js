@@ -15,7 +15,7 @@ export const lerp = (start, end, ease) => {
     return start + (end - start) * ease;
 };
 
-export const round = (n, d = 6) => {
+export const round = (n, d = 4) => {
     const decimal = Math.pow(10, d);
     return Math.round(n * decimal) / decimal;
 };
