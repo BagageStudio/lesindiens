@@ -13,7 +13,7 @@
                         </div>
                         <div class="project-info">
                             <span class="info-title">Expertise</span>
-                            <span class="info-content">{{ story.content.name }}</span>
+                            <Tags :tags="story.content.expertises" />
                         </div>
                     </div>
                     <div class="project-song" />
@@ -28,7 +28,8 @@ export default {
     asyncData({ app, $config, error, route }) {
         return app.$storyapi
             .get(`cdn/stories/playlist/${route.params.uid}`, {
-                version: $config.sBlokVersion
+                version: $config.sBlokVersion,
+                resolve_relations: 'expertises'
             })
             .then(res => {
                 return res.data;
@@ -48,7 +49,7 @@ export default {
 
 <style lang="scss" scoped>
 .project-hero {
-    padding: 110px 0 30px;
+    padding: 110px 0 20px;
 }
 .project-details {
     margin-top: 30px;
