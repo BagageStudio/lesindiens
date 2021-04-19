@@ -25,11 +25,22 @@
                 </div>
             </div>
         </div>
-        <div class="content">
+        <div class="content-infos" :class="{ hide: scrolling }">
             <div class="container">
                 <div class="container-small">
                     <div class="content-pad">
-                        <h1>Oui bonjour</h1>
+                        <h1 v-if="currentProject">{{ currentProject.content.song_title }}</h1>
+                        <div class="client">
+                            <span>Client: </span>
+                            <span v-if="currentProject">{{ currentProject.content.name }}</span>
+                        </div>
+                        <div class="expertises">
+                            <span>Expertises: </span>
+                            <Tags
+                                v-if="currentProject && currentProject.content.expertises"
+                                :tags="currentProject.content.expertises"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -39,29 +50,36 @@
 
 <script>
 export default {
-    asyncData({ app, $config, error }) {
-        return app.$storyapi
+    async asyncData({ app, $config, error }) {
+        const home = await app.$storyapi
             .get('cdn/stories/home', {
+                version: $config.sBlokVersion
+            })
+            .then(res => res.data.story.content)
+            .catch(res => error({ statusCode: 404, message: 'Failed to receive content form api' }));
+
+        console.log(home);
+
+        const projects = await app.$storyapi
+            .get('cdn/stories', {
                 version: $config.sBlokVersion,
-                resolve_relations: 'home.projects'
+                by_uuids: home.projects.join(','),
+                resolve_relations: 'expertises'
             })
-            .then(res => {
-                return res.data.story.content;
-            })
+            .then(res => res.data.stories)
             .catch(res => {
-                if (!res.response) {
-                    console.error(res);
-                    error({ statusCode: 404, message: 'Failed to receive content form api' });
-                } else {
-                    console.error(res.response.data);
-                    error({ statusCode: res.response.status, message: res.response.data });
-                }
+                console.error(res);
+                error({ statusCode: 404, message: 'Failed to receive content form api' });
             });
+        return { projects };
     },
-    data: () => ({
-        percentage: 0,
-        scrolling: false
-    }),
+    data() {
+        return {
+            percentage: 0,
+            scrolling: false,
+            currentProject: null
+        };
+    },
     computed: {
         projectWidthPercent() {
             return 100 / this.projects.length;
@@ -85,6 +103,8 @@ export default {
             dom: this.$refs.glWrapper
         });
 
+        this.currentProject = this.projects[0];
+
         this.$webgl.onSelected = this.onSelected;
         this.$webgl.onScrollChange = this.onScrollChange;
         this.$webgl.onScrollStart = this.onScrollStart;
@@ -100,7 +120,7 @@ export default {
             this.scrolling = false;
             const projectIndex = s % this.projects.length;
             const project = this.projects[projectIndex];
-            console.log(project);
+            this.currentProject = project;
         },
         onScrollChange(progress, widthTotal) {
             const maxScroll = widthTotal / 3;
@@ -126,6 +146,7 @@ export default {
     height: 100%;
     z-index: -1;
 }
+
 .content-pgb {
     position: absolute;
     left: 0;
@@ -135,6 +156,19 @@ export default {
     transition: 0.4s ease-in-out 0.5s;
     &.show {
         opacity: 1;
+        transition: 0.2s ease-in-out 0.2s;
+    }
+}
+
+.content-infos {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 70px;
+    opacity: 1;
+    transition: 0.4s ease-in-out 0.7s;
+    &.hide {
+        opacity: 0;
         transition: 0.2s ease-in-out;
     }
 }

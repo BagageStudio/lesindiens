@@ -3,6 +3,7 @@
         <Header />
         <Nuxt />
         <Grid v-show="true" />
+        <Svgs />
     </div>
 </template>
 <script>
