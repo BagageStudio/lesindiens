@@ -25,17 +25,18 @@
                 </div>
             </div>
         </div>
+        <div class="canvas-size" />
         <div class="content-infos" :class="{ hide: scrolling }">
             <div class="container">
                 <div class="container-small">
                     <div class="content-pad">
-                        <h1 v-if="currentProject">{{ currentProject.content.song_title }}</h1>
-                        <div class="client">
-                            <span>Client: </span>
+                        <h1 v-if="currentProject" v-html="projectTitle" />
+                        <div class="client detail">
+                            <span class="label">Client</span>
                             <span v-if="currentProject">{{ currentProject.content.name }}</span>
                         </div>
-                        <div class="expertises">
-                            <span>Expertises: </span>
+                        <div class="expertises detail">
+                            <span class="label">Expertises</span>
                             <Tags
                                 v-if="currentProject && currentProject.content.expertises"
                                 :tags="currentProject.content.expertises"
@@ -81,6 +82,12 @@ export default {
         };
     },
     computed: {
+        projectTitle() {
+            if (!this.currentProject) return '';
+            return typeof this.currentProject.content.song_title === 'string'
+                ? this.currentProject.content.song_title
+                : this.$storyapi.richTextResolver.render(this.currentProject.content.song_title);
+        },
         projectWidthPercent() {
             return 100 / this.projects.length;
         },
@@ -135,9 +142,22 @@ export default {
 <style lang="scss" scoped>
 .playlist {
     position: relative;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
     width: 100vw;
+    padding-top: 116px;
 }
+
+.canvas-size {
+    width: 100%;
+    max-height: 550px;
+    flex: 1 0 auto;
+    margin: 50px 0;
+    background-color: rgba(red, 0.2);
+}
+
 .gl-wrapper {
     position: absolute;
     top: 0;
@@ -161,17 +181,42 @@ export default {
 }
 
 .content-infos {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    bottom: 70px;
+    flex: 0 0 150px;
+    height: 150px;
+    margin-bottom: 30px;
     opacity: 1;
     transition: 0.4s ease-in-out 0.7s;
+    h1 {
+        font-weight: 100;
+        font-size: 4.2rem;
+        line-height: 45px;
+        margin-bottom: 30px;
+        ::v-deep br {
+            display: none;
+        }
+    }
     &.hide {
         opacity: 0;
         transition: 0.2s ease-in-out;
     }
 }
+
+.detail {
+    display: flex;
+    align-items: baseline;
+}
+
+.client {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.label {
+    font-size: 1.3rem;
+    color: $grey-3;
+    margin-right: 10px;
+}
+
 .progress-bar {
     position: relative;
     width: 100%;
