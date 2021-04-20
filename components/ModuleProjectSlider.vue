@@ -1,6 +1,14 @@
 <template>
     <div class="module-slider">
-        <div class="container">
+        <div
+            class="container"
+            @mousedown="lock"
+            @touchstart="lock"
+            @mouseup="move"
+            @touchend="move"
+            @mousemove="moving"
+            @touchmove="moving"
+        >
             <div ref="slider" class="wrapper-slider">
                 <ul class="slider">
                     <li v-for="slide in data.images" :key="slide.id">
@@ -59,6 +67,8 @@ export default {
         initSlides() {
             this.currentSlide = 1;
             gsap.set(this.$refs.slider, { x: 0 });
+            this.copyAfter = false;
+            gsap.set(this.$refs.sliderCopy, { x: '-100%' });
             if (this.ww >= this.$breakpoints.list.xl) {
                 this.widthPercentage = 112.5;
             } else if (this.ww >= this.$breakpoints.list.m) {
@@ -169,6 +179,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     margin: 0;
+    user-select: none;
     > li {
         flex: 0 0 auto;
         width: 100%;
