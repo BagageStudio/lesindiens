@@ -27,19 +27,37 @@
 }
 
 @font-face {
-    font-family: 'Graphik';
-    src: local('Graphik Regular'), url('~static/fonts/Graphik-Regular.woff2') format('woff2'),
-        url('~static/fonts/Graphik-Regular.woff') format('woff');
+    font-family: 'Object Sans';
+    src: local('ObjectSans-Regular'), url('~static/fonts/ObjectSans-Regular.woff2') format('woff2'),
+        url('~static/fonts/ObjectSans-Regular.woff') format('woff');
     font-display: swap;
     font-style: normal;
     font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Graphik';
-    src: local('Graphik Italic'), url('~static/fonts/Graphik-RegularItalic.woff2') format('woff2'),
-        url('~static/fonts/Graphik-RegularItalic.woff') format('woff');
+    font-family: 'Object Sans';
+    src: local('ObjectSans-Slanted'), url('~static/fonts/ObjectSans-Slanted.woff2') format('woff2'),
+        url('~static/fonts/ObjectSans-Slanted.woff') format('woff');
     font-display: swap;
     font-style: italic;
     font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Object Sans';
+    src: local('ObjectSans-Bold'), url('~static/fonts/ObjectSans-Bold.woff2') format('woff2'),
+        url('~static/fonts/ObjectSans-Bold.woff') format('woff');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'Object Sans';
+    src: local('ObjectSans-BoldSlanted'), url('~static/fonts/ObjectSans-BoldSlanted.woff2') format('woff2'),
+        url('~static/fonts/ObjectSans-BoldSlanted.woff') format('woff');
+    font-display: swap;
+    font-style: italic;
+    font-weight: 700;
 }

@@ -25,7 +25,7 @@ export default {
     align-items: baseline;
 }
 .tag {
-    font-family: $graphik;
+    font-family: $object;
     font-weight: 400;
     font-size: 1.3rem;
     line-height: 1;
