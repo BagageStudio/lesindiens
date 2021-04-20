@@ -187,6 +187,7 @@ export default {
     opacity: 1;
     transition: 0.4s ease-in-out 0.7s;
     h1 {
+        font-family: $telegraf;
         font-weight: 100;
         font-size: 4.2rem;
         line-height: 45px;

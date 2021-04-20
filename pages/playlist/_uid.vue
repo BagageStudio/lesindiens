@@ -93,7 +93,7 @@ export default {
 }
 .info-title {
     display: block;
-    font-family: $graphik;
+    font-family: $object;
     font-weight: 400;
     font-size: 1.3rem;
     line-height: 1;
@@ -101,7 +101,7 @@ export default {
     color: $grey-3;
 }
 .info-content {
-    font-family: $graphik;
+    font-family: $object;
     font-weight: 400;
     font-size: 1.6rem;
     line-height: 20px;
@@ -117,7 +117,7 @@ export default {
     display: flex;
     flex-direction: column;
     margin-bottom: 35px;
-    font-family: $graphik;
+    font-family: $object;
     font-weight: 400;
     font-size: 1.6rem;
     line-height: 20px;
