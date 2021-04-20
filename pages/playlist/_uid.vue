@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-project-title">
-                        <h1 class="project-title content-pad">{{ story.content.song_title }}</h1>
+                        <h1 class="project-title content-pad" v-html="title" />
                     </div>
                     <div class="project-hero-details">
                         <div class="project-infos content-pad">
@@ -65,6 +65,9 @@ export default {
             });
     },
     computed: {
+        title() {
+            return this.$storyapi.richTextResolver.render(this.story.content.song_title);
+        },
         intro() {
             return this.$storyapi.richTextResolver.render(this.story.content.intro);
         }
