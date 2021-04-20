@@ -4,9 +4,9 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-project-title">
-                        <h1 class="project-title content-pad">{{ story.content.song_title }}</h1>
+                        <h1 class="project-title content-pad" v-html="title" />
                     </div>
-                    <div class="project-details">
+                    <div class="project-hero-details">
                         <div class="project-infos content-pad">
                             <div class="project-info">
                                 <span class="info-title">Client</span>
@@ -18,6 +18,23 @@
                             </div>
                         </div>
                         <div class="project-song" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <FastImage :image="story.content.image" full-width />
+        <div class="wrapper-project-details">
+            <div class="container">
+                <div class="container-details container-small">
+                    <div class="project-details content-pad">
+                        <div v-for="detail in story.content.details" :key="detail._uid" class="project-detail">
+                            <span class="project-detail-title">{{ detail.title }}</span>
+                            <span class="project-detail-content">{{ detail.content }}</span>
+                        </div>
+                    </div>
+                    <div class="project-intro content-pad">
+                        <div v-html="intro" />
+                        <Button icon class="primary"> hello@lesindiens.fr </Button>
                     </div>
                 </div>
             </div>
@@ -46,6 +63,14 @@ export default {
                     error({ statusCode: res.response.status, message: res.response.data });
                 }
             });
+    },
+    computed: {
+        title() {
+            return this.$storyapi.richTextResolver.render(this.story.content.song_title);
+        },
+        intro() {
+            return this.$storyapi.richTextResolver.render(this.story.content.intro);
+        }
     }
 };
 </script>
@@ -54,13 +79,14 @@ export default {
 .project-hero {
     padding: 110px 0 20px;
 }
-.project-details {
+.project-hero-details {
     margin-top: 30px;
 }
 .project-info {
     margin-top: 10px;
 }
 .project-title {
+    font-family: $telegraf;
     font-size: 6.5rem;
     line-height: 1;
     font-weight: 100;
@@ -84,12 +110,29 @@ export default {
     margin-top: 115px;
 }
 
+.wrapper-project-details {
+    padding: 80px 0;
+}
+.project-detail {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 35px;
+    font-family: $graphik;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 20px;
+}
+.project-detail-title {
+    margin-bottom: 10px;
+    color: $grey-3;
+}
+
 @media (min-width: $tablet) {
     .wrapper-project-title {
         min-height: 472px;
         padding-top: 75px;
     }
-    .project-details {
+    .project-hero-details {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
@@ -111,6 +154,39 @@ export default {
     .project-song {
         margin-top: 0;
         width: percentage(2/10);
+    }
+
+    .container-details {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .project-details {
+        width: percentage(2/8);
+    }
+    .project-detail {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .project-intro {
+        width: percentage(5/8);
+    }
+}
+@media (min-width: $desktop-small) {
+    .wrapper-project-details {
+        padding: 150px 0;
+    }
+}
+@media (min-width: $desktop) {
+    .wrapper-project-details {
+        padding: 240px 0;
+    }
+    .project-details {
+        width: percentage(3/10);
+    }
+    .project-intro {
+        width: percentage(6/10);
     }
 }
 </style>
