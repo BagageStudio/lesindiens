@@ -148,13 +148,16 @@ class WebglApp {
 
         const item = width * itemIndex;
 
+        let projectIndex;
+        const index = itemIndex % this.medias.length;
+
         if (this.scroll.target < 0) {
             this.scroll.target = -item;
+            projectIndex = this.medias.length - index;
         } else {
             this.scroll.target = item;
+            projectIndex = index;
         }
-
-        const projectIndex = itemIndex % this.medias.length;
 
         this.onSelected(projectIndex);
     }
@@ -165,7 +168,6 @@ class WebglApp {
         this.gl = this.renderer.gl;
 
         this.gl.clearColor(0.063, 0.063, 0.067, 1);
-        // this.gl.clearColor(1, 0, 0, 1);
 
         this.dom.appendChild(this.gl.canvas);
     }

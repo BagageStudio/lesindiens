@@ -1,10 +1,30 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div class="content-pgb" :class="{ show: scrolling }">
+        <div class="canvas-size" />
+        <div class="content-infos" :class="{ hide: scrolling }">
             <div class="container">
                 <div class="container-small">
                     <div class="content-pad">
+                        <h1 v-if="currentProject">
+                            <div class="title" v-html="projectTitle" />
+                        </h1>
+                        <div class="client detail">
+                            <span class="label detail-inner">Client</span>
+                            <span v-if="currentProject" class="info detail-inner">{{
+                                currentProject.content.name
+                            }}</span>
+                        </div>
+                        <div class="expertises detail">
+                            <span class="label detail-inner">Expertises</span>
+                            <Tags
+                                v-if="currentProject && currentProject.content.expertises"
+                                class="info detail-inner"
+                                :tags="currentProject.content.expertises"
+                            />
+                        </div>
+                    </div>
+                    <div class="progress-bar-container content-pad" :class="{ show: scrolling }">
                         <div class="progress-bar">
                             <div
                                 class="progress-bar-inner"
@@ -19,27 +39,6 @@
                                     width: `${projectWidthPercent}%`,
                                     transform: `translateX(${extraPercentage}%)`
                                 }"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="canvas-size" />
-        <div class="content-infos" :class="{ hide: scrolling }">
-            <div class="container">
-                <div class="container-small">
-                    <div class="content-pad">
-                        <h1 v-if="currentProject" v-html="projectTitle" />
-                        <div class="client detail">
-                            <span class="label">Client</span>
-                            <span v-if="currentProject">{{ currentProject.content.name }}</span>
-                        </div>
-                        <div class="expertises detail">
-                            <span class="label">Expertises</span>
-                            <Tags
-                                v-if="currentProject && currentProject.content.expertises"
-                                :tags="currentProject.content.expertises"
                             />
                         </div>
                     </div>
@@ -167,38 +166,47 @@ export default {
     z-index: -1;
 }
 
-.content-pgb {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    bottom: 10vh;
-    opacity: 0;
-    transition: 0.4s ease-in-out 0.5s;
-    &.show {
-        opacity: 1;
-        transition: 0.2s ease-in-out 0.2s;
-    }
-}
-
 .content-infos {
     flex: 0 0 150px;
     height: 150px;
     margin-bottom: 30px;
-    opacity: 1;
     transition: 0.4s ease-in-out 0.7s;
     h1 {
+        display: inline-block;
         font-family: $telegraf;
         font-weight: 100;
         font-size: 4.2rem;
         line-height: 45px;
         margin-bottom: 30px;
-        ::v-deep br {
-            display: none;
-        }
+        perspective: 1000px;
+        perspective-origin: 50% 50%;
+
+        // transition: 0.4s ease-in-out 0.7s;
     }
     &.hide {
-        opacity: 0;
-        transition: 0.2s ease-in-out;
+        .detail-inner {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.2s ease-in-out;
+        }
+        .title {
+            opacity: 0;
+            transform: rotateX(25deg);
+            transition: 0.2s ease-in-out;
+        }
+    }
+}
+
+.container-small {
+    position: relative;
+}
+
+.title {
+    transform: rotate3d(0);
+    transform-origin: 50% 50% -20px;
+    transition: 0.4s ease-in-out 0.7s;
+    ::v-deep br {
+        display: none;
     }
 }
 
@@ -207,15 +215,49 @@ export default {
     align-items: baseline;
 }
 
+.detail-inner {
+    opacity: 1;
+    transform: translateY(0px);
+    transition: 0.4s ease-out 0.7s;
+}
+
 .client {
     font-size: 1.3rem;
     margin-bottom: 10px;
+    .info {
+        transition-delay: 0.75s;
+    }
+}
+
+.expertises {
+    .label {
+        transition-delay: 0.8s;
+    }
+    .info {
+        transition-delay: 0.85s;
+    }
 }
 
 .label {
     font-size: 1.3rem;
     color: $grey-3;
     margin-right: 10px;
+}
+
+.progress-bar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: 0.4s ease-in-out 0.5s;
+    &.show {
+        opacity: 1;
+        transition: 0.2s ease-in-out 0.2s;
+    }
 }
 
 .progress-bar {
