@@ -294,7 +294,6 @@ class WebglApp {
 
     update(now) {
         // convert to seconds
-        console.log(now);
         now *= 0.001;
 
         this.deltaTime = now - this.previousTime;
@@ -307,8 +306,6 @@ class WebglApp {
         this.scroll.speed.current = round(
             lerp(this.scroll.speed.current, this.scroll.speed.target, this.scroll.speed.ease * this.deltaTime)
         );
-
-        console.log(this.scroll.current, this.scroll.last);
 
         if (this.scroll.current !== this.scroll.last) {
             this.onScrollChange(this.scroll.current, this.medias[0].widthTotal);
