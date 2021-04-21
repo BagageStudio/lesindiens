@@ -10,11 +10,11 @@
                         <div class="project-infos content-pad">
                             <div class="project-info">
                                 <span class="info-title">Client</span>
-                                <span class="info-content">{{ story.content.name }}</span>
+                                <span class="info-content">{{ currentProject.content.name }}</span>
                             </div>
                             <div class="project-info">
                                 <span class="info-title">Expertise</span>
-                                <Tags :tags="story.content.expertises" />
+                                <Tags :tags="currentProject.content.expertises" />
                             </div>
                         </div>
                         <div class="project-song" />
@@ -22,12 +22,12 @@
                 </div>
             </div>
         </div>
-        <FastImage :image="story.content.image" full-width />
+        <FastImage :image="currentProject.content.image" full-width />
         <div class="wrapper-project-details">
             <div class="container">
                 <div class="container-details container-small">
                     <div class="project-details content-pad">
-                        <div v-for="detail in story.content.details" :key="detail._uid" class="project-detail">
+                        <div v-for="detail in currentProject.content.details" :key="detail._uid" class="project-detail">
                             <span class="project-detail-title">{{ detail.title }}</span>
                             <span class="project-detail-content">{{ detail.content }}</span>
                         </div>
@@ -39,20 +39,27 @@
                 </div>
             </div>
         </div>
-        <component :is="module.component" v-for="module in story.content.modules" :key="module.id" :data="module" />
+        <component
+            :is="module.component"
+            v-for="module in currentProject.content.modules"
+            :key="module.id"
+            :data="module"
+        />
+        <LinkedProjects :projects="twoOtherProjects" />
     </div>
 </template>
 
 <script>
 export default {
-    asyncData({ app, $config, error, route }) {
-        return app.$storyapi
-            .get(`cdn/stories/playlist/${route.params.uid}`, {
+    async asyncData({ app, $config, error, route }) {
+        const projects = await app.$storyapi
+            .get('cdn/stories', {
+                starts_with: 'playlist/',
                 version: $config.sBlokVersion,
                 resolve_relations: 'expertises'
             })
             .then(res => {
-                return res.data;
+                return res.data.stories;
             })
             .catch(res => {
                 if (!res.response) {
@@ -63,13 +70,26 @@ export default {
                     error({ statusCode: res.response.status, message: res.response.data });
                 }
             });
+        const currentProject = projects.find(element => element.slug === route.params.uid);
+        const otherProjects = projects.filter(element => element.slug !== route.params.uid);
+        // Randomly pick 2 projects
+        const twoOtherProjects = [];
+        for (let i = 0; i < 2; ) {
+            const random = Math.floor(Math.random() * otherProjects.length);
+            if (twoOtherProjects.includes(otherProjects[random])) {
+                continue;
+            }
+            twoOtherProjects.push(otherProjects[random]);
+            i++;
+        }
+        return { currentProject, twoOtherProjects };
     },
     computed: {
         title() {
-            return this.$storyapi.richTextResolver.render(this.story.content.song_title);
+            return this.$storyapi.richTextResolver.render(this.currentProject.content.song_title);
         },
         intro() {
-            return this.$storyapi.richTextResolver.render(this.story.content.intro);
+            return this.$storyapi.richTextResolver.render(this.currentProject.content.intro);
         }
     }
 };
