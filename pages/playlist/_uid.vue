@@ -40,6 +40,7 @@
             </div>
         </div>
         <component :is="module.component" v-for="module in story.content.modules" :key="module.id" :data="module" />
+        <LinkedProjects />
     </div>
 </template>
 
