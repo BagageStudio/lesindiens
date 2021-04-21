@@ -58,8 +58,6 @@ export default {
             .then(res => res.data.story.content)
             .catch(res => error({ statusCode: 404, message: 'Failed to receive content form api' }));
 
-        console.log(home);
-
         const projects = await app.$storyapi
             .get('cdn/stories', {
                 version: $config.sBlokVersion,
