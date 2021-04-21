@@ -1,7 +1,7 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div class="canvas-size" />
+        <div ref="sizeElement" class="canvas-size" />
         <div class="content-infos" :class="{ hide: scrolling }">
             <div class="container">
                 <div class="container-small">
@@ -106,7 +106,8 @@ export default {
         }));
 
         this.$webgl.init({
-            dom: this.$refs.glWrapper
+            dom: this.$refs.glWrapper,
+            sizeElement: this.$refs.sizeElement
         });
 
         this.currentProject = this.projects[0];
@@ -151,10 +152,9 @@ export default {
 
 .canvas-size {
     width: 100%;
-    max-height: 550px;
     flex: 1 0 auto;
     margin: 50px 0;
-    background-color: rgba(red, 0.2);
+    // background-color: rgba(red, 0.2);
 }
 
 .gl-wrapper {
@@ -191,7 +191,7 @@ export default {
         }
         .title {
             opacity: 0;
-            transform: rotateX(25deg);
+            transform: rotateX(45deg);
             transition: 0.2s ease-in-out;
         }
     }
@@ -202,8 +202,8 @@ export default {
 }
 
 .title {
-    transform: rotate3d(0);
-    transform-origin: 50% 50% -20px;
+    transform: rotateX(0);
+    transform-origin: 50% 100% -20px;
     transition: 0.4s ease-in-out 0.7s;
     ::v-deep br {
         display: none;

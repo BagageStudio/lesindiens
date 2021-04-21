@@ -8,10 +8,12 @@ import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
 export class Media {
-    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height, id }) {
+    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height, id, y }) {
         this.id = id;
         this.hoverValue = 0;
         this.extra = 0;
+
+        this.y = y;
 
         this.geometry = geometry;
         this.gl = gl;
@@ -138,8 +140,11 @@ export class Media {
         }
     }
 
-    onResize({ screen, viewport, width, height } = {}) {
+    onResize({ screen, viewport, width, height, y } = {}) {
         this.extra = 0;
+
+        if (y) this.y = y;
+
         if (screen) {
             this.screen = screen;
         }
@@ -177,5 +182,7 @@ export class Media {
         const offset = this.viewport.width / 2 - this.plane.scale.x / 2 - this.gridOffset;
 
         this.x = this.width * this.index - offset;
+
+        this.plane.position.y = this.y;
     }
 }
