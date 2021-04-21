@@ -2,20 +2,13 @@
     <div class="wrapper-linked-projects">
         <div class="container">
             <div class="container-small">
-                <a href="#" class="linked-project">
-                    <h3 class="linked-project-title content-pad">L'autre Finistère</h3>
+                <nuxt-link v-for="project in projects" :key="project.id" to="#" class="linked-project">
+                    <h3 class="linked-project-title content-pad">{{ project.content.song_title }}</h3>
                     <span class="linked-project-info content-pad">
                         <span class="info-title">Client</span>
-                        <span class="info-content">Pascale Moulinec Céramique</span>
+                        <span class="info-content">{{ project.content.name }}</span>
                     </span>
-                </a>
-                <a href="#" class="linked-project">
-                    <h3 class="linked-project-title content-pad">Born in the U.S.A</h3>
-                    <span class="linked-project-info content-pad">
-                        <span class="info-title">Client</span>
-                        <span class="info-content">MBS Accounting Technology &amp; Advisory</span>
-                    </span>
-                </a>
+                </nuxt-link>
             </div>
         </div>
     </div>
@@ -23,11 +16,9 @@
 
 <script>
 export default {
-    props: {},
-    data: () => ({}),
-    computed: {},
-    watch: {},
-    methods: {}
+    props: {
+        projects: { type: Array, required: true }
+    }
 };
 </script>
 
@@ -92,6 +83,9 @@ export default {
     }
 }
 @media (min-width: $desktop-large) {
+    .linked-project {
+        padding: 110px 0 25px;
+    }
     .linked-project-info {
         flex-direction: row;
         justify-content: flex-start;
