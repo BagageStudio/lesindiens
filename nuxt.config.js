@@ -23,7 +23,8 @@ export default {
     target: 'static',
 
     publicRuntimeConfig: {
-        sBlokVersion: netlifyEnv === 'development' ? 'draft' : 'published',
+        isDevEnv: process.env.NETLIFY_ENV === 'development',
+        sBlokVersion: process.env.SBLOK_VERSION || 'published',
         netlifyEnv: process.env.NETLIFY_ENV
     },
 
