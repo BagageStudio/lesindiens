@@ -27,7 +27,7 @@
                                 :key="link._uid"
                                 class="content-pad menu-item menu-link"
                             >
-                                <nuxt-link :to="link.link.story.full_slug">
+                                <nuxt-link :to="'/' + link.link.story.full_slug">
                                     <span>
                                         {{ link.label }}
                                     </span>
