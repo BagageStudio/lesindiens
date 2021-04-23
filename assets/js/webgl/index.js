@@ -9,18 +9,23 @@ import { Media } from './Media';
 import fxaa from './shaders/fxaa.glsl';
 
 class WebglApp {
-    init({ dom }) {
+    init({ dom, sizeElement }) {
         this.dom = dom;
+
+        this.previousTime = 0;
+        this.deltaTime = 0;
+
+        this.sizeElement = sizeElement;
 
         this.medias = [];
 
         this.scroll = {
-            ease: 0.05,
+            ease: 6.25,
             current: 0,
             target: 0,
             last: 0,
             speed: {
-                ease: 0.08,
+                ease: 10,
                 current: 0,
                 target: 0
             }
@@ -46,7 +51,7 @@ class WebglApp {
 
         this.onResize();
 
-        this.update();
+        window.requestAnimationFrame(this.update.bind(this));
 
         this.addEventListeners();
     }
@@ -190,23 +195,36 @@ class WebglApp {
     }
 
     computePlaneSize() {
-        let size = 500;
+        const { height: sizeFromHeight } = this.sizeElement.getBoundingClientRect();
+
+        let sizeFromWidth = 500;
 
         if (this.screen.width < BREAKPOINTS.s) {
-            size = 280;
+            sizeFromWidth = 280;
         } else if (this.screen.width < BREAKPOINTS.m) {
-            size = 300;
+            sizeFromWidth = 300;
         } else if (this.screen.width < BREAKPOINTS.xl) {
-            size = 350;
+            sizeFromWidth = 350;
         } else if (this.screen.width < BREAKPOINTS.threexl) {
-            size = 450;
+            sizeFromWidth = 450;
         }
+
+        const size = Math.min(sizeFromHeight, sizeFromWidth);
 
         const height = (this.viewport.height * size) / this.screen.height;
         const width = (this.viewport.width * size) / this.screen.width;
+
+        // - half of the window height + (size of header + size of margin) + half height of .canvas-size element
+        const verticalOffset = -this.screen.height / 2 + (116 + 50) + sizeFromHeight / 2;
+
+        const halfScreenIn3DSpace = (this.viewport.height * verticalOffset) / this.screen.height;
+
+        const y = -halfScreenIn3DSpace;
+
         return {
             height,
-            width
+            width,
+            y
         };
     }
 
@@ -233,7 +251,7 @@ class WebglApp {
 
         this.resolution.value.set(this.gl.canvas.width, this.gl.canvas.height);
 
-        const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
+        const { height: planeHeight, width: planeWidth, y } = this.computePlaneSize();
 
         if (this.medias.length) {
             this.medias.forEach(media => {
@@ -241,7 +259,8 @@ class WebglApp {
                     screen: this.screen,
                     viewport: this.viewport,
                     height: planeHeight,
-                    width: planeWidth
+                    width: planeWidth,
+                    y
                 });
             });
             this.onCheckDebounce();
@@ -251,7 +270,7 @@ class WebglApp {
     }
 
     addMedias(medias) {
-        const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
+        const { height: planeHeight, width: planeWidth, y } = this.computePlaneSize();
 
         this.medias = medias.map(({ image, id }, index) => {
             const media = new Media({
@@ -265,20 +284,27 @@ class WebglApp {
                 screen: this.screen,
                 viewport: this.viewport,
                 height: planeHeight,
-                width: planeWidth
+                width: planeWidth,
+                y
             });
 
             return media;
         });
     }
 
-    update() {
-        this.scroll.current = round(lerp(this.scroll.current, this.scroll.target, this.scroll.ease));
+    update(now) {
+        // convert to seconds
+        now *= 0.001;
+
+        this.deltaTime = now - this.previousTime;
+        this.previousTime = now;
+
+        this.scroll.current = round(lerp(this.scroll.current, this.scroll.target, this.scroll.ease * this.deltaTime));
 
         this.scroll.speed.target = round(this.scroll.current - this.scroll.last);
 
         this.scroll.speed.current = round(
-            lerp(this.scroll.speed.current, this.scroll.speed.target, this.scroll.speed.ease)
+            lerp(this.scroll.speed.current, this.scroll.speed.target, this.scroll.speed.ease * this.deltaTime)
         );
 
         if (this.scroll.current !== this.scroll.last) {

@@ -2,7 +2,7 @@
     <div>
         <Header />
         <Nuxt />
-        <Grid v-show="true" />
+        <Grid v-if="$config.isDevEnv" />
         <Svgs />
     </div>
 </template>
