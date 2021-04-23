@@ -28,8 +28,11 @@ body {
 
 .wysiwyg h1,
 .h1 {
-    font-size: 5rem;
-    margin: 0.67em 0;
+    font-family: $telegraf;
+    font-weight: 400;
+    font-size: 3.5rem;
+    line-height: 42px;
+    margin: 0;
 }
 
 .wysiwyg h2,
@@ -60,6 +63,13 @@ body {
 .h6 {
     font-size: 1.8rem;
     margin: 2.33em 0;
+}
+
+.subtitle {
+    font-family: $telegraf;
+    font-weight: 400;
+    font-size: 2.5rem;
+    line-height: 32px;
 }
 
 p {
