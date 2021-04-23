@@ -8,3 +8,8 @@
         </svg>
     </div>
 </template>
+<style lang="scss" scoped>
+.logo {
+    display: flex;
+}
+</style>

@@ -51,8 +51,8 @@
 <script>
 export default {
     async asyncData({ app, $config, error }) {
-        const home = await app.$storyapi
-            .get('cdn/stories/home', {
+        const playlist = await app.$storyapi
+            .get('cdn/stories/playlist', {
                 version: $config.sBlokVersion
             })
             .then(res => res.data.story.content)
@@ -61,7 +61,7 @@ export default {
         const projects = await app.$storyapi
             .get('cdn/stories', {
                 version: $config.sBlokVersion,
-                by_uuids: home.projects.join(','),
+                by_uuids: playlist.projects.join(','),
                 resolve_relations: 'expertises'
             })
             .then(res => res.data.stories)

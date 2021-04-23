@@ -1,5 +1,5 @@
 <template>
-    <a href="#">
+    <a :href="link">
         <span class="text">
             <slot />
         </span>
@@ -14,6 +14,11 @@ export default {
             required: false,
             default: false,
             type: Boolean
+        },
+        link: {
+            type: String,
+            required: false,
+            default: '#'
         }
     }
 };
@@ -27,6 +32,8 @@ export default {
 
 .primary {
     position: relative;
+    display: flex;
+    align-items: center;
     text-decoration: none;
     font-size: 1.5rem;
     padding: 7px 17px;
@@ -40,6 +47,8 @@ export default {
         bottom: 0;
         left: 0;
         right: 0;
+        transform-origin: 70% 50%;
+        transform: rotateZ(-1deg);
         border-radius: 10px;
         border: 1px solid $grey-1;
         background-color: $black;

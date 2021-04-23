@@ -126,6 +126,16 @@ class WebglApp {
         this.scroll.target = this.scroll.position + distance;
     }
 
+    onMouseLeave(event) {
+        if (this.isDown) this.onTouchUp(event);
+
+        // Unselect current hovered project
+        for (let index = 0; index < this.medias.length; index++) {
+            const project = this.medias[index].plane;
+            if (project.isHit) project.isHit = false;
+        }
+    }
+
     onTouchUp(event) {
         this.isDown = false;
 
@@ -339,13 +349,14 @@ class WebglApp {
         window.addEventListener('mousewheel', this.onWheel.bind(this));
         window.addEventListener('wheel', this.onWheel.bind(this));
 
-        window.addEventListener('mousedown', this.onTouchDown.bind(this));
-        window.addEventListener('mousemove', this.onTouchMove.bind(this));
-        window.addEventListener('mouseup', this.onTouchUp.bind(this));
+        this.sizeElement.addEventListener('mousedown', this.onTouchDown.bind(this));
+        this.sizeElement.addEventListener('mousemove', this.onTouchMove.bind(this));
+        this.sizeElement.addEventListener('mouseup', this.onTouchUp.bind(this));
+        this.sizeElement.addEventListener('mouseleave', this.onTouchUp.bind(this));
 
-        window.addEventListener('touchstart', this.onTouchDown.bind(this));
-        window.addEventListener('touchmove', this.onTouchMove.bind(this));
-        window.addEventListener('touchend', this.onTouchUp.bind(this));
+        this.sizeElement.addEventListener('touchstart', this.onTouchDown.bind(this));
+        this.sizeElement.addEventListener('touchmove', this.onTouchMove.bind(this));
+        this.sizeElement.addEventListener('touchend', this.onTouchUp.bind(this));
     }
 }
 
