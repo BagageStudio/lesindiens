@@ -2,6 +2,7 @@
     <div>
         <Header />
         <Nuxt />
+        <CustomCursor />
         <Grid v-if="$config.isDevEnv" />
         <Svgs />
     </div>
@@ -19,11 +20,21 @@ export default {
         this.$stereorepo.superScroll.on('scroll', scrollTop => {
             this.$store.commit('scroll/setScrollTop', scrollTop);
         });
+        window.addEventListener('mousemove', this.mouseMove, false);
     },
     beforeDestroy() {
         // NOTE: Avoiding memory leaks
         this.$stereorepo.superWindow.destroyWindow(this.$store);
         this.$stereorepo.superScroll.destroyScroll();
+    },
+    methods: {
+        mouseMove(e) {
+            if (!this.$store.state.cursor.hasMouse) this.$store.commit('cursor/setHasMouse', true);
+            this.$store.commit('cursor/setMousePos', {
+                x: e.clientX,
+                y: e.clientY
+            });
+        }
     }
 };
 </script>

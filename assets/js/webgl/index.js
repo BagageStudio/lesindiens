@@ -352,7 +352,7 @@ class WebglApp {
         this.sizeElement.addEventListener('mousedown', this.onTouchDown.bind(this));
         this.sizeElement.addEventListener('mousemove', this.onTouchMove.bind(this));
         this.sizeElement.addEventListener('mouseup', this.onTouchUp.bind(this));
-        this.sizeElement.addEventListener('mouseleave', this.onTouchUp.bind(this));
+        this.sizeElement.addEventListener('mouseleave', this.onMouseLeave.bind(this));
 
         this.sizeElement.addEventListener('touchstart', this.onTouchDown.bind(this));
         this.sizeElement.addEventListener('touchmove', this.onTouchMove.bind(this));
