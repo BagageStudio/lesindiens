@@ -2,7 +2,12 @@
     <div class="wrapper-linked-projects">
         <div class="container">
             <div class="container-small">
-                <nuxt-link v-for="project in projects" :key="project.id" to="#" class="linked-project">
+                <nuxt-link
+                    v-for="project in projects"
+                    :key="project.id"
+                    :to="'/' + project.full_slug"
+                    class="linked-project"
+                >
                     <h3 class="linked-project-title content-pad">{{ project.content.song_title }}</h3>
                     <span class="linked-project-info content-pad">
                         <span class="info-title">Client</span>
