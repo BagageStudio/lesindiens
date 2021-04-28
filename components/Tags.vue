@@ -23,6 +23,12 @@ export default {
 .tags {
     display: flex;
     align-items: baseline;
+    &.grey {
+        .tag {
+            color: $black;
+            background-color: $grey-6;
+        }
+    }
 }
 .tag {
     font-family: $object;

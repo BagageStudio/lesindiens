@@ -236,3 +236,25 @@ a {
         font-size: 1.8rem;
     }
 }
+
+@media (min-width: $desktop-small) {
+    .wrapper-cols {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .col-small {
+        width: percentage(2/8);
+    }
+    .col-large {
+        width: percentage(5/8);
+    }
+}
+@media (min-width: $desktop) {
+    .col-small {
+        width: percentage(3/10);
+    }
+    .col-large {
+        width: percentage(6/10);
+    }
+}
