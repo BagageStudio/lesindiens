@@ -76,15 +76,17 @@ class WebglApp {
     }
 
     updateRay(e) {
-        this.mouse.set(2.0 * (e.x / this.renderer.width) - 1.0, 2.0 * (1.0 - e.y / this.renderer.height) - 1.0);
-
-        // Update the ray's origin and direction using the camera and mouse
-        this.raycast.castMouse(this.camera, this.mouse);
-
         const meshes = this.medias.map(m => m.plane);
 
         // Just for the feedback in this example - reset each mesh's hit to false
         meshes.forEach(mesh => (mesh.isHit = false));
+
+        if (this.scrolling) return;
+
+        this.mouse.set(2.0 * (e.x / this.renderer.width) - 1.0, 2.0 * (1.0 - e.y / this.renderer.height) - 1.0);
+
+        // Update the ray's origin and direction using the camera and mouse
+        this.raycast.castMouse(this.camera, this.mouse);
 
         // raycast.intersectBounds will test against the bounds of each mesh, and
         // return an array of intersected meshes in order of closest to farthest
@@ -189,7 +191,7 @@ class WebglApp {
 
         if (this.scroll.target < 0) {
             this.scroll.target = -item;
-            projectIndex = this.medias.length - index;
+            projectIndex = index === 0 ? 0 : this.medias.length - index;
         } else {
             this.scroll.target = item;
             projectIndex = index;
@@ -198,6 +200,7 @@ class WebglApp {
         this.medias.forEach(m => {
             m.plane.isSelected = false;
         });
+
         this.medias[projectIndex].plane.isSelected = true;
         this.onSelected(projectIndex);
         this.selectedProject = projectIndex;
