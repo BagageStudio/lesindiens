@@ -1,11 +1,15 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div ref="sizeElement" class="canvas-size" />
-        <div class="content-infos" :class="{ hide: scrolling }">
+        <div class="container canvas-size-wrapper">
+            <div class="container-small content-pad">
+                <div ref="sizeElement" class="canvas-size" @mouseenter="imIn" @mouseleave="imOut" />
+            </div>
+        </div>
+        <div class="content-infos">
             <div class="container">
                 <div class="container-small">
-                    <div class="content-pad">
+                    <div class="content-pad" :class="{ hide: scrolling }">
                         <h1 v-if="currentProject">
                             <div class="title" v-html="projectTitle" />
                         </h1>
@@ -79,6 +83,9 @@ export default {
         };
     },
     computed: {
+        cursorIcon() {
+            return this.$store.state.cursor.icon;
+        },
         projectTitle() {
             if (!this.currentProject) return '';
             return typeof this.currentProject.content.song_title === 'string'
@@ -118,6 +125,13 @@ export default {
         });
     },
     methods: {
+        imIn() {
+            if (this.cursorIcon !== 'eye') this.$store.commit('cursor/setIcon', 'eye');
+            this.$store.commit('cursor/setShowCursor', true);
+        },
+        imOut() {
+            this.$store.commit('cursor/setShowCursor', false);
+        },
         onScrollStart() {
             this.scrolling = true;
         },
@@ -148,11 +162,18 @@ export default {
     padding-top: 116px;
 }
 
-.canvas-size {
+.canvas-size-wrapper {
+    display: flex;
     width: 100%;
+    min-height: 0;
     flex: 1 0 auto;
     margin: 50px 0;
+}
+.canvas-size {
+    height: 100%;
+    width: 100%;
     // background-color: rgba(red, 0.2);
+    cursor: none;
 }
 
 .gl-wrapper {
