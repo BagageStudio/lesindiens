@@ -244,9 +244,11 @@ a {
         justify-content: space-between;
     }
     .col-small {
+        order: 1;
         width: percentage(2/8);
     }
     .col-large {
+        order: 2;
         width: percentage(5/8);
     }
 }
