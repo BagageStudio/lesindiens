@@ -1,7 +1,7 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div ref="sizeElement" class="canvas-size" :class="{ 'no-cursor': cursorIsShown }" />
+        <div ref="sizeElement" class="canvas-size" :class="{ 'no-cursor': cursorIsShown && !scrolling }" />
 
         <div class="content-infos">
             <div class="container">
@@ -136,6 +136,7 @@ export default {
         },
         onScrollStart() {
             this.scrolling = true;
+            this.hideCursor();
         },
         onSelected(s) {
             this.scrolling = false;
