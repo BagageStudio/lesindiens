@@ -5,7 +5,7 @@
                 <nuxt-link class="content-pad" to="/">
                     <Logo />
                 </nuxt-link>
-                <div class="content-pad">
+                <div v-if="isMobile" class="content-pad">
                     <button class="burger" aria-label="Menu" @click="toggleMenuMobile">
                         <div class="burger-inner lines" :class="{ show: !showMenuMobile }">
                             <span />
@@ -19,8 +19,9 @@
                         </div>
                     </button>
                 </div>
+
                 <transition name="menu" :duration="{ enter: 900, leave: 600 }">
-                    <div v-show="showMenuMobile" class="menu">
+                    <div v-if="isMobile" v-show="showMenuMobile" class="menu">
                         <div class="menu-inner">
                             <div
                                 v-for="(link, index) in content.header_links"
@@ -42,6 +43,22 @@
                         </div>
                     </div>
                 </transition>
+
+                <div v-if="!isMobile" class="menu-desktop content-pad">
+                    <div v-for="(link, index) in content.header_links" :key="link._uid">
+                        <nuxt-link :to="'/' + link.link.story.full_slug" class="desktop-link">
+                            <span>
+                                {{ link.label }}
+                            </span>
+                            <span v-if="index === 0" class="number">{{ numberProjects }}</span></nuxt-link
+                        >
+                    </div>
+                </div>
+                <div v-if="!isMobile" class="content-pad">
+                    <Button icon class="primary desktop-email-link" :link="`mailto:${content.email.email}`">
+                        {{ content.email.email }}
+                    </Button>
+                </div>
             </div>
         </div>
     </div>
@@ -300,7 +317,6 @@ export default {
     }
 }
 .number {
-    font-family: $object;
     color: #9e9e9e;
     font-size: 2rem;
 }
@@ -353,6 +369,24 @@ export default {
         }
         &:nth-child(3) {
             transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+    }
+}
+
+@media (min-width: $desktop-small) {
+    .menu-desktop {
+        display: flex;
+        align-items: center;
+    }
+    .desktop-link {
+        display: flex;
+        font-size: 1.6rem;
+        font-family: $telegraf;
+        margin: 0 25px;
+        text-decoration: none;
+        .number {
+            font-size: 1.2rem;
+            margin-top: 2px;
         }
     }
 }
