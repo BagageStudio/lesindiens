@@ -70,6 +70,8 @@ export class Media {
             program: this.program
         });
 
+        if (this.index === 0) this.plane.isSelected = true;
+
         this.plane.setParent(this.scene);
     }
 
@@ -115,6 +117,9 @@ export class Media {
         const depth = horizontalPos * -10;
         const dark = this.computeDark(horizontalPos);
         const transparency = this.computeTransparency(horizontalPos);
+
+        if (transparency > 0.5 && !this.plane.isTransparent) this.plane.isTransparent = true;
+        if (transparency < 0.1 && this.plane.isTransparent) this.plane.isTransparent = false;
 
         this.plane.position.z = depth;
 
