@@ -1,15 +1,12 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div class="container canvas-size-wrapper">
-            <div class="container-small content-pad">
-                <div ref="sizeElement" class="canvas-size" @mouseenter="imIn" @mouseleave="imOut" />
-            </div>
-        </div>
+        <div ref="sizeElement" class="canvas-size" :class="{ 'no-cursor': cursorIsShown }" />
+
         <div class="content-infos">
             <div class="container">
                 <div class="container-small">
-                    <div class="content-pad" :class="{ hide: scrolling }">
+                    <div class="content-pad infos" :class="{ hide: scrolling }">
                         <h1 v-if="currentProject">
                             <div class="title" v-html="projectTitle" />
                         </h1>
@@ -79,7 +76,8 @@ export default {
         return {
             percentage: 0,
             scrolling: false,
-            currentProject: null
+            currentProject: null,
+            cursorIsShown: false
         };
     },
     computed: {
@@ -120,17 +118,21 @@ export default {
         this.$webgl.onSelected = this.onSelected;
         this.$webgl.onScrollChange = this.onScrollChange;
         this.$webgl.onScrollStart = this.onScrollStart;
+        this.$webgl.showCursor = this.showCursor;
+        this.$webgl.hideCursor = this.hideCursor;
         this.$nextTick(() => {
             this.$webgl.addMedias([...projects, ...projects, ...projects]);
         });
     },
     methods: {
-        imIn() {
+        showCursor() {
             if (this.cursorIcon !== 'eye') this.$store.commit('cursor/setIcon', 'eye');
             this.$store.commit('cursor/setShowCursor', true);
+            this.cursorIsShown = true;
         },
-        imOut() {
+        hideCursor() {
             this.$store.commit('cursor/setShowCursor', false);
+            this.cursorIsShown = false;
         },
         onScrollStart() {
             this.scrolling = true;
@@ -163,17 +165,18 @@ export default {
 }
 
 .canvas-size-wrapper {
-    display: flex;
     width: 100%;
     min-height: 0;
-    flex: 1 0 auto;
-    margin: 50px 0;
 }
 .canvas-size {
-    height: 100%;
+    display: flex;
     width: 100%;
-    // background-color: rgba(red, 0.2);
-    cursor: none;
+    cursor: grab;
+    flex: 1 0 auto;
+    margin: 50px 0;
+    &.no-cursor {
+        cursor: none;
+    }
 }
 
 .gl-wrapper {
@@ -202,6 +205,9 @@ export default {
 
         // transition: 0.4s ease-in-out 0.7s;
     }
+}
+
+.infos {
     &.hide {
         .detail-inner {
             opacity: 0;

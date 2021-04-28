@@ -41,6 +41,10 @@ class WebglApp {
         this.onScrollChange = null;
         this.onScrollEnd = null;
         this.onScrollStart = null;
+        this.showCursor = null;
+        this.hideCursor = null;
+
+        this.selectedProject = 0;
 
         this.createRenderer();
         this.createCamera();
@@ -99,8 +103,25 @@ class WebglApp {
         // if (hits.length) console.log(hits[0].hit.uv);
 
         // Update our feedback using this array
-        // hits.forEach(mesh => (mesh.isHit = true));
-        if (hits[0]) hits[0].isHit = true;
+
+        const updateHovered = index => {
+            if (!hits[index]) {
+                this.hideCursor();
+                return;
+            }
+            if (hits[index].isTransparent) {
+                updateHovered(index + 1);
+            } else {
+                hits[index].isHit = true;
+                if (hits[index].isSelected) {
+                    this.showCursor();
+                } else {
+                    this.hideCursor();
+                }
+            }
+        };
+
+        updateHovered(0);
     }
 
     onTouchDown(event) {
@@ -174,7 +195,12 @@ class WebglApp {
             projectIndex = index;
         }
 
+        this.medias.forEach(m => {
+            m.plane.isSelected = false;
+        });
+        this.medias[projectIndex].plane.isSelected = true;
         this.onSelected(projectIndex);
+        this.selectedProject = projectIndex;
     }
 
     createRenderer() {
