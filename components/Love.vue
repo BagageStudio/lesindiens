@@ -1,15 +1,14 @@
 <template>
-    <div class="work">
+    <div class="love">
         <div class="container">
             <div class="container-small">
-                <div class="work-content">
-                    <h4 class="work-title content-pad" v-html="resolveRichText(data.work_title)" />
+                <div class="love-content">
                     <div class="wrapper-cols">
-                        <SidebarItems v-if="isL" class="col-small content-pad" :data="data.work_sidebar_items" />
+                        <div class="col-small content-pad">
+                            <h4 class="love-title" v-html="resolveRichText(data.love_title)" />
+                        </div>
                         <div class="col-large content-pad">
-                            <div class="work-intro" v-html="resolveRichText(data.work_intro)" />
-                            <SidebarItems v-if="!isL" :data="data.work_sidebar_items" />
-                            <Values :data="data.values" />
+                            <div class="love-intro" v-html="resolveRichText(data.love_intro)" />
                         </div>
                     </div>
                 </div>
@@ -40,10 +39,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.work {
-    padding: 60px 0 100px;
+.love {
+    padding: 60px 0;
+    color: $black;
+    background-color: $white;
 }
-.work-content {
+.love-content {
     position: relative;
     padding: 36px 0 0;
     &::before {
@@ -52,58 +53,48 @@ export default {
         top: 0;
         left: $gutter;
         right: $gutter;
-        border-top: 1px solid $grey-2;
+        border-top: 1px solid $grey-5;
     }
 }
-.work-title {
+.love-title {
     font-family: $telegraf;
     font-weight: 400;
-    font-size: 3.5rem;
-    line-height: 42px;
+    font-size: 2.5rem;
+    line-height: 32px;
     margin-bottom: 28px;
+    :v-deep br {
+        display: none;
+    }
 }
-.work-intro {
+.love-intro {
     font-family: $object;
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 1.6rem;
     line-height: 30px;
     margin-bottom: 30px;
 }
-@media (min-width: $tablet) {
-    .work-title {
-        font-size: 6rem;
-        line-height: 60px;
-    }
-}
 @media (min-width: $desktop-small) {
-    .work {
+    .love {
         padding: 100px 0;
     }
-    .work-content {
+    .love-content {
         padding-top: 45px;
     }
-    .work-title {
-        font-size: 8rem;
-        line-height: 80px;
-        margin-bottom: 40px;
-    }
-    .work-intro {
-        margin-bottom: 0;
+    .love-title {
+        font-size: 3.5rem;
+        line-height: 42px;
+        margin-bottom: 30px;
+        :v-deep br {
+            display: block;
+        }
     }
 }
 @media (min-width: $desktop) {
-    .work {
+    .love {
         padding: 160px 0;
     }
-    .work-content {
+    .love-content {
         padding-top: 80px;
-    }
-}
-@media (min-width: $desktop-xxl) {
-    .work-title {
-        font-size: 12rem;
-        line-height: 120px;
-        margin-bottom: 80px;
     }
 }
 </style>

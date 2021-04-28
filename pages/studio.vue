@@ -10,6 +10,7 @@
         </div>
         <Services :data="services" />
         <Work :data="studio" />
+        <Love :data="studio" />
     </div>
 </template>
 
