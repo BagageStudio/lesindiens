@@ -4,12 +4,15 @@
             <div class="container">
                 <div class="container-small">
                     <div class="service-content">
-                        <div class="service-title-intro">
-                            <h3 class="service-title content-pad">{{ service.title }}</h3>
-                            <div class="service-intro content-pad" v-html="resolveRichText(service.intro)" />
+                        <div class="wrapper-cols service-title-intro">
+                            <h3 class="service-title col-small content-pad">{{ service.title }}</h3>
+                            <div class="col-large content-pad" v-html="resolveRichText(service.intro)" />
                         </div>
-                        <div class="service-sidebar-projects">
-                            <SidebarItems class="content-pad" :data="service.sidebar_items" />
+                        <div class="wrapper-cols service-sidebar-projects">
+                            <SidebarItems class="col-small content-pad" :data="service.sidebar_items" />
+                            <div class="col-large content-pad">
+                                <Projects :data="service.projects" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -69,25 +72,19 @@ export default {
 }
 
 @media (min-width: $desktop-small) {
+    .service {
+        padding: 100px 0;
+    }
     .service-title-intro {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
         padding-top: 45px;
-    }
-    .service-title {
-        width: percentage(2/8);
-    }
-    .service-intro {
-        width: percentage(5/8);
     }
 }
 @media (min-width: $desktop) {
-    .service-title {
-        width: percentage(3/10);
+    .service {
+        padding: 160px 0;
     }
-    .service-intro {
-        width: percentage(6/10);
+    .service-content {
+        padding-top: 80px;
     }
 }
 </style>

@@ -3,38 +3,50 @@
         <div class="studio-hero">
             <div class="container">
                 <div class="container-small">
-                    <h1 class="h1 content-pad">{{ story.content.title }}</h1>
+                    <h1 class="h1 content-pad">{{ studio.title }}</h1>
                     <div class="subtitle studio-subtitle content-pad" v-html="subtitle" />
                 </div>
             </div>
         </div>
-        <Services :data="story.content.services" />
+        <Services :data="services" />
+        <Work :data="studio" />
     </div>
 </template>
 
 <script>
 export default {
-    asyncData({ app, $config, error }) {
-        return app.$storyapi
+    async asyncData({ app, $config, error }) {
+        const studio = await app.$storyapi
             .get('cdn/stories/studio', {
-                version: $config.sBlokVersion
+                version: $config.sBlokVersion,
+                resolve_relations: 'service.projects'
             })
-            .then(res => {
-                return res.data;
-            })
-            .catch(res => {
-                if (!res.response) {
-                    console.error(res);
-                    error({ statusCode: 404, message: 'Failed to receive content form api' });
-                } else {
-                    console.error(res.response.data);
-                    error({ statusCode: res.response.status, message: res.response.data });
-                }
+            .then(res => res.data.story.content)
+            .catch(res => error({ statusCode: 404, message: 'Failed to receive content form api' }));
+
+        const services = studio.services.map(service => {
+            service.projects.map(async project => {
+                const expertises = await app.$storyapi
+                    .get('cdn/stories', {
+                        version: $config.sBlokVersion,
+                        by_uuids: project.content.expertises.join(',')
+                    })
+                    .then(res => res.data.stories)
+                    .catch(res => {
+                        console.error(res);
+                        error({ statusCode: 404, message: 'Failed to receive content form api' });
+                    });
+                project.content.expertises = expertises;
+                return project;
             });
+            return service;
+        });
+
+        return { studio, services };
     },
     computed: {
         subtitle() {
-            return this.$storyapi.richTextResolver.render(this.story.content.subtitle);
+            return this.$storyapi.richTextResolver.render(this.studio.subtitle);
         }
     }
 };
