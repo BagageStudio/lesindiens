@@ -47,11 +47,15 @@
                 <div v-if="!isMobile" class="menu-desktop content-pad">
                     <div v-for="(link, index) in content.header_links" :key="link._uid">
                         <nuxt-link :to="'/' + link.link.story.full_slug" class="desktop-link">
-                            <span>
-                                {{ link.label }}
+                            <span class="front">
+                                <span v-html="$options.filters.split(link.label)" />
+                                <span v-if="index === 0" class="number">{{ numberProjects }}</span>
                             </span>
-                            <span v-if="index === 0" class="number">{{ numberProjects }}</span></nuxt-link
-                        >
+                            <span class="back">
+                                <span v-html="$options.filters.split(link.label)" />
+                                <span v-if="index === 0" class="number">{{ numberProjects }}</span>
+                            </span>
+                        </nuxt-link>
                     </div>
                 </div>
                 <div v-if="!isMobile" class="content-pad">
@@ -91,7 +95,8 @@ export default {
         return {
             content: {},
             numberProjects: 0,
-            showMenuMobile: false
+            showMenuMobile: false,
+            animateCharsTimeline: null
         };
     },
     computed: {
@@ -123,6 +128,44 @@ export default {
             } else {
                 document.documentElement.classList.remove('no-scroll');
             }
+        },
+        mouseEnterLink(e) {
+            const letterFront = e.target.querySelectorAll('.front .letter');
+            const letterBack = e.target.querySelectorAll('.back .letter');
+            this.animateCharsTimeline = gsap
+                .timeline()
+                .to(letterFront, {
+                    rotationX: -90,
+                    opacity: 0,
+
+                    duration: 0.6
+                })
+                .fromTo(
+                    letterBack,
+                    { rotationX: 90, opacity: 0 },
+                    {
+                        rotationX: 0,
+                        opacity: 1,
+                        duration: 0.6
+                    },
+                    0
+                );
+        },
+        mouseLeaveLink(e) {
+            if (this.animateCharsTimeline) this.animateCharsTimeline.kill();
+            const letterFront = e.target.querySelectorAll('.front .letter');
+            const letterBack = e.target.querySelectorAll('.back .letter');
+
+            this.animateCharsTimeline = gsap
+                .timeline()
+                .set(letterBack, {
+                    rotationX: 90,
+                    opacity: 0
+                })
+                .set(letterFront, {
+                    rotationX: 0,
+                    opacity: 1
+                });
         }
     }
 };
@@ -379,14 +422,56 @@ export default {
         align-items: center;
     }
     .desktop-link {
-        display: flex;
+        display: block;
+        position: relative;
         font-size: 1.6rem;
         font-family: $telegraf;
         margin: 0 25px;
         text-decoration: none;
+        > span {
+            display: flex;
+            perspective: 100px;
+        }
         .number {
             font-size: 1.2rem;
             margin-top: 2px;
+        }
+        ::v-deep .letter {
+            display: inline-block;
+            transform-origin: 100% 50% -8px;
+            transition: 0.4s ease-in-out;
+            // background-color: red;
+        }
+
+        .front {
+            // opacity: 0;
+            ::v-deep .letter {
+                transform: rotateX(0);
+            }
+        }
+
+        .back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            ::v-deep .letter {
+                opacity: 0;
+                transform: rotateX(90deg);
+            }
+        }
+        &:hover {
+            .front {
+                ::v-deep .letter {
+                    opacity: 0;
+                    transform: rotateX(-90deg);
+                }
+            }
+            .back {
+                ::v-deep .letter {
+                    opacity: 1;
+                    transform: rotateX(0);
+                }
+            }
         }
     }
 }

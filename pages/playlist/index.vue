@@ -1,8 +1,12 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div ref="sizeElement" class="canvas-size" :class="{ 'no-cursor': cursorIsShown && !scrolling }" />
-
+        <div
+            ref="sizeElement"
+            class="canvas-size"
+            :class="{ 'no-cursor': cursorIsShown && !scrolling }"
+            @mouseleave="hideCursor"
+        />
         <div class="content-infos">
             <div class="container">
                 <div class="container-small">
