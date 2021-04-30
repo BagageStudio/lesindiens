@@ -440,11 +440,9 @@ export default {
             display: inline-block;
             transform-origin: 100% 50% -8px;
             transition: 0.4s ease-in-out;
-            // background-color: red;
         }
 
         .front {
-            // opacity: 0;
             .label {
                 transform: rotateX(0);
             }

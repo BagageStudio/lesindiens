@@ -132,6 +132,7 @@ export default {
     methods: {
         goToProject(projectSelected) {
             const project = this.projects.find(p => projectSelected.id === p.id);
+            this.hideCursor();
             this.$router.push(`/${project.full_slug}`);
         },
         showCursor() {
