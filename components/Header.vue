@@ -48,11 +48,11 @@
                     <div v-for="(link, index) in content.header_links" :key="link._uid">
                         <nuxt-link :to="'/' + link.link.story.full_slug" class="desktop-link">
                             <span class="front">
-                                <span v-html="$options.filters.split(link.label)" />
+                                <span class="label">{{ link.label }}</span>
                                 <span v-if="index === 0" class="number">{{ numberProjects }}</span>
                             </span>
                             <span class="back">
-                                <span v-html="$options.filters.split(link.label)" />
+                                <span class="label">{{ link.label }}</span>
                                 <span v-if="index === 0" class="number">{{ numberProjects }}</span>
                             </span>
                         </nuxt-link>
@@ -436,7 +436,7 @@ export default {
             font-size: 1.2rem;
             margin-top: 2px;
         }
-        ::v-deep .letter {
+        .label {
             display: inline-block;
             transform-origin: 100% 50% -8px;
             transition: 0.4s ease-in-out;
@@ -445,7 +445,7 @@ export default {
 
         .front {
             // opacity: 0;
-            ::v-deep .letter {
+            .label {
                 transform: rotateX(0);
             }
         }
@@ -454,20 +454,20 @@ export default {
             position: absolute;
             top: 0;
             left: 0;
-            ::v-deep .letter {
+            .label {
                 opacity: 0;
                 transform: rotateX(90deg);
             }
         }
         &:hover {
             .front {
-                ::v-deep .letter {
+                .label {
                     opacity: 0;
                     transform: rotateX(-90deg);
                 }
             }
             .back {
-                ::v-deep .letter {
+                .label {
                     opacity: 1;
                     transform: rotateX(0);
                 }
