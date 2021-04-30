@@ -40,6 +40,8 @@ export default {
 .wrapper-img {
     position: relative;
     background: $grey-5;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transition: clip-path 0.2s ease-in-out;
     &::before {
         content: '';
         display: block;
@@ -61,6 +63,11 @@ export default {
     text-decoration: none;
     &:nth-child(n + 2) {
         display: none;
+    }
+    &:hover {
+        .wrapper-img {
+            clip-path: polygon(0 28px, 100% 0, 100% 100%, 0 calc(100% - 20px));
+        }
     }
 }
 .project-details {
