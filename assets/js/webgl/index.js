@@ -43,8 +43,12 @@ class WebglApp {
         this.onScrollStart = null;
         this.showCursor = null;
         this.hideCursor = null;
+        this.goToProject = null;
 
-        this.selectedProject = 0;
+        this.isClicked = false;
+        this.cursorOnSelected = false;
+
+        this.selectedProject = null;
 
         this.createRenderer();
         this.createCamera();
@@ -109,6 +113,8 @@ class WebglApp {
         const updateHovered = index => {
             if (!hits[index]) {
                 this.hideCursor();
+                this.cursorOnSelected = false;
+                this.hoveredProject = null;
                 return;
             }
             if (hits[index].isTransparent) {
@@ -116,10 +122,13 @@ class WebglApp {
             } else {
                 hits[index].isHit = true;
                 if (hits[index].isSelected) {
+                    this.cursorOnSelected = true;
                     this.showCursor();
                 } else {
                     this.hideCursor();
+                    this.cursorOnSelected = false;
                 }
+                this.hoveredProject = hits[index];
             }
         };
 
@@ -128,6 +137,7 @@ class WebglApp {
 
     onTouchDown(event) {
         this.isDown = true;
+        this.isClicked = true;
 
         this.scroll.position = this.scroll.current;
         this.start = event.touches ? event.touches[0].clientX : event.clientX;
@@ -135,6 +145,7 @@ class WebglApp {
 
     onTouchMove(event) {
         this.updateRay(event);
+        this.isClicked = false;
 
         if (!this.isDown) return;
 
@@ -162,7 +173,23 @@ class WebglApp {
     onTouchUp(event) {
         this.isDown = false;
 
+        this.checkClick();
+
         this.onCheck();
+    }
+
+    selectProject(p) {
+        console.log(p);
+    }
+
+    checkClick() {
+        if (!this.isClicked) return;
+        this.isClicked = false;
+        if (this.cursorOnSelected) {
+            this.goToProject(this.selectedProject);
+        } else if (this.hoveredProject) {
+            this.selectProject(this.hoveredProject);
+        }
     }
 
     onWheel(event) {
@@ -203,7 +230,7 @@ class WebglApp {
 
         this.medias[projectIndex].plane.isSelected = true;
         this.onSelected(projectIndex);
-        this.selectedProject = projectIndex;
+        this.selectedProject = this.medias[projectIndex];
     }
 
     createRenderer() {
@@ -329,6 +356,8 @@ class WebglApp {
 
             return media;
         });
+
+        this.selectedProject = this.medias[0];
     }
 
     update(now) {

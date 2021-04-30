@@ -1,8 +1,12 @@
 <template>
     <div class="playlist">
         <div ref="glWrapper" class="gl-wrapper" />
-        <div ref="sizeElement" class="canvas-size" :class="{ 'no-cursor': cursorIsShown && !scrolling }" />
-
+        <div
+            ref="sizeElement"
+            class="canvas-size"
+            :class="{ 'no-cursor': cursorIsShown && !scrolling }"
+            @mouseleave="hideCursor"
+        />
         <div class="content-infos">
             <div class="container">
                 <div class="container-small">
@@ -120,11 +124,16 @@ export default {
         this.$webgl.onScrollStart = this.onScrollStart;
         this.$webgl.showCursor = this.showCursor;
         this.$webgl.hideCursor = this.hideCursor;
+        this.$webgl.goToProject = this.goToProject;
         this.$nextTick(() => {
             this.$webgl.addMedias([...projects, ...projects, ...projects]);
         });
     },
     methods: {
+        goToProject(projectSelected) {
+            const project = this.projects.find(p => projectSelected.id === p.id);
+            this.$router.push(`/${project.full_slug}`);
+        },
         showCursor() {
             if (this.cursorIcon !== 'eye') this.$store.commit('cursor/setIcon', 'eye');
             this.$store.commit('cursor/setShowCursor', true);
