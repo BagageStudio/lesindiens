@@ -9,6 +9,17 @@
                         </div>
                         <div class="col-large content-pad">
                             <div class="love-intro" v-html="resolveRichText(data.love_intro)" />
+                            <div class="love-projects">
+                                <div v-for="project in data.love_projects" :key="project._uid" class="love-project">
+                                    <component
+                                        :is="project.link ? 'nuxt-link' : 'div'"
+                                        :to="project.link ? project.link.full_slug : ''"
+                                        class="love-project-content"
+                                    >
+                                        <span class="project-name">{{ project.label }}</span>
+                                    </component>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,6 +84,35 @@ export default {
     line-height: 30px;
     margin-bottom: 30px;
 }
+.love-projects {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    width: calc(100% + #{2 * $gutter});
+    margin-left: -$gutter;
+}
+.love-project {
+    width: calc(50% - #{2 * $gutter});
+    margin: 0 #{$gutter} 5px;
+    &:nth-last-child(-n + 2) {
+        margin-bottom: 0;
+    }
+}
+.love-project-content {
+    display: inline-flex;
+    max-width: 100%;
+    text-decoration: none;
+}
+.project-name {
+    font-family: $object;
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media (min-width: $desktop-small) {
     .love {
         padding: 100px 0;
@@ -95,6 +135,12 @@ export default {
     }
     .love-content {
         padding-top: 80px;
+    }
+}
+@media (min-width: $desktop-large) {
+    .project-name {
+        font-size: 2.5rem;
+        line-height: 32px;
     }
 }
 </style>
