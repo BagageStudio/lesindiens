@@ -12,6 +12,8 @@ class WebglApp {
     init({ dom, sizeElement }) {
         this.dom = dom;
 
+        this.disabled = false;
+
         this.previousTime = 0;
         this.deltaTime = 0;
 
@@ -194,11 +196,10 @@ class WebglApp {
         const { index: selectedIndex } = this.selectedProject;
         const { index, width } = this.medias.find(m => m.plane.id === p.id);
 
+        if (selectedIndex === index) return;
         const offsetIndex =
             index - selectedIndex > 0 ? index - selectedIndex : this.medias.length - selectedIndex + index;
-        // const offsetIndex = index - selectedIndex < 0 ? : index - selectedIndex;
 
-        console.log(selectedIndex, index);
         this.canShowCursor = false;
         this.scroll.target += offsetIndex * width;
     }
@@ -403,6 +404,7 @@ class WebglApp {
         } else if (!this.scrollEnded) {
             this.scrollEnded = true;
             if (!this.canShowCursor) this.canShowCursor = true;
+            this.updateRay(this.mousePos);
             if (this.onScrollEnd) this.onScrollEnd();
         }
 
@@ -423,7 +425,7 @@ class WebglApp {
             camera: this.camera
         });
 
-        window.requestAnimationFrame(this.update.bind(this));
+        if (!this.disabled) window.requestAnimationFrame(this.update.bind(this));
     }
 
     addEventListeners() {
@@ -440,6 +442,51 @@ class WebglApp {
         this.sizeElement.addEventListener('touchstart', this.onTouchDown.bind(this));
         this.sizeElement.addEventListener('touchmove', this.onTouchMove.bind(this));
         this.sizeElement.addEventListener('touchend', this.onTouchUp.bind(this));
+    }
+
+    removeEventListeners() {
+        window.removeEventListener('resize', this.onResize.bind(this));
+
+        window.removeEventListener('mousewheel', this.onWheel.bind(this));
+        window.removeEventListener('wheel', this.onWheel.bind(this));
+
+        this.sizeElement.removeEventListener('mousedown', this.onTouchDown.bind(this));
+        this.sizeElement.removeEventListener('mousemove', this.onTouchMove.bind(this));
+        this.sizeElement.removeEventListener('mouseup', this.onTouchUp.bind(this));
+        this.sizeElement.removeEventListener('mouseleave', this.onMouseLeave.bind(this));
+
+        this.sizeElement.removeEventListener('touchstart', this.onTouchDown.bind(this));
+        this.sizeElement.removeEventListener('touchmove', this.onTouchMove.bind(this));
+        this.sizeElement.removeEventListener('touchend', this.onTouchUp.bind(this));
+    }
+
+    disable() {
+        this.disabled = true;
+        this.removeEventListeners();
+    }
+
+    enable({ dom, sizeElement }) {
+        this.disabled = false;
+
+        this.dom = dom;
+        this.sizeElement = sizeElement;
+        this.scroll = {
+            ease: 6.25,
+            current: 0,
+            target: 0,
+            last: 0,
+            speed: {
+                ease: 10,
+                current: 0,
+                target: 0
+            }
+        };
+
+        this.dom.appendChild(this.gl.canvas);
+
+        this.onResize();
+        window.requestAnimationFrame(this.update.bind(this));
+        this.addEventListeners();
     }
 }
 

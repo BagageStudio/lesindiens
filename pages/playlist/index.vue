@@ -107,32 +107,51 @@ export default {
         }
     },
     mounted() {
-        const projects = this.projects.map(p => ({
-            id: p.id,
-            image: p.content.image.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
-        }));
+        if (!this.$webgl.dom) {
+            this.initializeSlider();
+        } else {
+            this.setCallbackMethods();
 
-        this.$webgl.init({
-            dom: this.$refs.glWrapper,
-            sizeElement: this.$refs.sizeElement
-        });
-
-        this.currentProject = this.projects[0];
-
-        this.$webgl.onSelected = this.onSelected;
-        this.$webgl.onScrollChange = this.onScrollChange;
-        this.$webgl.onScrollStart = this.onScrollStart;
-        this.$webgl.showCursor = this.showCursor;
-        this.$webgl.hideCursor = this.hideCursor;
-        this.$webgl.goToProject = this.goToProject;
-        this.$nextTick(() => {
-            this.$webgl.addMedias([...projects, ...projects, ...projects]);
-        });
+            this.$webgl.enable({
+                dom: this.$refs.glWrapper,
+                sizeElement: this.$refs.sizeElement
+            });
+        }
+    },
+    beforeDestroy() {
+        this.hideCursor();
+        this.$webgl.disable();
     },
     methods: {
+        setCallbackMethods() {
+            this.$webgl.onSelected = this.onSelected;
+            this.$webgl.onScrollChange = this.onScrollChange;
+            this.$webgl.onScrollStart = this.onScrollStart;
+            this.$webgl.showCursor = this.showCursor;
+            this.$webgl.hideCursor = this.hideCursor;
+            this.$webgl.goToProject = this.goToProject;
+        },
+        initializeSlider() {
+            const projects = this.projects.map(p => ({
+                id: p.id,
+                image: p.content.image.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
+            }));
+
+            this.$webgl.init({
+                dom: this.$refs.glWrapper,
+                sizeElement: this.$refs.sizeElement
+            });
+
+            this.currentProject = this.projects[0];
+
+            this.setCallbackMethods();
+
+            this.$nextTick(() => {
+                this.$webgl.addMedias([...projects, ...projects, ...projects]);
+            });
+        },
         goToProject(projectSelected) {
             const project = this.projects.find(p => projectSelected.id === p.id);
-            this.hideCursor();
             this.$router.push(`/${project.full_slug}`);
         },
         showCursor() {

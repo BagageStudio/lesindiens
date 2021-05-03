@@ -18,7 +18,7 @@ export class Media {
         this.geometry = geometry;
         this.gl = gl;
         this.image = image;
-        console.log(index);
+
         this.index = index;
         this.length = length;
         this.scene = scene;
