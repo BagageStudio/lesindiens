@@ -18,7 +18,7 @@ export class Media {
         this.geometry = geometry;
         this.gl = gl;
         this.image = image;
-
+        console.log(index);
         this.index = index;
         this.length = length;
         this.scene = scene;
@@ -71,6 +71,7 @@ export class Media {
         });
 
         if (this.index === 0) this.plane.isSelected = true;
+        this.plane.mediaId = this.id;
 
         this.plane.setParent(this.scene);
     }

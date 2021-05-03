@@ -31,7 +31,13 @@ class WebglApp {
             }
         };
 
+        this.mousePos = {
+            x: 0,
+            y: 0
+        };
+
         this.scrolling = false;
+        this.scrollEnded = true;
 
         this.resolution = { value: new Vec2() };
 
@@ -45,6 +51,7 @@ class WebglApp {
         this.hideCursor = null;
         this.goToProject = null;
 
+        this.canShowCursor = true;
         this.isClicked = false;
         this.cursorOnSelected = false;
 
@@ -80,6 +87,10 @@ class WebglApp {
     }
 
     updateRay(e) {
+        this.mousePos = {
+            y: e.y,
+            x: e.x
+        };
         const meshes = this.medias.map(m => m.plane);
 
         // Just for the feedback in this example - reset each mesh's hit to false
@@ -122,8 +133,10 @@ class WebglApp {
             } else {
                 hits[index].isHit = true;
                 if (hits[index].isSelected) {
-                    this.cursorOnSelected = true;
-                    this.showCursor();
+                    if (this.canShowCursor) {
+                        this.cursorOnSelected = true;
+                        this.showCursor();
+                    }
                 } else {
                     this.hideCursor();
                     this.cursorOnSelected = false;
@@ -174,12 +187,20 @@ class WebglApp {
         this.isDown = false;
 
         this.checkClick();
-
         this.onCheck();
     }
 
     selectProject(p) {
-        console.log(p);
+        const { index: selectedIndex } = this.selectedProject;
+        const { index, width } = this.medias.find(m => m.plane.id === p.id);
+
+        const offsetIndex =
+            index - selectedIndex > 0 ? index - selectedIndex : this.medias.length - selectedIndex + index;
+        // const offsetIndex = index - selectedIndex < 0 ? : index - selectedIndex;
+
+        console.log(selectedIndex, index);
+        this.canShowCursor = false;
+        this.scroll.target += offsetIndex * width;
     }
 
     checkClick() {
@@ -376,9 +397,13 @@ class WebglApp {
         );
 
         if (this.scroll.current !== this.scroll.last) {
+            this.scrollEnded = false;
+            this.updateRay(this.mousePos);
             this.onScrollChange(this.scroll.current, this.medias[0].widthTotal);
-        } else if (this.onScrollEnd) {
-            this.onScrollEnd();
+        } else if (!this.scrollEnded) {
+            this.scrollEnded = true;
+            if (!this.canShowCursor) this.canShowCursor = true;
+            if (this.onScrollEnd) this.onScrollEnd();
         }
 
         if (this.scroll.current > this.scroll.last) {
