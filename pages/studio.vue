@@ -27,7 +27,7 @@ export default {
         const studio = await app.$storyapi
             .get('cdn/stories/studio', {
                 version: $config.sBlokVersion,
-                resolve_relations: 'service.projects'
+                resolve_relations: 'service.projects,love_project.link'
             })
             .then(res => res.data.story.content)
             .catch(res => error({ statusCode: 404, message: 'Failed to receive content form api' }));
