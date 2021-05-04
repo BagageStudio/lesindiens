@@ -211,6 +211,13 @@ class WebglApp {
 
         this.canShowCursor = false;
         this.scroll.target += offsetIndex * width;
+
+        this.scrolling = true;
+        if (this.timeoutShowInfo) this.timeoutShowInfo.kill();
+        this.onScrollStart();
+        this.launchInfoTimeout();
+
+        this.onCheck();
     }
 
     checkClick() {
