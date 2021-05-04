@@ -1,4 +1,5 @@
 import { Renderer, Camera, Transform, Plane, Vec2, Raycast, Post } from 'ogl';
+import { gsap } from 'gsap';
 
 import NormalizeWheel from 'normalize-wheel';
 import { BREAKPOINTS } from '../constants';
@@ -53,11 +54,17 @@ class WebglApp {
         this.hideCursor = null;
         this.goToProject = null;
 
+        this.outAnimationTiming = 0.4;
+        this.readyToShowInfo = false;
+        this.showInfoASAP = false;
+        this.timeoutShowInfo = null;
+
         this.canShowCursor = true;
         this.isClicked = false;
         this.cursorOnSelected = false;
 
         this.selectedProject = null;
+        this.selectedIndex = 0;
 
         this.createRenderer();
         this.createCamera();
@@ -166,7 +173,9 @@ class WebglApp {
 
         if (!this.scrolling) {
             this.scrolling = true;
+            if (this.timeoutShowInfo) this.timeoutShowInfo.kill();
             this.onScrollStart();
+            this.launchInfoTimeout();
         }
 
         const x = event.touches ? event.touches[0].clientX : event.clientX;
@@ -202,6 +211,13 @@ class WebglApp {
 
         this.canShowCursor = false;
         this.scroll.target += offsetIndex * width;
+
+        this.scrolling = true;
+        if (this.timeoutShowInfo) this.timeoutShowInfo.kill();
+        this.onScrollStart();
+        this.launchInfoTimeout();
+
+        this.onCheck();
     }
 
     checkClick() {
@@ -214,10 +230,23 @@ class WebglApp {
         }
     }
 
+    launchInfoTimeout() {
+        this.timeoutShowInfo = gsap.delayedCall(this.outAnimationTiming, () => {
+            this.readyToShowInfo = true;
+            if (this.showInfoASAP) {
+                this.onSelected(this.selectedIndex);
+                this.readyToShowInfo = false;
+                this.showInfoASAP = false;
+            }
+        });
+    }
+
     onWheel(event) {
         if (!this.scrolling) {
             this.scrolling = true;
+            if (this.timeoutShowInfo) this.timeoutShowInfo.kill();
             this.onScrollStart();
+            this.launchInfoTimeout();
         }
 
         const normalized = NormalizeWheel(event);
@@ -251,8 +280,17 @@ class WebglApp {
         });
 
         this.medias[projectIndex].plane.isSelected = true;
-        this.onSelected(projectIndex);
         this.selectedProject = this.medias[projectIndex];
+        this.selectedIndex = projectIndex;
+
+        if (!this.readyToShowInfo) {
+            this.showInfoASAP = true;
+            return;
+        }
+
+        this.onSelected(projectIndex);
+        this.readyToShowInfo = false;
+        this.showInfoASAP = false;
     }
 
     createRenderer() {

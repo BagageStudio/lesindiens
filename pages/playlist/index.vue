@@ -124,12 +124,12 @@ export default {
     },
     methods: {
         setCallbackMethods() {
-            this.$webgl.onSelected = this.onSelected;
-            this.$webgl.onScrollChange = this.onScrollChange;
-            this.$webgl.onScrollStart = this.onScrollStart;
-            this.$webgl.showCursor = this.showCursor;
-            this.$webgl.hideCursor = this.hideCursor;
-            this.$webgl.goToProject = this.goToProject;
+            this.$webgl.onSelected = this.onSelected.bind(this);
+            this.$webgl.onScrollChange = this.onScrollChange.bind(this);
+            this.$webgl.onScrollStart = this.onScrollStart.bind(this);
+            this.$webgl.showCursor = this.showCursor.bind(this);
+            this.$webgl.hideCursor = this.hideCursor.bind(this);
+            this.$webgl.goToProject = this.goToProject.bind(this);
         },
         initializeSlider() {
             const projects = this.projects.map(p => ({
