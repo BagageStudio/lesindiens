@@ -29,6 +29,13 @@
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="container-small">
+                <div class="wrapper-footer content-pad">
+                    <Footer theme="ultra-light" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
