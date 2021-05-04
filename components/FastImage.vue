@@ -1,5 +1,5 @@
 <template>
-    <picture class="fast-image" :class="{ loaded, cover, contains, 'full-width': fullWidth }">
+    <picture class="fast-image" :class="{ loaded, cover, contains, 'full-width': fullWidth }" draggable="false">
         <source type="image/webp" :srcset="transformImage(image.filename, 'filters:format(webp)')" />
         <img
             ref="fitImage"
@@ -7,6 +7,7 @@
             :alt="resolveAlt(image)"
             :loading="loading"
             class="image"
+            draggable="false"
         />
     </picture>
 </template>

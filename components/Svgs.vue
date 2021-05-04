@@ -21,6 +21,13 @@
                     d="M12.079 1.063V0L20.5 3.453v1.515L12.08 8.42V7.36l6.5-2.675H.5v-1h18.005l-6.426-2.621z"
                 />
             </symbol>
+            <symbol id="icon-arrow-long-left" fill="#fff" viewBox="0 0 15 6" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6.316.757V0L0 2.46v1.08L6.316 6v-.757L1.44 3.337H15v-.712H1.497L6.316.757z"
+                />
+            </symbol>
             <symbol id="icon-eye" viewBox="0 0 20 16" xmlns="http://www.w3.org/2000/svg" fill="#fff">
                 <path
                     fill-rule="evenodd"

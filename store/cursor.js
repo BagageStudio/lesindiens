@@ -5,7 +5,8 @@ export const state = () => ({
         x: 0,
         y: 0
     },
-    icon: 'arrow'
+    icon: 'arrow',
+    iconRotation: 0
 });
 
 // export const getters = () => {};
@@ -22,5 +23,8 @@ export const mutations = {
     },
     setIcon(state, icon) {
         state.icon = icon;
+    },
+    setIconRotation(state, iconRotation) {
+        state.iconRotation = iconRotation;
     }
 };

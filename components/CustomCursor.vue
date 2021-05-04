@@ -1,7 +1,7 @@
 <template>
     <div class="cursor-wrapper" :class="{ show: showCursor }">
         <div ref="cursor" class="cursor" />
-        <div ref="icon" class="cursor-icon">
+        <div ref="icon" class="cursor-icon" :class="{ left: iconRotation === 'left' }">
             <Icon :name="cursorIcon" />
         </div>
     </div>
@@ -23,6 +23,9 @@ export default {
         },
         mousePos() {
             return this.$store.state.cursor.mousePos;
+        },
+        iconRotation() {
+            return this.$store.state.cursor.iconRotation;
         }
     },
     watch: {
@@ -94,6 +97,10 @@ export default {
     height: 54px;
     .icon {
         transform-origin: 50% 50%;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    &.left .icon {
+        transform: rotate(-180deg);
     }
     .icon-arrow-long {
         width: 20px;

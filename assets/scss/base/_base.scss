@@ -176,6 +176,19 @@ a {
     }
 }
 
+.arrow-button {
+    width: 49px;
+    height: 40px;
+    border-radius: 50%;
+    background: $black;
+    border: 1px solid $grey-1;
+    box-shadow: 4px 3px 0px $grey-1;
+    .icon {
+        width: 15px;
+        height: 6px;
+    }
+}
+
 /******* CLASSES GENERALES  *******/
 
 .clearfix {
