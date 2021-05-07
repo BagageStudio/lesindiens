@@ -11,6 +11,7 @@
                             <div class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
+                    <Stickers />
                 </div>
             </div>
         </div>
