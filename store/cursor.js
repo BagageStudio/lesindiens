@@ -5,7 +5,7 @@ export const state = () => ({
         x: 0,
         y: 0
     },
-    icon: 'arrow',
+    icon: 'arrow-long',
     iconRotation: 0
 });
 
