@@ -214,6 +214,8 @@ export default {
             if (this.isMobile) return;
             this.over = false;
             this.$store.commit('cursor/setShowCursor', false);
+            this.cursorDirection = 'right';
+            this.$store.commit('cursor/setIconRotation', 'right');
         },
         showCursor() {
             if (this.isMobile) return;

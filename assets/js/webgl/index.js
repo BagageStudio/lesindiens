@@ -42,6 +42,17 @@ class WebglApp {
         this.scrolling = false;
         this.scrollEnded = true;
 
+        this.onResizeEvent = this.onResize.bind(this);
+        this.onWheelEvent = this.onWheel.bind(this);
+        this.onWheelEvent = this.onWheel.bind(this);
+        this.onTouchDownEvent = this.onTouchDown.bind(this);
+        this.onTouchMoveEvent = this.onTouchMove.bind(this);
+        this.onTouchUpEvent = this.onTouchUp.bind(this);
+        this.onMouseLeaveEvent = this.onMouseLeave.bind(this);
+        this.onTouchDownEvent = this.onTouchDown.bind(this);
+        this.onTouchMoveEvent = this.onTouchMove.bind(this);
+        this.onTouchUpEvent = this.onTouchUp.bind(this);
+
         this.resolution = { value: new Vec2() };
 
         this.onCheckDebounce = debounce(this.onCheck, 200);
@@ -467,35 +478,35 @@ class WebglApp {
     }
 
     addEventListeners() {
-        window.addEventListener('resize', this.onResize.bind(this));
+        window.addEventListener('resize', this.onResizeEvent);
 
-        window.addEventListener('mousewheel', this.onWheel.bind(this));
-        window.addEventListener('wheel', this.onWheel.bind(this));
+        window.addEventListener('mousewheel', this.onWheelEvent);
+        window.addEventListener('wheel', this.onWheelEvent);
 
-        this.sizeElement.addEventListener('mousedown', this.onTouchDown.bind(this));
-        this.sizeElement.addEventListener('mousemove', this.onTouchMove.bind(this));
-        this.sizeElement.addEventListener('mouseup', this.onTouchUp.bind(this));
-        this.sizeElement.addEventListener('mouseleave', this.onMouseLeave.bind(this));
+        this.sizeElement.addEventListener('mousedown', this.onTouchDownEvent);
+        this.sizeElement.addEventListener('mousemove', this.onTouchMoveEvent);
+        this.sizeElement.addEventListener('mouseup', this.onTouchUpEvent);
+        this.sizeElement.addEventListener('mouseleave', this.onMouseLeaveEvent);
 
-        this.sizeElement.addEventListener('touchstart', this.onTouchDown.bind(this));
-        this.sizeElement.addEventListener('touchmove', this.onTouchMove.bind(this));
-        this.sizeElement.addEventListener('touchend', this.onTouchUp.bind(this));
+        this.sizeElement.addEventListener('touchstart', this.onTouchDownEvent);
+        this.sizeElement.addEventListener('touchmove', this.onTouchMoveEvent);
+        this.sizeElement.addEventListener('touchend', this.onTouchUpEvent);
     }
 
     removeEventListeners() {
-        window.removeEventListener('resize', this.onResize.bind(this));
+        window.removeEventListener('resize', this.onResizeEvent);
 
-        window.removeEventListener('mousewheel', this.onWheel.bind(this));
-        window.removeEventListener('wheel', this.onWheel.bind(this));
+        window.removeEventListener('mousewheel', this.onWheelEvent);
+        window.removeEventListener('wheel', this.onWheelEvent);
 
-        this.sizeElement.removeEventListener('mousedown', this.onTouchDown.bind(this));
-        this.sizeElement.removeEventListener('mousemove', this.onTouchMove.bind(this));
-        this.sizeElement.removeEventListener('mouseup', this.onTouchUp.bind(this));
-        this.sizeElement.removeEventListener('mouseleave', this.onMouseLeave.bind(this));
+        this.sizeElement.removeEventListener('mousedown', this.onTouchDownEvent);
+        this.sizeElement.removeEventListener('mousemove', this.onTouchMoveEvent);
+        this.sizeElement.removeEventListener('mouseup', this.onTouchUpEvent);
+        this.sizeElement.removeEventListener('mouseleave', this.onMouseLeaveEvent);
 
-        this.sizeElement.removeEventListener('touchstart', this.onTouchDown.bind(this));
-        this.sizeElement.removeEventListener('touchmove', this.onTouchMove.bind(this));
-        this.sizeElement.removeEventListener('touchend', this.onTouchUp.bind(this));
+        this.sizeElement.removeEventListener('touchstart', this.onTouchDownEvent);
+        this.sizeElement.removeEventListener('touchmove', this.onTouchMoveEvent);
+        this.sizeElement.removeEventListener('touchend', this.onTouchUpEvent);
     }
 
     disable() {
