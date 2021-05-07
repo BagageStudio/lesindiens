@@ -114,6 +114,10 @@ export default {
         font-size: 4.6rem;
         font-weight: 100;
         line-height: 59px;
+        ::v-deep b,
+        ::v-deep strong {
+            font-weight: 100;
+        }
     }
 }
 @media (min-width: $desktop) {
