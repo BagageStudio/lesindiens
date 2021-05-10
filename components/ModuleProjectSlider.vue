@@ -220,7 +220,7 @@ export default {
         showCursor() {
             if (this.isMobile) return;
             this.over = true;
-            if (this.cursorIcon !== 'arrow-long') this.$store.commit('cursor/setIcon', 'arrow-long');
+            this.$store.commit('cursor/setIcon', 'arrow-long');
             this.$store.commit('cursor/setShowCursor', true);
             this.setDirection();
         },

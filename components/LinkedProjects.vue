@@ -7,6 +7,8 @@
                     :key="project.id"
                     :to="'/' + project.full_slug"
                     class="linked-project"
+                    @mouseenter.native="showCursor(project)"
+                    @mouseleave.native="hideCursor"
                 >
                     <h3 class="linked-project-title content-pad">{{ project.content.song_title }}</h3>
                     <span class="linked-project-info content-pad">
@@ -23,6 +25,20 @@
 export default {
     props: {
         projects: { type: Array, required: true }
+    },
+    computed: {},
+    methods: {
+        hideCursor() {
+            this.$store.commit('cursor/setShowCursor', false);
+        },
+        showCursor(project) {
+            if (!project.content.image) return;
+            this.$store.commit('cursor/setImage', {
+                image: project.content.image.filename,
+                size: ['135px', '110px']
+            });
+            this.$store.commit('cursor/setShowCursor', true);
+        }
     }
 };
 </script>
@@ -36,6 +52,7 @@ export default {
     display: block;
     padding: 60px 0 25px;
     text-decoration: none;
+    cursor: none;
     &::after {
         content: '';
         position: absolute;

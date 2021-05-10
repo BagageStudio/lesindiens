@@ -6,7 +6,10 @@ export const state = () => ({
         y: 0
     },
     icon: 'arrow-long',
-    iconRotation: 0
+    image: null,
+    size: ['135px', '110px'],
+    iconRotation: 0,
+    style: 'icon'
 });
 
 // export const getters = () => {};
@@ -22,9 +25,16 @@ export const mutations = {
         state.mousePos = mousePos;
     },
     setIcon(state, icon) {
+        if (state.style !== 'icon') state.style = 'icon';
         state.icon = icon;
+        state.size = ['66px', '54px'];
     },
     setIconRotation(state, iconRotation) {
         state.iconRotation = iconRotation;
+    },
+    setImage(state, { image, size }) {
+        if (state.style !== 'image') state.style = 'image';
+        state.image = image;
+        state.size = size;
     }
 };

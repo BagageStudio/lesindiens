@@ -1,14 +1,19 @@
 <template>
-    <div class="cursor-wrapper" :class="{ show: showCursor }">
+    <div ref="wrapper" class="cursor-wrapper" :class="{ show: showCursor }">
         <div ref="shadowWrapper" class="shadow-wrapper">
             <div ref="shadow" class="shadow" />
         </div>
         <div ref="roundWrapper" class="round-wrapper">
             <div ref="round" class="round" />
         </div>
-        <div ref="iconWrapper" class="icon-wrapper">
+        <div ref="iconWrapper" :class="{ hidden: cursorStyle !== 'icon' }" class="icon-wrapper">
             <div ref="icon" class="cursor-icon" :class="{ left: iconRotation === 'left' }">
                 <Icon :name="cursorIcon" />
+            </div>
+        </div>
+        <div ref="imageWrapper" :class="{ hidden: cursorStyle !== 'image' }" class="image-wrapper">
+            <div ref="image" class="cursor-image">
+                <img v-if="imageUrl" :src="imageUrl" alt="" @load="imageLoaded" />
             </div>
         </div>
     </div>
@@ -20,11 +25,22 @@ export default {
     data: () => ({
         roundRect: null,
         shadowRect: null,
-        iconRect: null
+        iconRect: null,
+        imageRect: null,
+        imageUrl: null
     }),
     computed: {
+        cursorStyle() {
+            return this.$store.state.cursor.style;
+        },
         cursorIcon() {
             return this.$store.state.cursor.icon;
+        },
+        cursorSize() {
+            return this.$store.state.cursor.size;
+        },
+        cursorImage() {
+            return this.$store.state.cursor.image;
         },
         showCursor() {
             return this.$store.state.cursor.showCursor;
@@ -37,8 +53,20 @@ export default {
         }
     },
     watch: {
+        cursorImage(img) {
+            gsap.to(this.$refs.imageWrapper, {
+                duration: 0.4,
+                opacity: 0,
+                onComplete: () => {
+                    this.imageUrl = img;
+                }
+            });
+        },
+        cursorSize(size) {
+            this.computeBCR(size);
+        },
         showCursor(show) {
-            gsap.to([this.$refs.round, this.$refs.icon, this.$refs.shadow], {
+            gsap.to([this.$refs.round, this.$refs.icon, this.$refs.shadow, this.$refs.image], {
                 duration: 0.5,
                 scale: show ? 1 : 0.2,
                 ease: 'power4.out'
@@ -49,6 +77,10 @@ export default {
                 icon: {
                     x: pos.x - this.iconRect.width / 2,
                     y: pos.y - this.iconRect.height / 2
+                },
+                image: {
+                    x: pos.x - this.imageRect.width / 2,
+                    y: pos.y - this.imageRect.height / 2
                 },
                 round: {
                     x: pos.x - this.roundRect.width / 2,
@@ -81,19 +113,42 @@ export default {
                 force3D: true,
                 ease: 'power4.out'
             });
+
+            gsap.to(this.$refs.imageWrapper, {
+                duration: 0.7,
+                x: p.image.x,
+                y: p.image.y,
+                force3D: true,
+                ease: 'power4.out'
+            });
         }
     },
     mounted() {
-        this.roundRect = this.$refs.roundWrapper.getBoundingClientRect();
-        this.iconRect = this.$refs.iconWrapper.getBoundingClientRect();
-        this.shadowRect = this.$refs.shadowWrapper.getBoundingClientRect();
+        this.computeBCR(this.cursorSize);
     },
-    methods: {}
+    methods: {
+        imageLoaded() {
+            gsap.to(this.$refs.imageWrapper, {
+                duration: 0.4,
+                opacity: 1
+            });
+        },
+        computeBCR(size) {
+            this.$refs.wrapper.style.setProperty('--width', size[0]);
+            this.$refs.wrapper.style.setProperty('--height', size[1]);
+            this.roundRect = this.$refs.roundWrapper.getBoundingClientRect();
+            this.iconRect = this.$refs.iconWrapper.getBoundingClientRect();
+            this.imageRect = this.$refs.imageWrapper.getBoundingClientRect();
+            this.shadowRect = this.$refs.shadowWrapper.getBoundingClientRect();
+        }
+    }
 };
 </script>
 <style lang="scss" scoped>
 .cursor-wrapper {
     position: fixed;
+    width: 100vw;
+    height: 100vh;
     top: 0;
     left: 0;
     pointer-events: none;
@@ -110,8 +165,8 @@ export default {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 66px;
-    height: 54px;
+    width: var(--width);
+    height: var(--height);
 }
 .shadow {
     position: relative;
@@ -131,8 +186,8 @@ export default {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 66px;
-    height: 54px;
+    width: var(--width);
+    height: var(--height);
 }
 .round {
     width: 100%;
@@ -144,15 +199,17 @@ export default {
     backface-visibility: hidden;
     transform-origin: 50% 50%;
     border: 1px solid $white;
-    box-shadow: 4px 3px 0px $white;
 }
 
 .icon-wrapper {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 66px;
-    height: 54px;
+    width: var(--width);
+    height: var(--height);
+    &.hidden {
+        visibility: hidden;
+    }
 }
 
 .cursor-icon {
@@ -179,6 +236,36 @@ export default {
     .icon-eye {
         width: 19px;
         height: 14px;
+    }
+}
+.image-wrapper {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: var(--width);
+    height: var(--height);
+    &.hidden {
+        visibility: hidden;
+    }
+}
+.cursor-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    transform-origin: 50% 50%;
+    transform: scale(0.2) rotateZ(0);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    border: 1px solid $white;
+
+    img {
+        width: 110%;
+        height: 110%;
+        object-fit: cover;
     }
 }
 </style>

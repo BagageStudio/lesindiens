@@ -155,7 +155,7 @@ export default {
             this.$router.push(`/${project.full_slug}`);
         },
         showCursor() {
-            if (this.cursorIcon !== 'eye') this.$store.commit('cursor/setIcon', 'eye');
+            this.$store.commit('cursor/setIcon', 'eye');
             this.$store.commit('cursor/setShowCursor', true);
             this.cursorIsShown = true;
         },
