@@ -1,27 +1,16 @@
 <template>
     <div class="stickers content-pad">
         <div ref="sticker" class="sticker" @mousemove="mouseMove" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
+            <div ref="shadow" class="shadow" />
+            <div ref="frame" class="frame" />
             <svg
                 ref="stickerContent"
                 class="sticker-content"
-                width="189"
-                height="228"
+                width="185"
+                height="225"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <g filter="url(#filter0_d)">
-                    <rect width="185" height="225" rx="10" fill="#101011" />
-                    <rect
-                        x=".5"
-                        y=".5"
-                        width="184"
-                        height="224"
-                        rx="9.5"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </g>
                 <g clip-path="url(#clip0)" stroke="#fff" stroke-miterlimit="10" stroke-linejoin="round">
                     <path
                         d="M74.943 122.071c27.611 0 49.994-22.413 49.994-50.06 0-27.648-22.383-50.061-49.994-50.061S24.949 44.363 24.949 72.01c0 27.648 22.383 50.061 49.994 50.061z"
@@ -76,22 +65,6 @@
                     <clipPath id="clip0">
                         <path fill="#fff" transform="translate(24 21)" d="M0 0h109v110H0z" />
                     </clipPath>
-                    <filter
-                        id="filter0_d"
-                        x="0"
-                        y="0"
-                        width="189"
-                        height="228"
-                        filterUnits="userSpaceOnUse"
-                        color-interpolation-filters="sRGB"
-                    >
-                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                        <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
-                        <feOffset dx="4" dy="3" />
-                        <feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" />
-                        <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
-                        <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
-                    </filter>
                 </defs>
             </svg>
         </div>
@@ -107,8 +80,12 @@ export default {
         stickerRect: null,
         percentageX: 0,
         percentageY: 0,
-        rotX: 0,
-        rotY: 0
+        XShadow: 0,
+        YShadow: 0,
+        rotXFrame: 0,
+        rotYFrame: 0,
+        rotXIllus: 0,
+        rotYIllus: 0
     }),
     computed: {
         scrollTop() {
@@ -128,14 +105,22 @@ export default {
             this.tilt(e.pageX, e.pageY);
         },
         mouseEnter() {
-            gsap.to(this.$refs.stickerContent, {
+            gsap.to([this.$refs.stickerContent, this.$refs.frame, this.$refs.shadow], {
                 duration: 0.2,
                 scale: 1.05
             });
         },
         mouseLeave() {
-            gsap.to(this.$refs.stickerContent, {
+            gsap.to([this.$refs.stickerContent, this.$refs.frame, this.$refs.shadow], {
                 duration: 0.5,
+                rotationX: 0,
+                rotationY: 0,
+                scale: 1
+            });
+            gsap.to(this.$refs.shadow, {
+                duration: 0.5,
+                x: 4,
+                y: 3,
                 rotationX: 0,
                 rotationY: 0,
                 scale: 1
@@ -149,12 +134,29 @@ export default {
                 ((cy - this.stickerRect.top - this.scrollTop - this.stickerRect.height / 2) / this.stickerRect.height) *
                     2
             );
-            this.rotX = -this.percentageY * 20;
-            this.rotY = this.percentageX * 20;
+
+            this.XShadow = this.percentageX * 4;
+            this.YShadow = this.percentageY * 3;
+            this.rotXFrame = -this.percentageY * 15;
+            this.rotYFrame = this.percentageX * 15;
+            this.rotXIllus = -this.percentageY * 20;
+            this.rotYIllus = this.percentageX * 20;
+            gsap.to(this.$refs.shadow, {
+                duration: 0.2,
+                x: this.XShadow,
+                y: this.YShadow,
+                rotationX: this.rotXFrame,
+                rotationY: this.rotYFrame
+            });
+            gsap.to(this.$refs.frame, {
+                duration: 0.2,
+                rotationX: this.rotXFrame,
+                rotationY: this.rotYFrame
+            });
             gsap.to(this.$refs.stickerContent, {
                 duration: 0.2,
-                rotationX: this.rotX,
-                rotationY: this.rotY
+                rotationX: this.rotXIllus,
+                rotationY: this.rotYIllus
             });
         },
         computeRect() {
@@ -166,11 +168,34 @@ export default {
 
 <style lang="scss" scoped>
 .sticker {
+    position: relative;
     width: 189px;
     height: 228px;
     perspective: 500px;
 }
+.shadow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $white;
+    border-radius: 10px;
+    transform: translate3d(4px, 3px, 0);
+}
+.frame {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $black;
+    border: 1px solid $white;
+    border-radius: 10px;
+    transform-origin: 50% 50% -50px;
+}
 .sticker-content {
+    position: relative;
     transform-origin: 50% 50% -20px;
 }
 .class {
