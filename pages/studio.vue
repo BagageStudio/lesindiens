@@ -11,7 +11,7 @@
                             <div class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-                    <Stickers />
+                    <Stickers :data="studio.stickers" />
                 </div>
             </div>
         </div>
