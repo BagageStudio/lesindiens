@@ -44,11 +44,20 @@ export default {
     computed: {
         scrollTop() {
             return this.$store.state.scroll.scrollTop;
+        },
+        ww() {
+            return this.$store.state.superWindow ? this.$store.state.superWindow.width : 320;
         }
     },
     watch: {
         scrollTop() {
             this.computeRect();
+        },
+        ww() {
+            if (!this.$store.state.superWindow) return true;
+            if (this.$store.state.superWindow.width >= this.$breakpoints.list.l) {
+                this.computeRect();
+            }
         }
     },
     mounted() {
@@ -132,11 +141,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.stickers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 .sticker {
     position: relative;
     width: 189px;
     height: 228px;
     perspective: 500px;
+    margin: 20px;
 }
 .shadow {
     position: absolute;

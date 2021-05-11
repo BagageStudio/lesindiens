@@ -11,7 +11,9 @@
                             <div class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-                    <Stickers :data="studio.stickers" />
+                    <div v-if="isL">
+                        <Stickers :data="studio.stickers" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,6 +56,10 @@ export default {
         return { studio, services };
     },
     computed: {
+        isL() {
+            if (!this.$store.state.superWindow) return true;
+            return this.$store.state.superWindow.width >= this.$breakpoints.list.l;
+        },
         subtitle() {
             return this.$storyapi.richTextResolver.render(this.studio.subtitle);
         }
