@@ -86,5 +86,9 @@ export default {
     .service-content {
         padding-top: 80px;
     }
+    .service-title {
+        font-size: 3.5rem;
+        line-height: 42px;
+    }
 }
 </style>

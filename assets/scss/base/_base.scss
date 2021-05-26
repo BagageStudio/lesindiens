@@ -103,8 +103,16 @@ ul {
 ol {
     counter-reset: ol-counter;
     > li {
+        line-height: 30px;
+        position: relative;
         counter-increment: ol-counter;
+        padding-left: 35px;
         &::before {
+            font-size: 2rem;
+            line-height: 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
             content: counter(ol-counter) '.';
         }
     }
