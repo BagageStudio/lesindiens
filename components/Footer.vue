@@ -1,6 +1,6 @@
 <template>
     <footer class="footer" :class="{ 'ultra-light': theme === 'ultra-light' }">
-        <div v-if="theme !== 'ultra-light'" class="wrapper-contact">
+        <div v-if="theme !== 'ultra-light' && theme !== 'light'" class="wrapper-contact">
             <div class="contact-links">
                 <a
                     v-for="contactLink in content.contact_links"
@@ -76,9 +76,17 @@ export default {
     padding: 38px 0;
 }
 .wrapper-contact {
+    position: relative;
     margin-bottom: 50px;
     padding-bottom: 40px;
-    border-bottom: 1px solid $grey-2;
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-bottom: 1px solid $grey-2;
+    }
 }
 .contact-links {
     display: flex;
@@ -174,6 +182,10 @@ export default {
         justify-content: space-between;
         width: calc(100% + #{2 * $gutter});
         margin-left: -$gutter;
+        &::before {
+            left: $gutter;
+            right: $gutter;
+        }
     }
     .contact-links {
         margin-bottom: 0;

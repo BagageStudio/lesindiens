@@ -46,6 +46,13 @@
             :data="module"
         />
         <LinkedProjects :projects="twoOtherProjects" />
+        <div class="container">
+            <div class="container-small">
+                <div class="wrapper-footer content-pad">
+                    <Footer theme="light" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
