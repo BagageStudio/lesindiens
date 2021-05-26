@@ -21,6 +21,13 @@
         <Work :data="studio" />
         <Love :data="studio" />
         <Fun :data="studio" />
+        <div class="container">
+            <div class="container-small">
+                <div class="wrapper-footer content-pad">
+                    <Footer />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

@@ -13,6 +13,13 @@
             </div>
         </div>
         <component :is="module.component" v-for="module in page[0].content.modules" :key="module._uid" :data="module" />
+        <div class="container">
+            <div class="container-small">
+                <div class="wrapper-footer content-pad">
+                    <Footer />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -22,7 +29,6 @@ export default {
         const page = await app.$storyapi
             .get('cdn/stories', {
                 version: $config.sBlokVersion,
-                // resolve_relations: 'expertises'
                 by_slugs: route.params.slug
             })
             .then(res => {

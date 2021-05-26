@@ -1,42 +1,46 @@
 <template>
     <footer class="footer" :class="{ 'ultra-light': theme === 'ultra-light' }">
-        <div v-if="theme !== 'ultra-light'" class="contact-links">
-            <a
-                v-for="contactLink in content.contact_links"
-                :key="contactLink._uid"
-                :href="contactLink.link.url"
-                class="contact-link"
-            >
-                {{ contactLink.label }}
-            </a>
-        </div>
-        <div class="wrapper-copy-links">
-            <span class="copy">{{ content.copy }}</span>
-            <div class="footer-links">
-                <nuxt-link
-                    v-for="footerLink in content.footer_links"
-                    :key="footerLink.id"
-                    :to="footerLink.link.story.full_slug"
-                    class="footer-link"
-                    >{{ footerLink.label }}</nuxt-link
+        <div v-if="theme !== 'ultra-light'" class="wrapper-contact">
+            <div class="contact-links">
+                <a
+                    v-for="contactLink in content.contact_links"
+                    :key="contactLink._uid"
+                    :href="contactLink.link.url"
+                    class="contact-link"
                 >
+                    {{ contactLink.label }}
+                </a>
+            </div>
+            <div class="footer-address">
+                <span class="address-label">Siège social</span>
+                <span class="address-content">{{ content.address }}</span>
             </div>
         </div>
-        <div v-if="theme !== 'ultra-light'" class="footer-address">
-            <span class="address-label">Siège social</span>
-            <span class="address-content">{{ content.address }}</span>
-        </div>
-        <div v-if="theme !== 'ultra-light'" class="social-links">
-            <a
-                v-for="socialLink in content.social_links"
-                :key="socialLink._uid"
-                :href="socialLink.link.url"
-                target="_blank"
-                rel="noopener nofollow noreferrer"
-                class="social-link"
-            >
-                {{ socialLink.label }}
-            </a>
+        <div class="wrapper-links">
+            <div v-if="theme !== 'ultra-light'" class="social-links">
+                <a
+                    v-for="socialLink in content.social_links"
+                    :key="socialLink._uid"
+                    :href="socialLink.link.url"
+                    target="_blank"
+                    rel="noopener nofollow noreferrer"
+                    class="social-link"
+                >
+                    {{ socialLink.label }}
+                </a>
+            </div>
+            <div class="wrapper-copy-links">
+                <span class="copy">{{ content.copy }}</span>
+                <div class="footer-links">
+                    <nuxt-link
+                        v-for="footerLink in content.footer_links"
+                        :key="footerLink.id"
+                        :to="footerLink.link.story.full_slug"
+                        class="footer-link"
+                        >{{ footerLink.label }}</nuxt-link
+                    >
+                </div>
+            </div>
         </div>
     </footer>
 </template>
@@ -71,10 +75,16 @@ export default {
 .footer {
     padding: 38px 0;
 }
+.wrapper-contact {
+    margin-bottom: 50px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid $grey-2;
+}
 .contact-links {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 50px;
 }
 .contact-link {
     font-family: $telegraf;
@@ -117,6 +127,7 @@ export default {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
+    margin-bottom: 50px;
 }
 .social-link {
     font-family: $object;
@@ -142,6 +153,65 @@ export default {
                 justify-content: flex-end;
             }
         }
+        &:not(.ultra-light) {
+            .wrapper-links {
+                display: flex;
+                align-items: baseline;
+                flex-direction: row-reverse;
+                justify-content: space-between;
+                width: calc(100% + #{2 * $gutter});
+                margin-left: -$gutter;
+            }
+            .wrapper-copy-links {
+                width: percentage(3/8);
+                padding: 0 #{$gutter};
+            }
+        }
+    }
+    .wrapper-contact {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        width: calc(100% + #{2 * $gutter});
+        margin-left: -$gutter;
+    }
+    .contact-links {
+        margin-bottom: 0;
+        width: percentage(3/8);
+        padding: 0 #{$gutter};
+    }
+    .footer-address {
+        width: percentage(4/8);
+        padding: 0 #{$gutter};
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    .address-label {
+        margin: 0 20px 0 0;
+    }
+    .social-links {
+        justify-content: flex-end;
+        width: percentage(4/8);
+        margin-bottom: 0;
+        padding: 0 #{$gutter};
+    }
+}
+@media (min-width: $desktop) {
+    .footer {
+        &:not(.ultra-light) {
+            .wrapper-copy-links {
+                width: percentage(4/10);
+            }
+        }
+    }
+    .contact-links {
+        width: percentage(4/10);
+    }
+    .footer-address {
+        width: percentage(5/10);
+    }
+    .social-links {
+        width: percentage(5/10);
     }
 }
 </style>
