@@ -7,6 +7,11 @@
                 </div>
             </div>
         </div>
+        <div v-if="page[0].content.content" class="container">
+            <div class="container-small">
+                <div class="content-pad wysiwyg" v-html="resolveRichText(page[0].content.content)" />
+            </div>
+        </div>
         <component :is="module.component" v-for="module in page[0].content.modules" :key="module._uid" :data="module" />
     </div>
 </template>
@@ -33,6 +38,11 @@ export default {
                 }
             });
         return { page };
+    },
+    methods: {
+        resolveRichText(text) {
+            return this.$storyapi.richTextResolver.render(text);
+        }
     }
 };
 </script>
