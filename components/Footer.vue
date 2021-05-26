@@ -162,6 +162,7 @@ export default {
             }
         }
         &:not(.ultra-light) {
+            padding: 45px 0;
             .wrapper-links {
                 display: flex;
                 align-items: baseline;
@@ -211,6 +212,7 @@ export default {
 @media (min-width: $desktop) {
     .footer {
         &:not(.ultra-light) {
+            padding: 105px 0 45px;
             .wrapper-copy-links {
                 width: percentage(4/10);
             }
