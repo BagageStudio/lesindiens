@@ -214,7 +214,7 @@ export default {
         position: absolute;
         display: inline-block;
         height: 1px;
-        background-color: $white;
+        background-color: var(--secondary);
         transform-origin: 100% 50% -10px;
         opacity: 0;
         &:nth-child(1) {
@@ -312,7 +312,7 @@ export default {
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: $black;
+        background-color: var(--primary);
         z-index: -1;
         transform-origin: 50% 0%;
     }

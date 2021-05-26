@@ -51,9 +51,12 @@ export default {
         transform: rotateZ(-1deg);
         border-radius: 10px;
         border: 1px solid $grey-1;
-        background-color: $black;
+        background-color: var(--primary);
         box-shadow: 4px 3px 0px 0px $grey-1;
         z-index: -1;
+    }
+    ::v-deep .icon {
+        fill: currentColor;
     }
 }
 </style>
