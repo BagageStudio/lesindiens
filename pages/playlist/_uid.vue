@@ -34,7 +34,7 @@
                     </div>
                     <div class="project-intro content-pad">
                         <div v-html="intro" />
-                        <Button icon class="primary"> hello@lesindiens.fr </Button>
+                        <Button icon class="primary" :link="'mailto:hello@lesindiens.fr'"> hello@lesindiens.fr </Button>
                     </div>
                 </div>
             </div>

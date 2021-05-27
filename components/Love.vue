@@ -1,11 +1,22 @@
 <template>
-    <div class="love">
+    <div class="love lightmode">
         <div class="container">
             <div class="container-small">
                 <div class="love-content">
                     <div class="wrapper-cols">
                         <div class="col-small content-pad">
                             <h4 class="love-title" v-html="resolveRichText(data.love_title)" />
+                            <Button
+                                v-if="data.trustfolio_link"
+                                icon
+                                class="primary align-top"
+                                :link="data.trustfolio_link.url"
+                                target="_blank"
+                                rel="noopener nofollow noreferrer"
+                            >
+                                <span class="txt-pre">Voir leur avis</span>
+                                <img src="~static/img/trustfolio.svg" alt="Trustfolio" />
+                            </Button>
                         </div>
                         <div class="col-large content-pad">
                             <div class="love-intro" v-html="resolveRichText(data.love_intro)" />

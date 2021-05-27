@@ -32,11 +32,15 @@ export default {
 
 .primary {
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     text-decoration: none;
     font-size: 1.5rem;
     padding: 7px 17px;
+    z-index: 1;
+    &.align-top {
+        align-items: baseline;
+    }
     .text {
         margin-right: 20px;
     }
@@ -58,5 +62,8 @@ export default {
     ::v-deep .icon {
         fill: currentColor;
     }
+}
+.txt-pre {
+    display: block;
 }
 </style>
