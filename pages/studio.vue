@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div v-if="isL">
-                        <Stickers :data="studio.stickers" />
+                        <Stickers :line-one="studio.stickers_line_one" :line-two="studio.stickers_line_two" />
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@ export default {
 
 <style lang="scss" scoped>
 .studio-hero {
-    padding: 110px 0 50px;
+    padding: 110px 0 30px;
 }
 .studio-title {
     font-family: $telegraf;
@@ -94,7 +94,7 @@ export default {
 }
 @media (min-width: $tablet) {
     .studio-hero {
-        padding: 180px 0 50px;
+        padding: 180px 0 30px;
     }
     .studio-title {
         font-size: 5rem;
@@ -103,7 +103,7 @@ export default {
 }
 @media (min-width: $desktop-small) {
     .studio-hero {
-        padding: 245px 0 50px;
+        padding: 245px 0 30px;
     }
     .studio-title {
         font-size: 7.5rem;

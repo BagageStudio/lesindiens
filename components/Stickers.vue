@@ -1,18 +1,39 @@
 <template>
     <div class="stickers content-pad">
-        <div
-            v-for="(sticker, index) in data"
-            ref="sticker"
-            :key="sticker.id"
-            class="sticker"
-            @mousemove="mouseMove($event, index)"
-            @mouseenter="mouseEnter(index)"
-            @mouseleave="mouseLeave(index)"
-        >
-            <div ref="shadow" class="shadow" />
-            <div ref="frame" class="frame" />
-            <div ref="stickerContent" class="sticker-content">
-                <FastImage :image="sticker" />
+        <div class="stickers-line">
+            <div
+                v-for="sticker in lineOne"
+                :id="sticker.id"
+                ref="sticker"
+                :key="sticker.id"
+                class="sticker"
+                @mousemove="mouseMove"
+                @mouseenter="mouseEnter(sticker.id.toString())"
+                @mouseleave="mouseLeave"
+            >
+                <div class="shadow" />
+                <div class="frame" />
+                <div class="sticker-content">
+                    <FastImage :image="sticker" />
+                </div>
+            </div>
+        </div>
+        <div class="stickers-line">
+            <div
+                v-for="sticker in lineTwo"
+                :id="sticker.id"
+                ref="sticker"
+                :key="sticker.id"
+                class="sticker"
+                @mousemove="mouseMove"
+                @mouseenter="mouseEnter(sticker.id.toString())"
+                @mouseleave="mouseLeave"
+            >
+                <div class="shadow" />
+                <div class="frame" />
+                <div class="sticker-content">
+                    <FastImage :image="sticker" />
+                </div>
             </div>
         </div>
     </div>
@@ -24,9 +45,11 @@ import { round } from '~/assets/js/utils';
 
 export default {
     props: {
-        data: { type: Array, required: true }
+        lineOne: { type: Array, required: true },
+        lineTwo: { type: Array, required: true }
     },
     data: () => ({
+        sticker: null,
         stickers: [],
         shadows: [],
         frames: [],
@@ -71,23 +94,34 @@ export default {
             this.frames = this.$refs.frame;
             this.stickersContent = this.$refs.stickerContent;
         },
-        mouseMove(e, index) {
-            this.tilt(e.pageX, e.pageY, index);
+        getStickerFromID(id) {
+            const sticker = this.stickers.find(s => {
+                return s.id === id;
+            });
+            const shadow = sticker.getElementsByClassName('shadow')[0];
+            const frame = sticker.getElementsByClassName('frame')[0];
+            const stickerContent = sticker.getElementsByClassName('sticker-content')[0];
+            const rect = this.stickersRect[id];
+            return { sticker, shadow, frame, stickerContent, rect };
         },
-        mouseEnter(index) {
-            gsap.to([this.stickersContent[index], this.frames[index], this.shadows[index]], {
+        mouseMove(e) {
+            this.tilt(e.pageX, e.pageY);
+        },
+        mouseEnter(id) {
+            this.sticker = this.getStickerFromID(id);
+            gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
                 duration: 0.2,
                 scale: 1.05
             });
         },
-        mouseLeave(index) {
-            gsap.to([this.stickersContent[index], this.frames[index], this.shadows[index]], {
+        mouseLeave() {
+            gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
                 duration: 0.5,
                 rotationX: 0,
                 rotationY: 0,
                 scale: 1
             });
-            gsap.to(this.shadows[index], {
+            gsap.to(this.sticker.shadow, {
                 duration: 0.5,
                 x: 4,
                 y: 3,
@@ -95,16 +129,15 @@ export default {
                 rotationY: 0,
                 scale: 1
             });
+            this.sticker = null;
         },
-        tilt(cx, cy, index) {
+        tilt(cx, cy) {
             this.percentageX = round(
-                ((cx - this.stickersRect[index].left - this.stickersRect[index].width / 2) /
-                    this.stickersRect[index].width) *
-                    2
+                ((cx - this.sticker.rect.left - this.sticker.rect.width / 2) / this.sticker.rect.width) * 2
             );
             this.percentageY = round(
-                ((cy - this.stickersRect[index].top - this.scrollTop - this.stickersRect[index].height / 2) /
-                    this.stickersRect[index].height) *
+                ((cy - this.sticker.rect.top - this.scrollTop - this.sticker.rect.height / 2) /
+                    this.sticker.rect.height) *
                     2
             );
             this.XShadow = this.percentageX * 4;
@@ -113,45 +146,79 @@ export default {
             this.rotYFrame = this.percentageX * 15;
             this.rotXIllus = -this.percentageY * 20;
             this.rotYIllus = this.percentageX * 20;
-            gsap.to(this.shadows[index], {
+            gsap.to(this.sticker.shadow, {
                 duration: 0.2,
                 x: this.XShadow,
                 y: this.YShadow,
                 rotationX: this.rotXFrame,
                 rotationY: this.rotYFrame
             });
-            gsap.to(this.frames[index], {
+            gsap.to(this.sticker.frame, {
                 duration: 0.2,
                 rotationX: this.rotXFrame,
                 rotationY: this.rotYFrame
             });
-            gsap.to(this.stickersContent[index], {
+            gsap.to(this.sticker.stickerContent, {
                 duration: 0.2,
                 rotationX: this.rotXIllus,
                 rotationY: this.rotYIllus
             });
         },
         computeRect() {
+            const stickersRect = {};
             for (let index = 0; index < this.stickers.length; index++) {
-                this.stickersRect[index] = this.stickers[index].getBoundingClientRect();
+                const id = this.stickers[index].id;
+                stickersRect[id] = this.stickers[index].getBoundingClientRect();
             }
+            this.stickersRect = stickersRect;
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
-.stickers {
+.sticker {
+    position: relative;
+    perspective: 500px;
+    margin: 20px;
+}
+.stickers-line {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-}
-.sticker {
-    position: relative;
-    width: 189px;
-    height: 228px;
-    perspective: 500px;
-    margin: 20px;
+    &:nth-child(1) {
+        align-items: flex-end;
+        .sticker {
+            &:nth-child(1) {
+                right: 36px;
+                width: 336px;
+                height: 102px;
+            }
+            &:nth-child(2) {
+                top: 41px;
+                left: 36px;
+                width: 189px;
+                height: 185px;
+            }
+        }
+    }
+    &:nth-child(2) {
+        .sticker {
+            &:nth-child(1) {
+                width: 336px;
+                height: 102px;
+            }
+            &:nth-child(2) {
+                width: 189px;
+                height: 185px;
+            }
+            &:nth-child(3) {
+                top: 41px;
+                width: 344px;
+                height: 144px;
+            }
+        }
+    }
 }
 .shadow {
     position: absolute;
