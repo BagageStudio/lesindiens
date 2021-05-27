@@ -193,7 +193,7 @@ export default {
 .sticker {
     position: relative;
     perspective: 500px;
-    margin: 10px;
+    margin: 15px;
 }
 .stickers-line {
     display: flex;
@@ -203,13 +203,13 @@ export default {
         align-items: flex-end;
         .sticker {
             &:nth-child(1) {
-                right: 36px;
+                right: 31px;
                 width: 269px;
                 height: 82px;
             }
             &:nth-child(2) {
-                top: 41px;
-                left: 36px;
+                top: 36px;
+                left: 31px;
                 width: 151px;
                 height: 148px;
             }
@@ -226,7 +226,7 @@ export default {
                 height: 148px;
             }
             &:nth-child(3) {
-                top: 41px;
+                top: 36px;
                 width: 275px;
                 height: 115px;
             }
@@ -262,7 +262,10 @@ export default {
     transform-origin: 50% 50%;
 }
 
-@media (min-width: $desktop) {
+@media (min-width: $desktop-large) {
+    .sticker {
+        margin: 20px;
+    }
     .stickers-line {
         &:nth-child(1) {
             .sticker {
