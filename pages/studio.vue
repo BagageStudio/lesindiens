@@ -11,9 +11,9 @@
                             <div class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-                    <div v-if="isL">
-                        <Stickers :line-one="studio.stickers_line_one" :line-two="studio.stickers_line_two" />
-                    </div>
+                </div>
+                <div v-if="isL">
+                    <Stickers :line-one="studio.stickers_line_one" :line-two="studio.stickers_line_two" />
                 </div>
             </div>
         </div>

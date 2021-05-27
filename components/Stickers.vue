@@ -193,7 +193,7 @@ export default {
 .sticker {
     position: relative;
     perspective: 500px;
-    margin: 20px;
+    margin: 10px;
 }
 .stickers-line {
     display: flex;
@@ -204,31 +204,31 @@ export default {
         .sticker {
             &:nth-child(1) {
                 right: 36px;
-                width: 336px;
-                height: 102px;
+                width: 269px;
+                height: 82px;
             }
             &:nth-child(2) {
                 top: 41px;
                 left: 36px;
-                width: 189px;
-                height: 185px;
+                width: 151px;
+                height: 148px;
             }
         }
     }
     &:nth-child(2) {
         .sticker {
             &:nth-child(1) {
-                width: 336px;
-                height: 102px;
+                width: 269px;
+                height: 82px;
             }
             &:nth-child(2) {
-                width: 189px;
-                height: 185px;
+                width: 151px;
+                height: 148px;
             }
             &:nth-child(3) {
                 top: 41px;
-                width: 344px;
-                height: 144px;
+                width: 275px;
+                height: 115px;
             }
         }
     }
@@ -260,5 +260,42 @@ export default {
 }
 .class {
     transform-origin: 50% 50%;
+}
+
+@media (min-width: $desktop) {
+    .stickers-line {
+        &:nth-child(1) {
+            .sticker {
+                &:nth-child(1) {
+                    right: 36px;
+                    width: 336px;
+                    height: 102px;
+                }
+                &:nth-child(2) {
+                    top: 41px;
+                    left: 36px;
+                    width: 189px;
+                    height: 185px;
+                }
+            }
+        }
+        &:nth-child(2) {
+            .sticker {
+                &:nth-child(1) {
+                    width: 336px;
+                    height: 102px;
+                }
+                &:nth-child(2) {
+                    width: 189px;
+                    height: 185px;
+                }
+                &:nth-child(3) {
+                    top: 41px;
+                    width: 344px;
+                    height: 144px;
+                }
+            }
+        }
+    }
 }
 </style>
