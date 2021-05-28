@@ -6,7 +6,7 @@
             <span class="text">
                 <slot />
             </span>
-            <Icon v-if="icon" name="arrow" />
+            <Icon v-if="icon" name="arrow" class="button-icon" />
         </span>
     </a>
 </template>
@@ -165,8 +165,19 @@ export default {
             align-items: baseline;
         }
     }
-    .text {
-        margin-right: 20px;
+    &.color-secondary {
+        .shadow {
+            background: var(--secondary);
+        }
+        .frame {
+            border-color: var(--secondary);
+        }
+    }
+    .button-icon {
+        margin-left: 20px;
+    }
+    &.huge {
+        padding: 20px;
     }
 }
 .button-content {

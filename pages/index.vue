@@ -5,6 +5,9 @@
                 <div class="container-small">
                     <div class="wrapper-cols-home">
                         <div class="col-large-home content-pad">
+                            <Button class="primary color-secondary huge home-sticker">
+                                <img src="~static/img/hello.svg" alt="Hello !" />
+                            </Button>
                             <h1 class="home-title" v-html="$storyapi.richTextResolver.render(story.content.title)" />
                             <div class="expertises">
                                 <div
@@ -66,6 +69,9 @@ export default {
 <style lang="scss" scoped>
 .home-hero {
     padding: 110px 0 50px;
+}
+.home-sticker {
+    margin-bottom: 50px;
 }
 .home-title {
     font-family: $telegraf;
