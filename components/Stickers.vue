@@ -51,9 +51,6 @@ export default {
     data: () => ({
         sticker: null,
         stickers: [],
-        shadows: [],
-        frames: [],
-        stickersContent: [],
         stickersRect: [],
         percentageX: 0,
         percentageY: 0,
@@ -90,9 +87,6 @@ export default {
     methods: {
         init() {
             this.stickers = this.$refs.sticker;
-            this.shadows = this.$refs.shadow;
-            this.frames = this.$refs.frame;
-            this.stickersContent = this.$refs.stickerContent;
         },
         getStickerFromID(id) {
             const sticker = this.stickers.find(s => {
