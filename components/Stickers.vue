@@ -107,14 +107,6 @@ export default {
                 duration: 0.2,
                 scale: 1.05
             });
-            gsap.to(this.sticker.frame, {
-                duration: 0.2,
-                borderColor: '#fff'
-            });
-            gsap.to(this.sticker.shadow, {
-                duration: 0.2,
-                backgroundColor: '#fff'
-            });
         },
         mouseLeave() {
             gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
@@ -123,18 +115,13 @@ export default {
                 rotationY: 0,
                 scale: 1
             });
-            gsap.to(this.sticker.frame, {
-                duration: 0.5,
-                borderColor: '#323336'
-            });
             gsap.to(this.sticker.shadow, {
                 duration: 0.5,
                 x: 4,
                 y: 3,
                 rotationX: 0,
                 rotationY: 0,
-                scale: 1,
-                backgroundColor: '#323336'
+                scale: 1
             });
             this.sticker = null;
         },
@@ -188,6 +175,16 @@ export default {
     position: relative;
     perspective: 500px;
     margin: 15px;
+    &:hover {
+        .shadow {
+            background: $white;
+            transition-duration: 0.2s;
+        }
+        .frame {
+            border-color: $white;
+            transition-duration: 0.2s;
+        }
+    }
 }
 .stickers-line {
     display: flex;
@@ -236,6 +233,7 @@ export default {
     background: $grey-1;
     border-radius: 10px;
     transform: translate3d(4px, 3px, 0);
+    transition: background-color 0.5s ease-out;
 }
 .frame {
     position: absolute;
@@ -247,6 +245,7 @@ export default {
     border: 1px solid $grey-1;
     border-radius: 10px;
     transform-origin: 50% 50% -50px;
+    transition: border-color 0.5s ease-out;
 }
 .sticker-content {
     position: relative;
