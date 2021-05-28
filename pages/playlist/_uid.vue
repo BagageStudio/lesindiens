@@ -34,7 +34,16 @@
                     </div>
                     <div class="project-intro content-pad">
                         <div v-html="intro" />
-                        <Button icon class="primary" :link="'mailto:hello@lesindiens.fr'"> hello@lesindiens.fr </Button>
+                        <Button
+                            v-if="currentProject.content.website_link"
+                            icon
+                            class="primary project-link"
+                            :link="currentProject.content.website_link.url"
+                            target="_blank"
+                            rel="noopener nofollow noreferrer"
+                        >
+                            Voir le site
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -152,6 +161,9 @@ export default {
 .project-detail-title {
     margin-bottom: 10px;
     color: $grey-3;
+}
+.project-link {
+    margin-top: 60px;
 }
 
 @media (min-width: $tablet) {

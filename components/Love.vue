@@ -4,7 +4,7 @@
             <div class="container-small">
                 <div class="love-content">
                     <div class="wrapper-cols">
-                        <div class="col-small content-pad">
+                        <div class="col-small content-pad wrapper-love-title">
                             <h4 class="love-title" v-html="resolveRichText(data.love_title)" />
                             <Button
                                 v-if="data.trustfolio_link"
@@ -78,6 +78,9 @@ export default {
         border-top: 1px solid $grey-5;
     }
 }
+.wrapper-love-title {
+    margin-bottom: 40px;
+}
 .love-title {
     font-family: $telegraf;
     font-weight: 400;
@@ -130,6 +133,9 @@ export default {
     }
     .love-content {
         padding-top: 45px;
+    }
+    .wrapper-love-title {
+        margin-bottom: 0;
     }
     .love-title {
         font-size: 3.5rem;
