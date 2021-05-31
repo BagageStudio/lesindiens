@@ -32,10 +32,12 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="container-small">
-                <div class="wrapper-footer content-pad">
-                    <Footer theme="ultra-light" />
+        <div class="home-footer">
+            <div class="container">
+                <div class="container-small">
+                    <div class="wrapper-footer content-pad">
+                        <Footer theme="ultra-light" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,6 +69,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
 .home-hero {
     padding: 110px 0 50px;
 }
