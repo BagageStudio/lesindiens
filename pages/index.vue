@@ -6,7 +6,17 @@
                     <div class="wrapper-cols-home">
                         <div class="col-large-home content-pad">
                             <Button class="primary color-secondary huge home-sticker">
-                                <img src="~static/img/hello.svg" alt="Hello !" />
+                                <div class="wrapper-illus-txt">
+                                    <Sprite
+                                        class="cat"
+                                        :cols="60"
+                                        :rows="1"
+                                        :interval="0.03"
+                                        :loop="true"
+                                        url="img/cat.png"
+                                    />
+                                    <img src="~static/img/hello.svg" alt="Hello !" />
+                                </div>
                             </Button>
                             <h1 class="home-title" v-html="$storyapi.richTextResolver.render(story.content.title)" />
                             <div class="expertises">
@@ -80,6 +90,16 @@ export default {
 }
 .home-sticker {
     margin-bottom: 50px;
+    .wrapper-illus-txt {
+        display: flex;
+        align-items: center;
+    }
+}
+.cat {
+    flex: 0 0 auto;
+    width: 59px;
+    height: 87px;
+    margin: -40px 20px 0 0;
 }
 .home-title {
     font-family: $telegraf;

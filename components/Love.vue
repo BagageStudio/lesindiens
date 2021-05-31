@@ -9,7 +9,7 @@
                             <Button
                                 v-if="data.trustfolio_link"
                                 icon
-                                class="primary align-top"
+                                class="primary align-top trustfolio-link"
                                 :link="data.trustfolio_link.url"
                                 target="_blank"
                                 rel="noopener nofollow noreferrer"
@@ -90,6 +90,9 @@ export default {
     :v-deep br {
         display: none;
     }
+}
+.trustfolio-link {
+    transform: rotateZ(-1deg);
 }
 .love-intro {
     font-family: $object;

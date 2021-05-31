@@ -345,9 +345,14 @@ export default {
     }
 }
 
+.desktop-email-link {
+    transform: rotateZ(-1deg);
+}
+
 .email-link {
     font-size: 2rem;
     padding: 20px 17px 16px;
+    transform: rotateZ(-1deg);
     ::v-deep {
         .icon {
             width: 21px;

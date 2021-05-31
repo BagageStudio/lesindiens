@@ -159,7 +159,6 @@ export default {
     font-size: 1.5rem;
     padding: 7px 17px;
     z-index: 1;
-    transform: rotateZ(-1deg);
     &.align-top {
         .button-content {
             align-items: baseline;
