@@ -30,13 +30,14 @@
                             </div>
                         </div>
                         <div class="col-small-home content-pad">
-                            <div class="projects">
+                            <!-- <div class="projects">
                                 <div v-for="p in story.content.projects" :key="p.id" class="project">
                                     <nuxt-link :to="p.full_slug">
                                         {{ p.content.song_title }}
                                     </nuxt-link>
                                 </div>
-                            </div>
+                            </div> -->
+                            <Slider :projects="story.content.projects" />
                         </div>
                     </div>
                 </div>
@@ -135,7 +136,8 @@ export default {
 @media (min-width: $desktop-small) {
     .wrapper-cols-home {
         display: flex;
-        align-items: flex-start;
+        // align-items: flex-start;
+        align-items: stretch;
         justify-content: space-between;
     }
     .col-large-home {
