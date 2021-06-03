@@ -1,55 +1,27 @@
 <template>
     <div class="slider">
-        <div ref="slider" class="images" @click="clickCursor(iconDirection)">
-            <!-- <div
+        <div
             ref="slider"
             class="images"
-            @click="clickCursor(iconDirection)"
-            @mouseenter="imIn"
-            @mouseleave="imOut"
+            @mousedown="lock"
+            @touchstart="lock"
+            @mouseup="move"
+            @touchend="move"
             @mousemove="mouseMove"
-        > -->
+            @touchmove="moving"
+            @mouseenter="showCursor"
+            @mouseleave="hideCursor"
+            @click="changeSlide"
+        >
             <div v-for="s in projects" ref="image" :key="s.id" class="image">
                 <FastImage class="js-image-inner" :image="s.content.image" cover />
-                <!-- <img
-                    v-if="!objectFitFallback"
-                    v-imageLoaded
-                    class="js-image-inner"
-                    :srcset="getSrcSet(s.image)"
-                    :sizes="getSizesAttr()"
-                    :alt="s.title"
-                />
-                <span
-                    v-if="objectFitFallback"
-                    class="image-fallback js-image-inner"
-                    :style="{ backgroundImage: `url(/slides/${s.image})` }"
-                /> -->
             </div>
         </div>
         <div class="nav">
             <div ref="nav" class="inner-nav">
-                <nuxt-link :to="projects[current].full_slug">
+                <nuxt-link :to="projects[current].full_slug" class="nav-link">
                     <span class="name">{{ projects[current].name }}</span>
                 </nuxt-link>
-                <!-- <a
-                        v-if="slides[current].url"
-                        :href="slides[current].url"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="wrapper-infos"
-                    >
-                        <span class="category">{{ slides[current].cat }}</span>
-                        <div class="infos">
-                            <span class="name">{{ slides[current].title }}</span>
-                            <Icon name="link" />
-                        </div>
-                    </a>
-                    <div v-else class="wrapper-infos">
-                        <span class="category">{{ slides[current].cat }}</span>
-                        <div class="infos">
-                            <span class="name">{{ slides[current].title }}</span>
-                        </div>
-                    </div> -->
                 <div class="arrows">
                     <button aria-label="Projet précédent" class="prev" @click="changeSlide('left')">
                         <Icon name="chevron" />
@@ -81,8 +53,7 @@ export default {
         totalNumber: 0,
         transitionning: false,
         autoPlayTimeout: null,
-        imagesSizes: [580, 780, 960, 1630],
-        slides: []
+        willSwipe: true
     }),
     computed: {
         isL() {
@@ -96,11 +67,17 @@ export default {
         mousePos() {
             return this.$store.state.cursor.mousePos;
         },
-        showCursor() {
-            return this.$store.state.cursor.showCursor;
-        },
         iconDirection() {
             return this.$store.state.cursor.iconDirection;
+        },
+        isMobile() {
+            return this.ww <= this.$breakpoints.list.m;
+        },
+        cursorIcon() {
+            return this.$store.state.cursor.icon;
+        },
+        hasMouse() {
+            return this.$store.state.cursor.hasMouse;
         }
     },
     watch: {
@@ -123,7 +100,6 @@ export default {
         }
     },
     created() {
-        // this.slides = this.$store.getters.getSlides;
         this.totalNumber = this.projects.length - 1;
     },
     mounted() {
@@ -131,19 +107,72 @@ export default {
         this.initSlider();
     },
     methods: {
-        // getSrc(imageName) {
-        //     const size = this.imagesSizes[this.imagesSizes.length - 1];
-        //     return `slides/${size}/${imageName}`;
-        // },
-        // getSrcSet(imageName) {
-        //     return this.imagesSizes.map(size => `slides/${size}/${imageName} ${size}w`).join(', ');
-        // },
-        // getSizesAttr() {
-        //     return this.imagesSizes.map(size => `(max-width: ${size}px) ${size}px`).join(', ');
-        // },
-        clickCursor(d) {
-            if (!this.isL) return;
-            this.changeSlide(d);
+        lock(e) {
+            if (this.hasMouse && !this.isMobile) return;
+            this.x0 = this.unify(e).clientX;
+            this.y0 = this.unify(e).clientY;
+        },
+        move(e) {
+            if (!this.willSwipe) return;
+            if (this.x0 || this.x0 === 0) {
+                const dx = this.unify(e).clientX - this.x0;
+                const s = Math.sign(dx);
+
+                if (s === -1) {
+                    this.nextSlides();
+                } else if (s === 1) {
+                    this.prevSlides();
+                }
+
+                this.x0 = null;
+            }
+        },
+        moving(e) {
+            if (!this.x0 || !this.y0) return;
+            const actualx0 = this.unify(e).clientX;
+            const actualy0 = this.unify(e).clientY;
+            const distX = Math.abs(actualx0 - this.x0);
+            const distY = Math.abs(actualy0 - this.y0);
+            if (distY > distX) {
+                this.willSwipe = false;
+                return;
+            }
+            this.willSwipe = true;
+            e.preventDefault();
+        },
+        mouseMove(e) {
+            if (!this.hasMouse) {
+                this.moving(e);
+            } else {
+                this.cursorMove(e);
+            }
+        },
+        cursorMove(e) {
+            this.setDirection();
+        },
+        setDirection() {
+            if (!this.over || this.isMobile) return;
+            const posFromElement = this.mousePos.x - this.rect.left;
+            const side = posFromElement - this.rect.width / 2;
+            const direction = side < 0 ? 'left' : 'right';
+            if (this.cursorDirection !== direction) {
+                this.cursorDirection = direction;
+                this.$store.commit('cursor/setIconRotation', direction);
+            }
+        },
+        hideCursor() {
+            if (this.isMobile) return;
+            this.over = false;
+            this.$store.commit('cursor/setShowCursor', false);
+            this.cursorDirection = 'right';
+            this.$store.commit('cursor/setIconRotation', 'right');
+        },
+        showCursor() {
+            if (this.isMobile) return;
+            this.over = true;
+            this.$store.commit('cursor/setIcon', 'arrow-long');
+            this.$store.commit('cursor/setShowCursor', true);
+            this.setDirection();
         },
         initSlider() {
             const img = this.$refs.image[this.current];
@@ -162,10 +191,10 @@ export default {
             if (this.transitionning) return;
             EventBus.$emit('back');
             this.transitionning = true;
-            if (direction === 'left') {
-                this.nextSlide(-1);
-            } else {
+            if (this.cursorDirection === 'right') {
                 this.nextSlide(1);
+            } else if (this.cursorDirection === 'left') {
+                this.nextSlide(-1);
             }
         },
         manageZindex(nextIndex) {
@@ -184,7 +213,6 @@ export default {
             }
         },
         nextSlide(direction) {
-            console.log('next slide');
             const nextIndex = this.getNextIndex(direction);
             this.manageZindex(nextIndex);
             const nextImage = this.$refs.image[nextIndex];
@@ -207,18 +235,6 @@ export default {
             this.over = false;
             this.$store.commit('cursor/setShowCursor', false);
         },
-        mouseMove() {
-            if (!this.showCursor && this.isL) this.$store.commit('cursor/setShowCursor', true);
-            this.over = true;
-            this.setDirection();
-        },
-        setDirection() {
-            if (!this.over) return;
-            const posFromElement = this.mousePos.x - this.rect.left;
-            const side = posFromElement - this.rect.width / 2;
-            const direction = side < 0 ? 'left' : 'right';
-            if (this.iconDirection !== direction) this.$store.commit('cursor/setIconDirection', direction);
-        },
         timeoutAutoplay() {
             if (!this.isL) return;
             EventBus.$emit('startTimer');
@@ -237,8 +253,6 @@ export default {
         },
         navTimeline(dir = 'out') {
             const title = this.$refs.nav.querySelector('.name');
-            // const cat = this.$refs.nav.querySelector('.category');
-            // const link = this.$refs.nav.querySelector('.icon-link');
             const tl = gsap.timeline({
                 paused: true,
                 onComplete:
@@ -248,7 +262,6 @@ export default {
                           }
                         : null
             });
-            // const txts = [link, title, cat].filter(el => el);
             const txts = [title].filter(el => el);
             if (dir === 'in') txts.reverse();
             tl.fromTo(
@@ -366,6 +379,20 @@ export default {
     }
 }
 
+.nav {
+    padding: 25px 0;
+}
+.nav-link {
+    text-decoration: none;
+}
+.name {
+    text-decoration: none;
+    font-family: $object;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 30px;
+}
+
 .arrows {
     display: flex;
     justify-content: space-between;
@@ -391,20 +418,8 @@ export default {
     }
 }
 
-// @media (min-width: $tablet) {
-//     .slider {
-//         width: calc(100% + 80px);
-//         margin-left: -40px;
-//     }
-// }
-
 @media (min-width: $desktop-small) {
     .slider {
-        // position: fixed;
-        // bottom: 0;
-        // right: 0;
-        // height: auto;
-        // width: calc(((100% - 80px) * 7 / 12) + 30px);
         height: 100%;
         margin: 0;
     }
@@ -414,18 +429,5 @@ export default {
     .images {
         cursor: none;
     }
-}
-
-@media (min-width: $desktop-large) {
-    // .slider {
-    //     width: calc(((100% - 180px) * 7 / 12) + 80px);
-    //     // top: $header-height-big;
-    // }
-}
-
-@media (min-width: $desktop-xxl) {
-    // .slider {
-    //     width: calc(((100% - 180px) * 8 / 12) + 80px);
-    // }
 }
 </style>
