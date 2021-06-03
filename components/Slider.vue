@@ -351,7 +351,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 335px;
-    margin: 60px 0 0;
 }
 
 .images {
@@ -381,6 +380,10 @@ export default {
 
 .nav {
     padding: 25px 0;
+}
+.inner-nav {
+    display: flex;
+    justify-content: space-between;
 }
 .nav-link {
     text-decoration: none;
@@ -418,10 +421,19 @@ export default {
     }
 }
 
+@media (min-width: $phone) {
+    .slider {
+        height: 435px;
+    }
+}
+@media (min-width: $tablet) {
+    .slider {
+        height: 535px;
+    }
+}
 @media (min-width: $desktop-small) {
     .slider {
         height: 100%;
-        margin: 0;
     }
     .arrows {
         display: none;

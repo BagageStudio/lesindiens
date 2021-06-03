@@ -30,13 +30,6 @@
                             </div>
                         </div>
                         <div class="col-small-home content-pad">
-                            <!-- <div class="projects">
-                                <div v-for="p in story.content.projects" :key="p.id" class="project">
-                                    <nuxt-link :to="p.full_slug">
-                                        {{ p.content.song_title }}
-                                    </nuxt-link>
-                                </div>
-                            </div> -->
                             <Slider :projects="story.content.projects" />
                         </div>
                     </div>
@@ -86,8 +79,11 @@ export default {
     justify-content: space-between;
     min-height: 100vh;
 }
+.col-large-home {
+    margin-bottom: 60px;
+}
 .home-hero {
-    padding: 110px 0 50px;
+    padding: 110px 0 38px;
 }
 .home-sticker {
     margin-bottom: 50px;
@@ -130,7 +126,7 @@ export default {
 
 @media (min-width: $tablet) {
     .home-hero {
-        padding: 170px 0 50px;
+        padding: 170px 0 32px;
     }
 }
 @media (min-width: $desktop-small) {
@@ -142,6 +138,7 @@ export default {
     }
     .col-large-home {
         width: percentage(4/8);
+        margin-bottom: 80px;
     }
     .col-small-home {
         width: percentage(3/8);
