@@ -22,14 +22,32 @@
                 <nuxt-link :to="projects[current].full_slug" class="nav-link">
                     <span class="name">{{ projects[current].name }}</span>
                 </nuxt-link>
-                <div class="arrows">
+                <div class="wrapper-buttons">
+                    <button
+                        class="btn-prev arrow-button"
+                        type="button"
+                        aria-label="Projet précédent"
+                        @click="changeSlide('left')"
+                    >
+                        <Icon name="arrow-long-left" />
+                    </button>
+                    <button
+                        class="btn-next arrow-button"
+                        aria-label="Projet suivant"
+                        type="button"
+                        @click="changeSlide('right')"
+                    >
+                        <Icon name="arrow-long" />
+                    </button>
+                </div>
+                <!-- <div class="arrows">
                     <button aria-label="Projet précédent" class="prev" @click="changeSlide('left')">
                         <Icon name="chevron" />
                     </button>
                     <button aria-label="Projet suivant" class="next" @click="changeSlide('right')">
                         <Icon name="chevron" />
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -191,9 +209,9 @@ export default {
             if (this.transitionning) return;
             EventBus.$emit('back');
             this.transitionning = true;
-            if (this.cursorDirection === 'right') {
+            if (direction === 'right') {
                 this.nextSlide(1);
-            } else if (this.cursorDirection === 'left') {
+            } else if (direction === 'left') {
                 this.nextSlide(-1);
             }
         },
@@ -396,28 +414,13 @@ export default {
     line-height: 30px;
 }
 
-.arrows {
+.wrapper-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-start;
     width: 100%;
-    max-width: 80px;
-    button {
-        color: $white;
-        border: none;
-        &.next {
-            .icon {
-                transform-origin: 50% 50%;
-                transform: rotate(180deg);
-            }
-        }
-        &:focus {
-            outline: none;
-        }
-    }
-    .icon {
-        width: 9px;
-        height: 18px;
+    .arrow-button {
+        margin-left: 20px;
     }
 }
 
@@ -435,7 +438,7 @@ export default {
     .slider {
         height: 100%;
     }
-    .arrows {
+    .wrapper-buttons {
         display: none;
     }
     .images {
