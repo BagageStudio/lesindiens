@@ -27,7 +27,7 @@
                         class="btn-prev arrow-button"
                         type="button"
                         aria-label="Projet précédent"
-                        @click="changeSlide('left')"
+                        @click="arrowChangeSlide(-1)"
                     >
                         <Icon name="arrow-long-left" />
                     </button>
@@ -35,19 +35,11 @@
                         class="btn-next arrow-button"
                         aria-label="Projet suivant"
                         type="button"
-                        @click="changeSlide('right')"
+                        @click="arrowChangeSlide(1)"
                     >
                         <Icon name="arrow-long" />
                     </button>
                 </div>
-                <!-- <div class="arrows">
-                    <button aria-label="Projet précédent" class="prev" @click="changeSlide('left')">
-                        <Icon name="chevron" />
-                    </button>
-                    <button aria-label="Projet suivant" class="next" @click="changeSlide('right')">
-                        <Icon name="chevron" />
-                    </button>
-                </div> -->
             </div>
         </div>
     </div>
@@ -74,6 +66,10 @@ export default {
         willSwipe: true
     }),
     computed: {
+        ww() {
+            if (!this.$store.state.superWindow) return false;
+            return this.$store.state.superWindow.width;
+        },
         isL() {
             if (!this.$store.state.superWindow) return false;
             return this.$store.state.superWindow.width >= this.$breakpoints.list.l;
@@ -89,7 +85,7 @@ export default {
             return this.$store.state.cursor.iconDirection;
         },
         isMobile() {
-            return this.ww <= this.$breakpoints.list.m;
+            return this.ww <= this.$breakpoints.list.l;
         },
         cursorIcon() {
             return this.$store.state.cursor.icon;
@@ -125,6 +121,9 @@ export default {
         this.initSlider();
     },
     methods: {
+        unify(e) {
+            return e.changedTouches ? e.changedTouches[0] : e;
+        },
         lock(e) {
             if (this.hasMouse && !this.isMobile) return;
             this.x0 = this.unify(e).clientX;
@@ -137,9 +136,9 @@ export default {
                 const s = Math.sign(dx);
 
                 if (s === -1) {
-                    this.nextSlides();
+                    this.nextSlide(1);
                 } else if (s === 1) {
-                    this.prevSlides();
+                    this.nextSlide(-1);
                 }
 
                 this.x0 = null;
@@ -204,14 +203,22 @@ export default {
                 this.timeoutAutoplay();
             });
         },
-        changeSlide(direction) {
+        arrowChangeSlide(direction) {
             if (this.autoPlayTimeout) clearRequestTimeout(this.autoPlayTimeout);
             if (this.transitionning) return;
             EventBus.$emit('back');
             this.transitionning = true;
-            if (direction === 'right') {
+            this.nextSlide(direction);
+        },
+        changeSlide(direction) {
+            if (this.isMobile) return;
+            if (this.autoPlayTimeout) clearRequestTimeout(this.autoPlayTimeout);
+            if (this.transitionning) return;
+            EventBus.$emit('back');
+            this.transitionning = true;
+            if (this.cursorDirection === 'right') {
                 this.nextSlide(1);
-            } else if (direction === 'left') {
+            } else if (this.cursorDirection === 'left') {
                 this.nextSlide(-1);
             }
         },
