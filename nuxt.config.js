@@ -16,6 +16,7 @@ const customSass = {
 const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3000;
 const netlifyEnv = process.env.NETLIFY_ENV;
+const isProdEnv = netlifyEnv === 'production';
 const websiteUrl = process.env.URL || `http://${host}:${port}`;
 
 export default {
@@ -181,5 +182,12 @@ export default {
             '~/assets/scss/abstracts/_mixins.scss',
             '~/assets/scss/abstracts/_placeholders.scss'
         ]
+    },
+
+    // Robots config
+    robots: () => {
+        return isProdEnv
+            ? { UserAgent: '*', Disallow: ['/404'], Sitemap: `${websiteUrl}/sitemap.xml` }
+            : { UserAgent: '*', Disallow: '/' };
     }
 };
