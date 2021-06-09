@@ -134,7 +134,7 @@ export default {
         initializeSlider() {
             const projects = this.projects.map(p => ({
                 id: p.id,
-                image: p.content.image.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
+                image: p.content.thumbnail.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
             }));
 
             this.$webgl.init({

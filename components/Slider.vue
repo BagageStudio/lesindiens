@@ -14,7 +14,7 @@
             @click="changeSlide"
         >
             <div v-for="s in projects" ref="image" :key="s.id" class="image">
-                <FastImage class="js-image-inner" :image="s.content.image" cover />
+                <FastImage class="js-image-inner" :image="s.content.thumbnail" cover />
             </div>
         </div>
         <div class="nav">
