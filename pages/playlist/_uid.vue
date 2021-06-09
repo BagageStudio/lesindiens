@@ -35,7 +35,7 @@
                     <div class="project-intro content-pad">
                         <div v-html="intro" />
                         <Button
-                            v-if="currentProject.content.website_link"
+                            v-if="currentProject.content.website_link.url"
                             icon
                             class="primary project-link"
                             :link="currentProject.content.website_link.url"
