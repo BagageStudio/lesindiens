@@ -1,7 +1,11 @@
 <template>
     <div class="e404">
         <div class="wrapper-e404-title">
-            <h1 class="e404-title">Oups ! Erreur 404, cette page n'existe pas.</h1>
+            <h1 class="e404-title">
+                <span class="wrapper-title">
+                    <span ref="title">Oups ! Erreur 404, cette page n'existe pas.&nbsp;</span>
+                </span>
+            </h1>
         </div>
         <div class="container">
             <div class="e404-container container-small">
@@ -21,6 +25,12 @@
 
 <script>
 export default {
+    mounted() {
+        // clone title
+        const title = this.$refs.title;
+        const titleCopy = title.cloneNode(true);
+        title.after(titleCopy);
+    },
     head() {
         return {
             htmlAttrs: {
@@ -40,12 +50,29 @@ export default {
     overflow: hidden;
 }
 .e404-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
     white-space: nowrap;
     font-family: $telegraf;
     font-weight: 100;
     font-size: 48vw;
     line-height: 0.44em;
     padding: 0.83em 0 0.56em;
+}
+.wrapper-title {
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    animation: scrollText 30s infinite linear;
+}
+
+@keyframes scrollText {
+    from {
+        transform: translate3d(0%, 0, 0);
+    }
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
 }
 
 .e404-container {
