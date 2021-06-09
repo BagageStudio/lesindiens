@@ -6,7 +6,7 @@
             <span class="text">
                 <slot />
             </span>
-            <Icon v-if="icon" name="arrow" class="button-icon" />
+            <Icon v-if="icon" name="arrow" />
         </span>
     </a>
 </template>
@@ -172,7 +172,7 @@ export default {
             border-color: var(--secondary);
         }
     }
-    .button-icon {
+    .icon {
         margin-left: 20px;
     }
     &.huge {
