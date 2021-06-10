@@ -10,7 +10,7 @@
                     @mouseenter.native="showCursor(project)"
                     @mouseleave.native="hideCursor"
                 >
-                    <h3 class="linked-project-title content-pad">{{ project.content.song_title }}</h3>
+                    <h3 class="linked-project-title content-pad" v-html="resolveRichText(project.content.song_title)" />
                     <span class="linked-project-info content-pad">
                         <span class="info-title">Client</span>
                         <span class="info-content">{{ project.content.name }}</span>
@@ -38,6 +38,9 @@ export default {
                 size: ['135px', '110px']
             });
             this.$store.commit('cursor/setShowCursor', true);
+        },
+        resolveRichText(text) {
+            return this.$storyapi.richTextResolver.render(text);
         }
     }
 };
@@ -67,6 +70,9 @@ export default {
     font-weight: 400;
     font-size: 3.5rem;
     line-height: 42px;
+    ::v-deep br {
+        display: none;
+    }
 }
 .linked-project-info {
     display: flex;
