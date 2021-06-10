@@ -55,9 +55,7 @@ export default {
         },
         ww() {
             if (!this.$store.state.superWindow) return true;
-            if (this.$store.state.superWindow.width >= this.$breakpoints.list.l) {
-                this.computeRect();
-            }
+            this.computeRect();
         }
     },
     mounted() {
