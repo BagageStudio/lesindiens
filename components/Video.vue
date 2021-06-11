@@ -1,5 +1,5 @@
 <template>
-    <video autoplay loop muted playsinline :class="{ 'full-width': fullWidth }">
+    <video autoplay loop muted playsinline preload="none" :class="{ 'full-width': fullWidth }">
         <source :src="video.webm_file.filename" type="video/webm" />
         <source :src="video.mp4_file.filename" type="video/mp4" />
     </video>
