@@ -2,7 +2,7 @@
     <div
         ref="image"
         class="sprite"
-        :style="{ backgroundImage: `url(${url})`, backgroundSize: cols * 100 + '% auto' }"
+        :style="{ backgroundImage: `url(${imagePath})`, backgroundSize: cols * 100 + '% auto' }"
     />
 </template>
 <script>
@@ -50,13 +50,15 @@ export default {
         gridWidth: 0,
         gridHeight: 0,
         shouldStop: false,
-        tl: null
+        tl: null,
+        imagePath: null
     }),
     created() {
         this.gridWidth = 100 / (this.cols - 1);
         this.gridHeight = 100 / (this.rows - 1);
     },
-    mounted() {
+    async mounted() {
+        await this.loadImage();
         this.tl = gsap.timeline({
             paused: true,
             repeat: this.loop ? -1 : 0,
@@ -86,6 +88,16 @@ export default {
         if (this.autoplay) this.play();
     },
     methods: {
+        loadImage() {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    this.imagePath = img.src;
+                    this.$emit('load');
+                };
+                img.src = this.url;
+            });
+        },
         pause() {
             this.tl.pause();
         },

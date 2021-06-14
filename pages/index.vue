@@ -5,7 +5,7 @@
                 <div class="container-small">
                     <div class="wrapper-cols-home">
                         <div class="col-large-home content-pad">
-                            <Button class="primary color-secondary huge home-sticker">
+                            <Button v-slot="scope" class="primary color-secondary huge home-sticker">
                                 <div class="wrapper-illus-txt">
                                     <Sprite
                                         class="cat"
@@ -14,8 +14,9 @@
                                         :interval="0.03"
                                         :loop="true"
                                         url="img/cat.png"
+                                        @load="scope.computeRect"
                                     />
-                                    <img src="~static/img/hello.svg" alt="Hello !" />
+                                    <img src="~static/img/hello.svg" alt="Hello !" @load="scope.computeRect" />
                                 </div>
                             </Button>
                             <h1 class="home-title" v-html="$storyapi.richTextResolver.render(story.content.title)" />

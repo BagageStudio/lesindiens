@@ -4,7 +4,7 @@
         <span class="frame" />
         <span class="button-content">
             <span class="text">
-                <slot />
+                <slot :computeRect="computeRect" />
             </span>
             <Icon v-if="icon" name="arrow" />
         </span>
@@ -60,7 +60,9 @@ export default {
     },
     mounted() {
         this.init();
-        this.computeRect();
+        this.$nextTick(() => {
+            this.computeRect();
+        });
     },
     methods: {
         init() {
