@@ -53,6 +53,9 @@ export default {
         }
     },
     watch: {
+        $route() {
+            this.$store.commit('cursor/setShowCursor', false);
+        },
         cursorImage(img) {
             gsap.to(this.$refs.imageWrapper, {
                 duration: 0.4,
