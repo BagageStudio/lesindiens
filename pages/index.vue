@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="col-small-home content-pad">
-                            <Slider :projects="story.content.projects" />
+                            <Slider :projects="story.content.projects" @change="changeUri" />
                         </div>
                     </div>
                 </div>
@@ -41,6 +41,7 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
+                        <Playlist v-if="currentTrack" :track="currentTrack" />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
@@ -69,6 +70,26 @@ export default {
                     error({ statusCode: res.response.status, message: res.response.data });
                 }
             });
+    },
+    data: () => ({
+        currentTrack: null
+    }),
+    computed: {
+        tracks() {
+            return this.$store.getters['playlist/getTracks'];
+        }
+    },
+    mounted() {
+        this.currentUri = this.story.content.projects[0].content.spotify_id;
+    },
+    methods: {
+        changeUri(uri) {
+            this.currentTrack = this.tracks.find(track => {
+                return track.uri === uri;
+            });
+            console.log(this.tracks);
+            console.log('this.currentTrack : ' + this.currentTrack);
+        }
     }
 };
 </script>

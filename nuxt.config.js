@@ -150,7 +150,7 @@ export default {
     ],
 
     // Modules (https://go.nuxtjs.dev/config-modules)
-    modules: [],
+    modules: ['@nuxtjs/proxy', '@nuxtjs/axios'],
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
     build: {
@@ -189,5 +189,17 @@ export default {
         return isProdEnv
             ? { UserAgent: '*', Disallow: ['/404'], Sitemap: `${websiteUrl}/sitemap.xml` }
             : { UserAgent: '*', Disallow: '/' };
+    },
+
+    axios: {
+        baseURL: process.env.DEPLOY_PRIME_URL || 'http://localhost:3000'
+    },
+    proxy: {
+        '/.netlify': {
+            target: 'http://localhost:9000',
+            pathRewrite: {
+                '^/.netlify/functions': ''
+            }
+        }
     }
 };

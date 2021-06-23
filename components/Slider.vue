@@ -248,6 +248,8 @@ export default {
             const animNav = this.navTimeline();
             anim.play();
             animNav.play();
+            console.log(this.projects[this.current].content.spotify_id);
+            this.$emit('change', this.projects[this.current].content.spotify_id);
         },
         imIn() {
             if (!this.isL) return;
