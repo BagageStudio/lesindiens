@@ -28,9 +28,6 @@ export default {
     props: {
         data: { type: Object, required: true }
     },
-    data: () => ({
-        funGL: null
-    }),
     computed: {
         isL() {
             if (!this.$store.state.superWindow) return true;

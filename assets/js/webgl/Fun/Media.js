@@ -2,8 +2,6 @@ import { Texture, Program, Mesh } from 'ogl';
 
 import { gsap } from 'gsap';
 
-import { clamp, map } from '../../utils';
-import { BREAKPOINTS } from '../../constants';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 import { FunGL } from './index';

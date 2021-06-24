@@ -1,7 +1,6 @@
-import { Renderer, Camera, Transform, Plane, Vec2, Raycast, Post } from 'ogl';
-import { gsap } from 'gsap';
+import { Renderer, Camera, Transform, Plane, Vec2, Post } from 'ogl';
 
-import { debounce, lerp, round, distance, clamp } from '../../utils';
+import { distance } from '../../utils';
 import fxaa from '../shaders/fxaa.glsl';
 import { Media } from './Media';
 
@@ -193,11 +192,6 @@ class GL {
     }
 
     getClampedInertia(value) {
-        // const clampValues = {
-        //     min: 0.0001,
-        //     max: 0.2
-        // };
-
         const maxInertia = 0.2;
 
         if (value >= 0) {
