@@ -1,5 +1,12 @@
 <template>
-    <a ref="button" :href="link" @mousemove="mouseMove" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
+    <component
+        :is="link !== '#' ? 'a' : 'span'"
+        ref="button"
+        :href="link"
+        @mousemove="mouseMove"
+        @mouseenter="mouseEnter"
+        @mouseleave="mouseLeave"
+    >
         <span class="shadow" />
         <span class="frame" />
         <span class="button-content">
@@ -8,7 +15,7 @@
             </span>
             <Icon v-if="icon" name="arrow" />
         </span>
-    </a>
+    </component>
 </template>
 
 <script>
