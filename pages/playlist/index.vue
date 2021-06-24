@@ -1,5 +1,5 @@
 <template>
-    <div class="playlist">
+    <div class="playlist" :style="{ '--windowHeight': `${wh}px` }">
         <div ref="glWrapper" class="gl-wrapper" />
         <div
             ref="sizeElement"
@@ -85,6 +85,9 @@ export default {
         };
     },
     computed: {
+        wh() {
+            return this.$store.state.superWindow ? this.$store.state.superWindow.height : 600;
+        },
         cursorIcon() {
             return this.$store.state.cursor.icon;
         },
@@ -189,9 +192,10 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 100vh;
+    min-height: var(--windowHeight);
     width: 100vw;
     padding-top: 116px;
+    padding-bottom: 55px;
 }
 
 .canvas-size-wrapper {
@@ -219,10 +223,15 @@ export default {
 }
 
 .content-infos {
+    display: flex;
+    align-items: flex-start;
     flex: 0 0 150px;
     height: 150px;
     margin-bottom: 30px;
     transition: 0.4s ease-in-out 0.7s;
+    .container {
+        flex-grow: 1;
+    }
     h1 {
         display: inline-block;
         font-family: $telegraf;
@@ -306,7 +315,8 @@ export default {
     right: 0;
     bottom: 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 90px;
     opacity: 0;
     transition: 0.4s ease-in-out 0.5s;
     &.show {
@@ -328,6 +338,11 @@ export default {
         height: 3px;
         background-color: #fff;
         transform-origin: 0% 50%;
+    }
+}
+@media (min-width: $tablet) {
+    .playlist {
+        padding-bottom: 0;
     }
 }
 </style>

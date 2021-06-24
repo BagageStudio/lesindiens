@@ -44,7 +44,6 @@ class WebglApp {
 
         this.onResizeEvent = this.onResize.bind(this);
         this.onWheelEvent = this.onWheel.bind(this);
-        this.onWheelEvent = this.onWheel.bind(this);
         this.onTouchDownEvent = this.onTouchDown.bind(this);
         this.onTouchMoveEvent = this.onTouchMove.bind(this);
         this.onTouchUpEvent = this.onTouchUp.bind(this);
@@ -190,7 +189,10 @@ class WebglApp {
         }
 
         const x = event.touches ? event.touches[0].clientX : event.clientX;
-        const distance = (this.start - x) * 0.015;
+
+        const speed = this.screen.width >= BREAKPOINTS.m ? 0.015 : 0.03;
+
+        const distance = (this.start - x) * speed;
 
         this.scroll.target = this.scroll.position + distance;
     }
