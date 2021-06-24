@@ -9,7 +9,7 @@
                 class="sticker"
                 @mousemove="mouseMove"
                 @mouseenter="mouseEnter(sticker.id.toString())"
-                @mouseleave="mouseLeave"
+                @mouseleave="mouseLeave(sticker.id.toString())"
             >
                 <div class="shadow" />
                 <div class="frame" />
@@ -27,7 +27,7 @@
                 class="sticker"
                 @mousemove="mouseMove"
                 @mouseenter="mouseEnter(sticker.id.toString())"
-                @mouseleave="mouseLeave"
+                @mouseleave="mouseLeave(sticker.id.toString())"
             >
                 <div class="shadow" />
                 <div class="frame" />
@@ -49,6 +49,7 @@ export default {
         lineTwo: { type: Array, required: true }
     },
     data: () => ({
+        animScale: {},
         sticker: null,
         stickers: [],
         stickersRect: [],
@@ -84,6 +85,11 @@ export default {
         this.init();
         this.computeRect();
     },
+    beforeDestroy() {
+        Object.values(this.animScale).forEach(tween => {
+            if (tween) tween.kill();
+        });
+    },
     methods: {
         init() {
             this.stickers = this.$refs.sticker;
@@ -103,26 +109,43 @@ export default {
         },
         mouseEnter(id) {
             this.sticker = this.getStickerFromID(id);
-            gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
+            if (this.animScale[id]) this.animScale[id].kill();
+            const tween = gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
                 duration: 0.2,
                 scale: 1.05
             });
+
+            this.$set(this.animScale, id, tween);
         },
-        mouseLeave() {
-            gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
-                duration: 0.5,
-                rotationX: 0,
-                rotationY: 0,
-                scale: 1
-            });
-            gsap.to(this.sticker.shadow, {
-                duration: 0.5,
-                x: 4,
-                y: 3,
-                rotationX: 0,
-                rotationY: 0,
-                scale: 1
-            });
+        mouseLeave(id) {
+            if (this.animScale[id]) this.animScale[id].kill();
+
+            const tl = gsap
+                .timeline()
+                .to(
+                    [this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow],
+                    {
+                        duration: 0.5,
+                        rotationX: 0,
+                        rotationY: 0,
+                        scale: 1
+                    },
+                    'start'
+                )
+                .to(
+                    this.sticker.shadow,
+                    {
+                        duration: 0.5,
+                        x: 4,
+                        y: 3,
+                        rotationX: 0,
+                        rotationY: 0,
+                        scale: 1
+                    },
+                    'start'
+                );
+            this.$set(this.animScale, id, tl);
+
             this.sticker = null;
         },
         tilt(cx, cy) {

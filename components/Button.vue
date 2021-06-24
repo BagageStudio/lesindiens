@@ -29,6 +29,7 @@ export default {
         }
     },
     data: () => ({
+        animScale: null,
         button: null,
         sticker: null,
         stickerRect: [],
@@ -58,6 +59,9 @@ export default {
             this.computeRect();
         }
     },
+    beforeDestroy() {
+        if (this.animScale) this.animScale.kill();
+    },
     mounted() {
         this.init();
         this.$nextTick(() => {
@@ -81,26 +85,38 @@ export default {
         },
         mouseEnter() {
             this.sticker = this.getStickerFromButton(this.button);
-            gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
+            if (this.animScale) this.animScale.kill();
+            this.animScale = gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
                 duration: 0.2,
                 scale: 1.05
             });
         },
         mouseLeave() {
-            gsap.to([this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow], {
-                duration: 0.5,
-                rotationX: 0,
-                rotationY: 0,
-                scale: 1
-            });
-            gsap.to(this.sticker.shadow, {
-                duration: 0.5,
-                x: 4,
-                y: 3,
-                rotationX: 0,
-                rotationY: 0,
-                scale: 1
-            });
+            if (this.animScale) this.animScale.kill();
+            this.animScale = gsap
+                .timeline()
+                .to(
+                    [this.sticker.stickerContent, this.sticker.frame, this.sticker.shadow],
+                    {
+                        duration: 0.5,
+                        rotationX: 0,
+                        rotationY: 0,
+                        scale: 1
+                    },
+                    'start'
+                )
+                .to(
+                    this.sticker.shadow,
+                    {
+                        duration: 0.5,
+                        x: 4,
+                        y: 3,
+                        rotationX: 0,
+                        rotationY: 0,
+                        scale: 1
+                    },
+                    'start'
+                );
         },
         tilt(cx, cy) {
             this.percentageX = round(
