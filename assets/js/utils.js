@@ -35,3 +35,13 @@ export const debounce = (func, wait, immediate) => {
         if (callNow) func.apply(context, args);
     };
 };
+
+export const distance = (a, b) => {
+    const x1 = a.x;
+    const y1 = a.y;
+
+    const x2 = b.x;
+    const y2 = b.y;
+
+    return Math.hypot(x2 - x1, y2 - y1);
+};

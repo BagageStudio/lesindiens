@@ -102,6 +102,9 @@ export default {
     }
 }
 @media (min-width: $desktop-small) {
+    .container-footer {
+        background-color: transparent;
+    }
     .studio-hero {
         padding: 245px 0 30px;
     }
