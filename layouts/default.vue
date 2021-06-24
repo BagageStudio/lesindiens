@@ -9,6 +9,11 @@
 </template>
 <script>
 export default {
+    async fetch() {
+        console.log(this.$axios);
+        const res = await this.$axios.get('/.netlify/functions/getPlaylist');
+        this.$store.commit('playlist/setTracks', res.data.playlist.items);
+    },
     mounted() {
         // Init superWindow
         this.$stereorepo.superWindow.initializeWindow(this.$store);
