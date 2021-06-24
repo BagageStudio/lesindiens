@@ -9,6 +9,7 @@
 </template>
 <script>
 export default {
+    fetchOnServer: false,
     async fetch() {
         const res = await this.$axios.get('/.netlify/functions/getPlaylist');
         this.$store.commit('playlist/setTracks', res.data.playlist.items);
