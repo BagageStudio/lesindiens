@@ -133,10 +133,7 @@ class GL {
     }
 
     createGeometry() {
-        this.planeGeometry = new Plane(this.gl, {
-            heightSegments: 1,
-            widthSegments: 1
-        });
+        this.planeGeometry = new Plane(this.gl);
     }
 
     computePlaneSize() {

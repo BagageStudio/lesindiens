@@ -325,10 +325,7 @@ class WebglApp {
     }
 
     createGeometry() {
-        this.planeGeometry = new Plane(this.gl, {
-            heightSegments: 50,
-            widthSegments: 100
-        });
+        this.planeGeometry = new Plane(this.gl);
     }
 
     computePlaneSize() {
