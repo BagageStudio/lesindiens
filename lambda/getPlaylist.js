@@ -33,13 +33,13 @@ exports.handler = async function (event, context) {
             body: JSON.stringify(response)
         };
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
         return {
             statusCode: 200,
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify(error)
+            body: JSON.stringify(error.response)
         };
     }
 };

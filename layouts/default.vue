@@ -11,8 +11,13 @@
 export default {
     fetchOnServer: false,
     async fetch() {
-        const res = await this.$axios.get('/.netlify/functions/getPlaylist');
-        this.$store.commit('playlist/setTracks', res.data.playlist.items);
+        let tracks = [];
+        try {
+            tracks = await this.$axios.get('/.netlify/functions/getPlaylist').then(res => res.data.playlist.items);
+        } catch (error) {
+            console.log(error);
+        }
+        this.$store.commit('playlist/setTracks', tracks);
     },
     mounted() {
         // Init superWindow
