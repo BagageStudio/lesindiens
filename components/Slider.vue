@@ -113,6 +113,12 @@ export default {
             this.rect = this.$refs.slider.getBoundingClientRect();
         }
     },
+    beforeDestroy() {
+        if (this.autoPlayTimeout) {
+            clearRequestTimeout(this.autoPlayTimeout);
+            this.autoPlayTimeout = null;
+        }
+    },
     created() {
         this.totalNumber = this.projects.length - 1;
     },
