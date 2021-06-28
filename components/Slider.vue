@@ -245,6 +245,8 @@ export default {
         },
         nextSlide(direction) {
             const nextIndex = this.getNextIndex(direction);
+            this.$emit('change', this.projects[nextIndex].content.spotify_id);
+
             this.manageZindex(nextIndex);
             const nextImage = this.$refs.image[nextIndex];
             const nextInner = nextImage.querySelector('.js-image-inner');
@@ -252,10 +254,9 @@ export default {
             const currentInner = currentImage.querySelector('.js-image-inner');
             const anim = this.slideTimeline(currentInner, currentImage, nextInner, nextImage, nextIndex, direction);
             const animNav = this.navTimeline();
+
             anim.play();
             animNav.play();
-            console.log(this.projects[this.current].content.spotify_id);
-            this.$emit('change', this.projects[this.current].content.spotify_id);
         },
         imIn() {
             if (!this.isL) return;
