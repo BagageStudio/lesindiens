@@ -4,6 +4,7 @@
             <div class="container">
                 <div class="container-small">
                     <h1 class="type-title content-pad">{{ page[0].content.title }}</h1>
+                    <Playlist v-if="currentTrack && currentTrack.url" class="type-playlist" :track="currentTrack" />
                 </div>
             </div>
         </div>
@@ -24,6 +25,8 @@
 </template>
 
 <script>
+import tracks from '~/app/tracks.json';
+
 export default {
     async asyncData({ app, $config, error, route }) {
         const page = await app.$storyapi
@@ -44,6 +47,21 @@ export default {
                 }
             });
         return { page };
+    },
+    data: () => ({
+        currentTrack: null
+    }),
+    computed: {
+        tracks() {
+            return tracks;
+        }
+    },
+    mounted() {
+        if (this.page[0].content.spotify_id) {
+            this.currentTrack = this.tracks.find(track => {
+                return track.uri === this.page[0].content.spotify_id;
+            });
+        }
     },
     methods: {
         resolveRichText(text) {
@@ -70,6 +88,9 @@ export default {
     line-height: 1;
     font-weight: 100;
 }
+.type-playlist {
+    margin-top: 30px;
+}
 @media (min-width: $tablet) {
     .type-hero {
         padding: 180px 0 50px;
@@ -82,6 +103,9 @@ export default {
 @media (min-width: $desktop-small) {
     .type-hero {
         padding: 245px 0 50px;
+    }
+    .type-playlist {
+        margin-top: 50px;
     }
 }
 </style>

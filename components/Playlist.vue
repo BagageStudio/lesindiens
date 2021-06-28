@@ -14,7 +14,6 @@
                     ref="circle"
                     class="progress-circle"
                     stroke-width="1"
-                    stroke="white"
                     fill="transparent"
                     transform="matrix(0,-1,1,0,0,70)"
                     r="34"
@@ -298,7 +297,7 @@ button {
         left: 0;
         right: 0;
         border-radius: 50%;
-        border: 1px solid #323336;
+        border: 1px solid var(--quinquennial);
     }
 }
 
@@ -336,7 +335,7 @@ button {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: $black;
+        background-color: var(--primary);
         z-index: 4;
     }
 }
@@ -351,7 +350,7 @@ button {
     background-position: 50% 50%;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: black;
+    background-color: var(--primary);
     z-index: 2;
     &.next-jaquette {
         opacity: 0;
@@ -376,7 +375,7 @@ button {
         top: 0;
         width: 16px;
         height: 11px;
-        fill: $white;
+        fill: var(--secondary);
     }
     &:hover,
     &:focus {
@@ -400,6 +399,7 @@ button {
     // 213.62830044410595 is the circumference of the circle (radius * 2 * PI)
     stroke-dasharray: 213.62830044410595 213.62830044410595;
     stroke-dashoffset: 213.62830044410595;
+    stroke: var(--secondary);
 }
 
 .artist {
