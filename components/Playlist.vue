@@ -24,14 +24,14 @@
             </svg>
         </div>
         <div class="data">
-            <span ref="name" class="name">{{ trackName }}</span>
-            <span ref="artist" class="artist">{{ artistName }}</span>
-            <div class="controls">
-                <button aria-label="Son allumé ou muet" class="sound" @click="toggleMute">
-                    <Icon v-show="mute" name="mute" />
-                    <Icon v-show="!mute" name="sound" />
-                </button>
+            <div class="track-infos">
+                <span ref="artist" class="artist">{{ artistName }}</span>
+                <span ref="name" class="name">{{ trackName }}</span>
             </div>
+            <button aria-label="Son allumé ou muet" class="sound" @click="toggleMute">
+                <Icon v-show="mute" name="mute" />
+                <Icon v-show="!mute" name="sound" />
+            </button>
         </div>
         <audio
             ref="player"
@@ -272,6 +272,7 @@ button {
 }
 .playlist {
     display: inline-flex;
+    align-items: center;
     width: 100%;
     padding: 0 $gutter;
     opacity: 0;
@@ -303,10 +304,20 @@ button {
 
 .data {
     display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    max-width: calc(100% - 70px);
+}
+
+.track-infos {
+    display: flex;
     flex-direction: column;
-    margin-right: 10px;
     overflow: hidden;
+    margin-right: 10px;
+    font-size: 1.3rem;
+    line-height: 1;
     > span {
+        margin: 4px 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -352,21 +363,13 @@ button {
     margin-left: auto;
 }
 
-.controls {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    button {
-        border: none;
-    }
-}
-
 .sound {
     position: relative;
     width: 16px;
     height: 11px;
-    margin-left: 20px;
+    margin: 4px 0 6px;
     transition: opacity 0.3s ease-in-out;
+    border: none;
     .icon {
         position: absolute;
         left: 0;
