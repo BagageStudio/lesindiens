@@ -11,7 +11,7 @@
                             <div class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-                    <Playlist v-if="currentTrack && currentTrack.url" :track="currentTrack" />
+                    <Playlist v-if="currentTrack && currentTrack.url" class="studio-playlist" :track="currentTrack" />
                 </div>
                 <div v-if="isL">
                     <Stickers :line-one="studio.stickers_line_one" :line-two="studio.stickers_line_two" />
@@ -90,7 +90,7 @@ export default {
 
 <style lang="scss" scoped>
 .studio-hero {
-    padding: 110px 0 30px;
+    padding: 110px 0 50px;
 }
 .studio-title {
     font-family: $telegraf;
@@ -105,6 +105,9 @@ export default {
     font-size: 2.5rem;
     line-height: 32px;
     margin-top: 20px;
+}
+.studio-playlist {
+    margin-top: 40px;
 }
 @media (min-width: $tablet) {
     .studio-hero {
