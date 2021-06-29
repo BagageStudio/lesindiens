@@ -90,6 +90,7 @@ export default {
 }
 .type-playlist {
     margin-top: 30px;
+    padding: 0 $gutter;
 }
 @media (min-width: $tablet) {
     .type-hero {
