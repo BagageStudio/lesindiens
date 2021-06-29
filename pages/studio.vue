@@ -108,6 +108,7 @@ export default {
 }
 .studio-playlist {
     margin-top: 40px;
+    padding: 0 $gutter;
 }
 @media (min-width: $tablet) {
     .studio-hero {

@@ -272,8 +272,8 @@ button {
 .playlist {
     display: inline-flex;
     align-items: center;
-    width: 100%;
-    padding: 0 $gutter;
+    max-width: 100%;
+    padding: 0;
     opacity: 0;
     transition: opacity 1s cubic-bezier(0.165, 0.84, 0.44, 1);
     &.show {
@@ -404,11 +404,5 @@ button {
 
 .artist {
     color: #787878;
-}
-
-@media (min-width: $desktop-large) {
-    .playlist {
-        width: percentage(3/4);
-    }
 }
 </style>
