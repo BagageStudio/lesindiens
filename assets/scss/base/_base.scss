@@ -14,6 +14,7 @@
 html {
     font-size: 62.5%; /* sets the base font to 10px for easier math */
     background: var(--primary);
+    transition: background 0.2s ease-in-out;
     &.no-scroll {
         position: fixed;
         left: 0;
