@@ -1,11 +1,11 @@
 <template>
     <div class="header">
         <div class="container">
-            <div class="container-small">
+            <div v-show="isMobile" class="container-small">
                 <nuxt-link class="content-pad" to="/">
                     <Logo />
                 </nuxt-link>
-                <div v-if="isMobile" class="content-pad">
+                <div class="content-pad">
                     <button class="burger" aria-label="Menu" @click="toggleMenuMobile">
                         <div class="burger-inner lines" :class="{ show: !showMenuMobile }">
                             <span />
@@ -21,7 +21,7 @@
                 </div>
 
                 <transition name="menu" :duration="{ enter: 900, leave: 600 }">
-                    <div v-if="isMobile" v-show="showMenuMobile" class="menu">
+                    <div v-show="showMenuMobile" class="menu">
                         <div class="menu-inner">
                             <div
                                 v-for="(link, index) in content.header_links"
@@ -43,8 +43,13 @@
                         </div>
                     </div>
                 </transition>
+            </div>
 
-                <div v-if="!isMobile" class="menu-desktop content-pad">
+            <div v-show="!isMobile" class="container-small">
+                <nuxt-link class="content-pad" to="/">
+                    <Logo />
+                </nuxt-link>
+                <div class="menu-desktop content-pad">
                     <div v-for="(link, index) in content.header_links" :key="link._uid">
                         <nuxt-link :to="'/' + link.link.story.full_slug" class="desktop-link">
                             <span class="front">
@@ -58,7 +63,7 @@
                         </nuxt-link>
                     </div>
                 </div>
-                <div v-if="!isMobile" class="content-pad">
+                <div class="content-pad">
                     <Button icon class="primary desktop-email-link" :link="`mailto:${content.email.email}`">
                         {{ content.email.email }}
                     </Button>
@@ -104,7 +109,7 @@ export default {
             return this.ww <= this.$breakpoints.list.l;
         },
         ww() {
-            return this.$store.state.superWindow ? this.$store.state.superWindow.width : 320;
+            return this.$store.state.superWindow ? this.$store.state.superWindow.width : 375;
         }
     },
     watch: {
