@@ -90,13 +90,13 @@ export default {
         onScroll() {
             this.pos = this.$el.getBoundingClientRect();
             if (
-                this.pos.top - this.w.h + this.offset.bottom < 0 &&
+                this.pos.top - this.w.height + this.offset.bottom < 0 &&
                 this.pos.top + this.pos.height - this.offset.top > 0
             ) {
                 this.isIn = true;
             } else if (
                 this.pos.top + this.pos.height - this.offset.top < 0 ||
-                this.pos.top - this.w.h + this.offset.bottom > 0
+                this.pos.top - this.w.height + this.offset.bottom > 0
             ) {
                 this.isIn = false;
             }
