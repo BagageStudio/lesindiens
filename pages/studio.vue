@@ -11,6 +11,7 @@
                             <div class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
+                    <Playlist v-if="currentTrack && currentTrack.url" class="studio-playlist" :track="currentTrack" />
                 </div>
                 <div v-if="isL">
                     <Stickers :line-one="studio.stickers_line_one" :line-two="studio.stickers_line_two" />
@@ -32,6 +33,8 @@
 </template>
 
 <script>
+import tracks from '~/app/tracks.json';
+
 export default {
     async asyncData({ app, $config, error }) {
         const studio = await app.$storyapi
@@ -62,6 +65,9 @@ export default {
 
         return { studio, services };
     },
+    data: () => ({
+        currentTrack: null
+    }),
     computed: {
         isL() {
             if (!this.$store.state.superWindow) return true;
@@ -69,14 +75,22 @@ export default {
         },
         subtitle() {
             return this.$storyapi.richTextResolver.render(this.studio.subtitle);
+        },
+        tracks() {
+            return tracks;
         }
+    },
+    mounted() {
+        this.currentTrack = this.tracks.find(track => {
+            return track.uri === this.studio.spotify_id;
+        });
     }
 };
 </script>
 
 <style lang="scss" scoped>
 .studio-hero {
-    padding: 110px 0 30px;
+    padding: 110px 0 50px;
 }
 .studio-title {
     font-family: $telegraf;
@@ -91,6 +105,10 @@ export default {
     font-size: 2.5rem;
     line-height: 32px;
     margin-top: 20px;
+}
+.studio-playlist {
+    margin-top: 40px;
+    padding: 0 $gutter;
 }
 @media (min-width: $tablet) {
     .studio-hero {

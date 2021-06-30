@@ -17,7 +17,13 @@
                                 <Tags :tags="currentProject.content.expertises" />
                             </div>
                         </div>
-                        <div class="project-song" />
+                        <div class="project-song content-pad">
+                            <Playlist
+                                v-if="currentTrack && currentTrack.url"
+                                class="project-playlist"
+                                :track="currentTrack"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,6 +72,8 @@
 </template>
 
 <script>
+import tracks from '~/app/tracks.json';
+
 export default {
     async asyncData({ app, $config, error, route }) {
         const projects = await app.$storyapi
@@ -100,13 +108,24 @@ export default {
         }
         return { currentProject, twoOtherProjects };
     },
+    data: () => ({
+        currentTrack: null
+    }),
     computed: {
         title() {
             return this.$storyapi.richTextResolver.render(this.currentProject.content.song_title);
         },
         intro() {
             return this.$storyapi.richTextResolver.render(this.currentProject.content.intro);
+        },
+        tracks() {
+            return tracks;
         }
+    },
+    mounted() {
+        this.currentTrack = this.tracks.find(track => {
+            return track.uri === this.currentProject.content.spotify_id;
+        });
     }
 };
 </script>
@@ -177,7 +196,7 @@ export default {
         justify-content: space-between;
     }
     .project-infos {
-        width: percentage(7/10);
+        width: percentage(4/8);
     }
     .project-info {
         display: flex;
@@ -192,7 +211,7 @@ export default {
     }
     .project-song {
         margin-top: 0;
-        width: percentage(2/10);
+        width: percentage(3/8);
     }
 
     .container-details {
@@ -224,8 +243,22 @@ export default {
     .project-details {
         width: percentage(3/10);
     }
+    .project-infos {
+        width: percentage(5/10);
+    }
+    .project-song {
+        width: percentage(4/10);
+    }
     .project-intro {
         width: percentage(6/10);
+    }
+}
+@media (min-width: $desktop-xxl) {
+    .project-infos {
+        width: percentage(6/10);
+    }
+    .project-song {
+        width: percentage(3/10);
     }
 }
 </style>

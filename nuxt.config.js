@@ -164,6 +164,9 @@ export default {
 
     // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
     buildModules: [
+        '@nuxtjs/proxy',
+        '@nuxtjs/axios',
+        '~/modules/tracks',
         // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         '@nuxtjs/style-resources',
@@ -176,8 +179,11 @@ export default {
         ]
     ],
 
+    privateRuntimeConfig: {
+        spotifySecret: process.env.SPOTIFY_SECRET
+    },
     // Modules (https://go.nuxtjs.dev/config-modules)
-    modules: ['@nuxtjs/proxy', '@nuxtjs/axios'],
+    modules: [],
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
     build: {

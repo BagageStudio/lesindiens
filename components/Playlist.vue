@@ -14,7 +14,6 @@
                     ref="circle"
                     class="progress-circle"
                     stroke-width="1"
-                    stroke="white"
                     fill="transparent"
                     transform="matrix(0,-1,1,0,0,70)"
                     r="34"
@@ -24,14 +23,14 @@
             </svg>
         </div>
         <div class="data">
-            <span ref="name" class="name">{{ trackName }}</span>
-            <span ref="artist" class="artist">{{ artistName }}</span>
-            <div class="controls">
-                <button aria-label="Son allumé ou muet" class="sound" @click="toggleMute">
-                    <Icon v-show="mute" name="mute" />
-                    <Icon v-show="!mute" name="sound" />
-                </button>
+            <div class="track-infos">
+                <span ref="artist" class="artist">{{ artistName }}</span>
+                <span ref="name" class="name">{{ trackName }}</span>
             </div>
+            <button aria-label="Son allumé ou muet" class="sound" @click="toggleMute">
+                <Icon v-show="mute" name="mute" />
+                <Icon v-show="!mute" name="sound" />
+            </button>
         </div>
         <audio
             ref="player"
@@ -64,18 +63,20 @@ export default {
         stoped: true,
         ready: false,
         trackUrl: '',
+        nextJaquetteUrl: '',
         jaquetteUrl: '',
-        nextJaquetteUrl: ''
+        prevTrack: null,
+        currentTrack: null
     }),
     computed: {
         dashOffset() {
             return this.circum - (this.progress / 100) * this.circum;
         },
         trackName() {
-            return this.tracks ? this.tracks[this.current].name : '';
+            return this.currentTrack ? this.currentTrack.name : '';
         },
         artistName() {
-            return this.tracks ? this.tracks[this.current].artist : '';
+            return this.currentTrack ? this.currentTrack.artist : '';
         },
         tracks() {
             return this.$store.getters['playlist/getTracks'];
@@ -101,6 +102,9 @@ export default {
         trackUrl() {
             this.stoped = false;
             this.$refs.player.muted = this.mute;
+        },
+        track(newTrack, prevTrack) {
+            this.nextTrack(1);
         }
     },
     mounted() {
@@ -108,8 +112,10 @@ export default {
     },
     methods: {
         initPlaylist() {
-            this.jaquetteUrl = this.tracks[this.current].img.url;
-            this.trackUrl = this.tracks[this.current].url;
+            this.currentTrack = this.track;
+            this.prevTrack = this.track;
+            this.jaquetteUrl = this.currentTrack.img.url;
+            this.trackUrl = this.currentTrack.url;
         },
         letsFakeIt() {
             this.fake = true;
@@ -120,10 +126,7 @@ export default {
             this.fakeTween = gsap.to(this, {
                 duration: 30,
                 progress: 100,
-                ease: 'none',
-                onComplete: () => {
-                    this.nextTrack(1);
-                }
+                ease: 'none'
             });
         },
         stopTheFake() {
@@ -173,20 +176,13 @@ export default {
             this.$refs.player.muted = this.mute;
         },
         audioEnd() {
-            this.nextTrack(1);
+            // this.nextTrack(1);
         },
         timeUpdate() {
             if (!this.$refs.player || this.fake || this.stoped) return;
             const duration = this.$refs.player.duration;
             const currentTime = this.$refs.player.currentTime;
             this.progress = (currentTime / duration) * 100;
-        },
-        getNextIndex(dir) {
-            if (dir > 0) {
-                return this.current === this.tracks.length - 1 ? 0 : this.current + 1;
-            } else {
-                return this.current === 0 ? this.tracks.length - 1 : this.current - 1;
-            }
         },
         nextTrack(direction) {
             if (this.transitionning) return;
@@ -201,9 +197,7 @@ export default {
             if (this.fake) this.fakeTween.kill();
             this.progress = 0;
 
-            const nextCurrent = this.getNextIndex(direction);
-
-            this.nextJaquetteUrl = this.tracks[nextCurrent].img.url;
+            this.nextJaquetteUrl = this.track.img.url;
 
             const rotationToRemove = (gsap.getProperty(this.$refs.jaquette, 'rotation') % 360) + 360;
 
@@ -250,9 +244,9 @@ export default {
                     'begin'
                 )
                 .add(() => {
-                    this.current = nextCurrent;
-                    this.jaquetteUrl = this.tracks[nextCurrent].img.url;
-                    this.trackUrl = this.tracks[this.current].url;
+                    this.currentTrack = this.track;
+                    this.jaquetteUrl = this.track.img.url;
+                    this.trackUrl = this.track.url;
                 }, 'end')
                 .to(
                     [this.$refs.artist, this.$refs.name],
@@ -277,8 +271,9 @@ button {
 }
 .playlist {
     display: inline-flex;
-    width: 100%;
-    padding: 0 $gutter;
+    align-items: center;
+    max-width: 100%;
+    padding: 0;
     opacity: 0;
     transition: opacity 1s cubic-bezier(0.165, 0.84, 0.44, 1);
     &.show {
@@ -302,16 +297,26 @@ button {
         left: 0;
         right: 0;
         border-radius: 50%;
-        border: 1px solid #323336;
+        border: 1px solid var(--quinquennial);
     }
 }
 
 .data {
     display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    max-width: calc(100% - 70px);
+}
+
+.track-infos {
+    display: flex;
     flex-direction: column;
-    margin-right: 10px;
     overflow: hidden;
+    margin-right: 10px;
+    font-size: 1.3rem;
+    line-height: 1;
     > span {
+        margin: 4px 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -330,7 +335,7 @@ button {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: $black;
+        background-color: var(--primary);
         z-index: 4;
     }
 }
@@ -345,7 +350,7 @@ button {
     background-position: 50% 50%;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: black;
+    background-color: var(--primary);
     z-index: 2;
     &.next-jaquette {
         opacity: 0;
@@ -357,28 +362,20 @@ button {
     margin-left: auto;
 }
 
-.controls {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    button {
-        border: none;
-    }
-}
-
 .sound {
     position: relative;
     width: 16px;
     height: 11px;
-    margin-left: 20px;
+    margin: 4px 0 6px;
     transition: opacity 0.3s ease-in-out;
+    border: none;
     .icon {
         position: absolute;
         left: 0;
         top: 0;
         width: 16px;
         height: 11px;
-        fill: $white;
+        fill: var(--secondary);
     }
     &:hover,
     &:focus {
@@ -402,15 +399,10 @@ button {
     // 213.62830044410595 is the circumference of the circle (radius * 2 * PI)
     stroke-dasharray: 213.62830044410595 213.62830044410595;
     stroke-dashoffset: 213.62830044410595;
+    stroke: var(--secondary);
 }
 
 .artist {
     color: #787878;
-}
-
-@media (min-width: $desktop-large) {
-    .playlist {
-        width: percentage(3/4);
-    }
 }
 </style>

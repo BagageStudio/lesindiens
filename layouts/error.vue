@@ -3,7 +3,7 @@
         <div class="wrapper-e404-title">
             <h1 class="e404-title">
                 <span class="wrapper-title">
-                    <span ref="title">Oups ! Erreur 404, cette page n'existe pas.&nbsp;</span>
+                    <span ref="title">{{ errorPage.title }}&nbsp;</span>
                 </span>
             </h1>
         </div>
@@ -11,9 +11,15 @@
             <div class="e404-container container-small">
                 <div class="wrapper-content-e404">
                     <div class="content-txt content-pad">
-                        <h2 class="e404-subtitle">On chante ensemble <br />ou tu retournes à&nbsp;l'accueil&nbsp;?</h2>
+                        <h2 class="e404-subtitle" v-html="subtitle" />
                     </div>
-                    <div class="content-playlist content-pad">Playlist</div>
+                    <div class="content-playlist">
+                        <Playlist
+                            v-if="currentTrack && currentTrack.url"
+                            class="error-playlist"
+                            :track="currentTrack"
+                        />
+                    </div>
                 </div>
                 <div class="e404-btn content-pad">
                     <Button icon class="primary" :link="'/'"> Retour à l'accueil </Button>
@@ -24,8 +30,35 @@
 </template>
 
 <script>
+import tracks from '~/app/tracks.json';
+
 export default {
+    async asyncData({ app, $config, error }) {
+        const errorPage = await app.$storyapi
+            .get('cdn/stories/error', {
+                version: $config.sBlokVersion
+            })
+            .then(res => res.data.story.content)
+            .catch(res => error({ statusCode: 404, message: 'Failed to receive content form api' }));
+
+        return { errorPage };
+    },
+    data: () => ({
+        currentTrack: null
+    }),
+    computed: {
+        subtitle() {
+            return this.$storyapi.richTextResolver.render(this.errorPage.subtitle);
+        },
+        tracks() {
+            return tracks;
+        }
+    },
     mounted() {
+        this.currentTrack = this.tracks.find(track => {
+            return track.uri === this.errorPage.spotify_id;
+        });
+
         // clone title
         const title = this.$refs.title;
         const titleCopy = title.cloneNode(true);
@@ -66,6 +99,10 @@ export default {
     animation: scrollText 30s infinite linear;
 }
 
+.error-playlist {
+    padding: 0 $gutter;
+}
+
 @keyframes scrollText {
     from {
         transform: translate3d(0%, 0, 0);
@@ -101,6 +138,8 @@ export default {
     }
 }
 .content-playlist {
+    display: flex;
+    justify-content: center;
     margin: 30px 0 40px;
 }
 .e404-btn {
@@ -135,6 +174,9 @@ export default {
         > br {
             display: block;
         }
+    }
+    .content-playlist {
+        justify-content: flex-start;
     }
     .e404-btn {
         justify-content: flex-start;

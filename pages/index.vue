@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="col-small-home content-pad">
-                            <Slider :projects="story.content.projects" @change="changeUri" />
+                            <Slider :projects="story.content.projects" @change="changeTrack" />
                         </div>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist v-if="currentTrack" :track="currentTrack" />
+                        <Playlist v-if="currentTrack && currentTrack.url" :track="currentTrack" />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import tracks from '~/app/tracks.json';
+
 export default {
     asyncData({ app, $config, error }) {
         return app.$storyapi
@@ -76,19 +78,17 @@ export default {
     }),
     computed: {
         tracks() {
-            return this.$store.getters['playlist/getTracks'];
+            return tracks;
         }
     },
     mounted() {
-        this.currentUri = this.story.content.projects[0].content.spotify_id;
+        this.changeTrack(this.story.content.projects[0].content.spotify_id);
     },
     methods: {
-        changeUri(uri) {
+        changeTrack(uri) {
             this.currentTrack = this.tracks.find(track => {
                 return track.uri === uri;
             });
-            console.log(this.tracks);
-            console.log('this.currentTrack : ' + this.currentTrack);
         }
     }
 };

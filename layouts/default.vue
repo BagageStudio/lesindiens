@@ -9,16 +9,6 @@
 </template>
 <script>
 export default {
-    fetchOnServer: false,
-    async fetch() {
-        let tracks = [];
-        try {
-            tracks = await this.$axios.get('/.netlify/functions/getPlaylist').then(res => res.data.playlist.items);
-        } catch (error) {
-            console.log(error);
-        }
-        this.$store.commit('playlist/setTracks', tracks);
-    },
     mounted() {
         // Init superWindow
         this.$stereorepo.superWindow.initializeWindow(this.$store);
