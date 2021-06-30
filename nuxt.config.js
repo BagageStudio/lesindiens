@@ -122,6 +122,33 @@ export default {
         ]
     },
 
+    pageTransition: {
+        name: 'page',
+        mode: 'out-in',
+        appear: true,
+        css: false,
+        beforeLeave(el) {
+            // console.log('Before leave...')
+        },
+        leave(el) {
+            // console.log('Enter...')
+        },
+        afterLeave(el) {
+            // console.log('After leave...')
+        },
+        beforeEnter(el) {
+            // console.log('Before enter...')
+        },
+        enter(el) {
+            // console.log('Enter...')
+        },
+        afterEnter(el) {
+            // console.log('After enter...')
+        }
+    },
+
+    loading: false,
+
     // Global CSS (https://go.nuxtjs.dev/config-css)
     css: ['~assets/scss/main.scss'],
 

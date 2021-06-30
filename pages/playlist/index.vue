@@ -7,7 +7,7 @@
             :class="{ 'no-cursor': cursorIsShown && !scrolling }"
             @mouseleave="hideCursor"
         />
-        <div class="content-infos">
+        <div class="content-infos" :class="{ show: showInfo }">
             <div class="container">
                 <div class="container-small">
                     <div class="content-pad infos" :class="{ hide: scrolling }">
@@ -79,7 +79,8 @@ export default {
     data() {
         return {
             percentage: 0,
-            scrolling: false,
+            scrolling: true,
+            showInfo: false,
             currentProject: null,
             cursorIsShown: false
         };
@@ -119,6 +120,7 @@ export default {
                 dom: this.$refs.glWrapper,
                 sizeElement: this.$refs.sizeElement
             });
+            this.currentProject = this.projects[0];
         }
     },
     beforeDestroy() {
@@ -128,6 +130,7 @@ export default {
     methods: {
         setCallbackMethods() {
             this.$webgl.onSelected = this.onSelected.bind(this);
+            this.$webgl.onLoaded = this.onLoaded.bind(this);
             this.$webgl.onScrollChange = this.onScrollChange.bind(this);
             this.$webgl.onScrollStart = this.onScrollStart.bind(this);
             this.$webgl.showCursor = this.showCursor.bind(this);
@@ -135,23 +138,22 @@ export default {
             this.$webgl.goToProject = this.goToProject.bind(this);
         },
         initializeSlider() {
-            const projects = this.projects.map(p => ({
+            const images = this.projects.map(p => ({
                 id: p.id,
                 image: p.content.thumbnail.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
             }));
 
             this.$webgl.init({
                 dom: this.$refs.glWrapper,
-                sizeElement: this.$refs.sizeElement
+                sizeElement: this.$refs.sizeElement,
+                images
             });
-
-            this.currentProject = this.projects[0];
 
             this.setCallbackMethods();
 
-            this.$nextTick(() => {
-                this.$webgl.addMedias([...projects, ...projects, ...projects]);
-            });
+            this.$webgl.enable();
+
+            this.currentProject = this.projects[0];
         },
         goToProject(projectSelected) {
             const project = this.projects.find(p => projectSelected.id === p.id);
@@ -167,10 +169,12 @@ export default {
             this.cursorIsShown = false;
         },
         onScrollStart() {
+            console.log('on scroll start');
             this.scrolling = true;
             this.hideCursor();
         },
         onSelected(s) {
+            console.log('on selected');
             this.scrolling = false;
             const projectIndex = s % this.projects.length;
             const project = this.projects[projectIndex];
@@ -181,12 +185,18 @@ export default {
             const scroll = (progress * 100) / maxScroll;
             const move = scroll % 100;
             this.percentage = move < 0 ? 100 + move : move;
+        },
+        onLoaded() {
+            this.showInfo = true;
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
+canvas {
+    background-color: red;
+}
 .playlist {
     position: relative;
     display: flex;
@@ -228,7 +238,11 @@ export default {
     flex: 0 0 150px;
     height: 150px;
     margin-bottom: 30px;
-    transition: 0.4s ease-in-out 0.7s;
+    transition: 0.4s ease-in-out;
+    opacity: 0;
+    &.show {
+        opacity: 1;
+    }
     .container {
         flex-grow: 1;
     }
@@ -241,8 +255,6 @@ export default {
         margin-bottom: 30px;
         perspective: 1000px;
         perspective-origin: 50% 50%;
-
-        // transition: 0.4s ease-in-out 0.7s;
     }
 }
 

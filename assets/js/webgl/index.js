@@ -4,29 +4,29 @@ import { gsap } from 'gsap';
 import NormalizeWheel from 'normalize-wheel';
 import { BREAKPOINTS } from '../constants';
 
-import { debounce, lerp, round } from '../utils';
+import { debounce, lerp, round, wait } from '../utils';
 import { Media } from './Media';
 
 import fxaa from './shaders/fxaa.glsl';
 
 class WebglApp {
-    init({ dom, sizeElement }) {
+    init({ dom, sizeElement, images }) {
         this.dom = dom;
-
-        this.disabled = false;
 
         this.previousTime = 0;
         this.deltaTime = 0;
 
         this.sizeElement = sizeElement;
 
+        this.images = images;
         this.medias = [];
+        this.textures = [];
 
         this.scroll = {
             ease: 6.25,
-            current: 0,
-            target: 0,
-            last: 0,
+            current: 100,
+            target: 100,
+            last: 100,
             speed: {
                 ease: 10,
                 current: 0,
@@ -63,10 +63,11 @@ class WebglApp {
         this.showCursor = null;
         this.hideCursor = null;
         this.goToProject = null;
+        this.onLoaded = null;
 
         this.outAnimationTiming = 0.4;
         this.readyToShowInfo = false;
-        this.showInfoASAP = false;
+        this.showInfoASAP = true;
         this.timeoutShowInfo = null;
 
         this.canShowCursor = true;
@@ -82,12 +83,6 @@ class WebglApp {
         this.createGeometry();
         this.createRaycast();
         this.createFXAA();
-
-        this.onResize();
-
-        window.requestAnimationFrame(this.update.bind(this));
-
-        this.addEventListeners();
     }
 
     createFXAA() {
@@ -125,20 +120,6 @@ class WebglApp {
         // raycast.intersectBounds will test against the bounds of each mesh, and
         // return an array of intersected meshes in order of closest to farthest
         const hits = this.raycast.intersectBounds(meshes);
-
-        // Can intersect with geometry if the bounds aren't enough, or if you need
-        // to find out the uv or normal value at the hit point.
-        // Optional arguments include backface culling `cullFace`, and `maxDistance`
-        // Both useful for doing early exits to help optimise.
-        // const hits = raycast.intersectMeshes(meshes, {
-        //     cullFace: true,
-        //     maxDistance: 10,
-        //     includeUV: true,
-        //     includeNormal: true,
-        // });
-        // if (hits.length) console.log(hits[0].hit.uv);
-
-        // Update our feedback using this array
 
         const updateHovered = index => {
             if (!hits[index]) {
@@ -212,6 +193,75 @@ class WebglApp {
 
         this.checkClick();
         this.onCheck();
+    }
+
+    async loadImages() {
+        if (this.textures.length) return Promise.resolve();
+
+        const promises = [];
+        this.textures = this.images.map(img => {
+            const image = new Image();
+
+            image.crossOrigin = 'Anonymous';
+            image.src = img.image;
+            const loadPromise = new Promise((resolve, reject) => {
+                image.onload = _ => {
+                    const { naturalWidth, naturalHeight } = image;
+                    resolve({
+                        image,
+                        naturalWidth,
+                        naturalHeight
+                    });
+                };
+            });
+            promises.push(loadPromise);
+        });
+        this.textures = await Promise.all(promises);
+        console.log('all images loaded');
+    }
+
+    appear() {
+        this.onLoaded();
+        const opacity = {
+            value: 0
+        };
+        gsap.timeline()
+            .fromTo(
+                this.scroll,
+                {
+                    target: 100,
+                    current: 100
+                },
+                {
+                    target: 0,
+                    current: 0,
+                    duration: 2.2,
+                    delay: 0.5,
+                    ease: 'power3.out'
+                },
+                'start'
+            )
+            .to(
+                opacity,
+                {
+                    value: 1,
+                    duration: 2.2,
+                    delay: 0.5,
+                    ease: 'power3.out',
+
+                    onUpdate: () => {
+                        if (this.medias.length) {
+                            this.medias.forEach(media => {
+                                media.opacity = opacity.value;
+                            });
+                        }
+                    }
+                },
+                'start'
+            );
+
+        // We wait for only 1.2s, because of multiple delays used in CSS. c'est dégeulasse tant pis
+        return wait(1200);
     }
 
     selectProject(p) {
@@ -405,15 +455,17 @@ class WebglApp {
         this.post.resize();
     }
 
-    addMedias(medias) {
+    addMedias() {
         const { height: planeHeight, width: planeWidth, y } = this.computePlaneSize();
+        const medias = [...this.textures, ...this.textures, ...this.textures];
 
         this.medias = medias.map(({ image, id }, index) => {
+            const textureIndex = index % this.textures.length;
             const media = new Media({
                 id,
                 geometry: this.planeGeometry,
                 gl: this.gl,
-                image,
+                texture: this.textures[textureIndex],
                 index,
                 length: medias.length,
                 scene: this.scene,
@@ -487,8 +539,8 @@ class WebglApp {
         this.sizeElement.addEventListener('mouseup', this.onTouchUpEvent);
         this.sizeElement.addEventListener('mouseleave', this.onMouseLeaveEvent);
 
-        this.sizeElement.addEventListener('touchstart', this.onTouchDownEvent);
-        this.sizeElement.addEventListener('touchmove', this.onTouchMoveEvent);
+        this.sizeElement.addEventListener('touchstart', this.onTouchDownEvent, { passive: true });
+        this.sizeElement.addEventListener('touchmove', this.onTouchMoveEvent, { passive: true });
         this.sizeElement.addEventListener('touchend', this.onTouchUpEvent);
     }
 
@@ -508,32 +560,42 @@ class WebglApp {
         this.sizeElement.removeEventListener('touchend', this.onTouchUpEvent);
     }
 
-    disable() {
-        this.disabled = true;
-        this.removeEventListeners();
-    }
-
-    enable({ dom, sizeElement }) {
-        this.disabled = false;
-
-        this.dom = dom;
-        this.sizeElement = sizeElement;
+    resetScroll() {
         this.scroll = {
             ease: 6.25,
-            current: 0,
-            target: 0,
-            last: 0,
+            current: 100,
+            target: 100,
+            last: 100,
             speed: {
                 ease: 10,
                 current: 0,
                 target: 0
             }
         };
+    }
 
+    disable() {
+        this.disabled = true;
+        this.resetScroll();
+        this.removeEventListeners();
+    }
+
+    async enable({ dom, sizeElement } = {}) {
+        this.disabled = false;
+
+        if (dom) this.dom = dom;
+        if (sizeElement) this.sizeElement = sizeElement;
         this.dom.appendChild(this.gl.canvas);
 
         this.onResize();
+
         window.requestAnimationFrame(this.update.bind(this));
+
+        await this.loadImages();
+        this.addMedias();
+
+        await this.appear();
+        this.launchInfoTimeout();
         this.addEventListeners();
     }
 }

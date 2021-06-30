@@ -3,7 +3,7 @@ precision highp float;
 uniform vec2 uImageSizes;
 uniform vec2 uPlaneSizes;
 uniform float uDark;
-uniform float uTransparency;
+uniform float uOpacity;
 uniform sampler2D tMap;
 
 varying vec2 vUv;
@@ -23,7 +23,7 @@ void main(){
     
     vec4 final=mix(texture2D(tMap,uv),backgroundColor,uDark);
     
-    final.a=1.-uTransparency;
+    final.a=1.-uOpacity;
     
     gl_FragColor=final;
     

@@ -45,3 +45,9 @@ export const distance = (a, b) => {
 
     return Math.hypot(x2 - x1, y2 - y1);
 };
+
+export const wait = ms => {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+};

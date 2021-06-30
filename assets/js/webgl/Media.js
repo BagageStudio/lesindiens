@@ -2,13 +2,13 @@ import { Texture, Program, Mesh } from 'ogl';
 
 import { gsap } from 'gsap';
 
-import { clamp, map } from '../utils';
+import { clamp, map, lerp } from '../utils';
 import { BREAKPOINTS } from '../constants';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
 export class Media {
-    constructor({ geometry, gl, image, index, length, renderer, scene, screen, viewport, width, height, id, y }) {
+    constructor({ geometry, gl, texture, index, length, renderer, scene, screen, viewport, width, height, id, y }) {
         this.id = id;
         this.hoverValue = 0;
         this.extra = 0;
@@ -17,7 +17,7 @@ export class Media {
 
         this.geometry = geometry;
         this.gl = gl;
-        this.image = image;
+        this.texture = texture;
 
         this.index = index;
         this.length = length;
@@ -25,6 +25,7 @@ export class Media {
 
         this.screen = screen;
         this.viewport = viewport;
+        this.opacity = 0;
 
         this.createShader();
         this.createMesh();
@@ -37,31 +38,23 @@ export class Media {
             generateMipmaps: false
         });
 
+        texture.image = this.texture.image;
+
         this.program = new Program(this.gl, {
             fragment,
             vertex,
             uniforms: {
                 tMap: { value: texture },
                 uPlaneSizes: { value: [0, 0] },
-                uImageSizes: { value: [0, 0] },
+                uImageSizes: { value: [this.texture.naturalWidth, this.texture.naturalHeight] },
                 uDark: { value: 0 },
-                uTransparency: { value: 0 },
+                uOpacity: { value: 0 },
                 uViewportSizes: { value: [this.viewport.width, this.viewport.height] },
                 uSpeed: { value: 0 },
                 uTime: { value: 0 }
             },
             transparent: true
         });
-
-        const image = new Image();
-
-        image.crossOrigin = 'Anonymous';
-        image.src = this.image;
-        image.onload = _ => {
-            texture.image = image;
-
-            this.program.uniforms.uImageSizes.value = [image.naturalWidth, image.naturalHeight];
-        };
     }
 
     createMesh() {
@@ -124,8 +117,8 @@ export class Media {
 
         this.plane.position.z = depth;
 
-        this.plane.program.uniforms.uDark.value = dark;
-        this.plane.program.uniforms.uTransparency.value = transparency;
+        this.plane.program.uniforms.uDark.value = lerp(1, dark, this.opacity);
+        this.plane.program.uniforms.uOpacity.value = transparency;
         this.plane.program.uniforms.uSpeed.value = this.hoverValue + scroll.speed.current;
 
         this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
