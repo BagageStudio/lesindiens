@@ -73,8 +73,10 @@
 
 <script>
 import tracks from '~/app/tracks.json';
+import { basic } from '~/assets/js/transitions';
 
 export default {
+    transition: basic,
     async asyncData({ app, $config, error, route }) {
         const projects = await app.$storyapi
             .get('cdn/stories', {

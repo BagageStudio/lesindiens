@@ -1,6 +1,6 @@
 <template>
     <div class="e404">
-        <div class="wrapper-e404-title">
+        <div v-if="errorPage" class="wrapper-e404-title">
             <h1 class="e404-title">
                 <span class="wrapper-title">
                     <span ref="title">{{ errorPage.title }}&nbsp;</span>
@@ -33,18 +33,18 @@
 import tracks from '~/app/tracks.json';
 
 export default {
-    async asyncData({ app, $config, error }) {
-        const errorPage = await app.$storyapi
+    async fetch() {
+        const errorPage = await this.$storyapi
             .get('cdn/stories/error', {
-                version: $config.sBlokVersion
+                version: this.$config.sBlokVersion
             })
             .then(res => res.data.story.content)
-            .catch(res => error({ statusCode: 404, message: 'Failed to receive content form api' }));
-
-        return { errorPage };
+            .catch(res => this.error({ statusCode: 404, message: 'Failed to receive content form api' }));
+        this.errorPage = errorPage;
     },
     data: () => ({
-        currentTrack: null
+        currentTrack: null,
+        errorPage: null
     }),
     computed: {
         subtitle() {

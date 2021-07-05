@@ -41,14 +41,17 @@
 
 <script>
 import { gsap } from 'gsap';
-import { round } from '~/assets/js/utils';
+import { round, random } from '~/assets/js/utils';
 
 export default {
     props: {
         lineOne: { type: Array, required: true },
-        lineTwo: { type: Array, required: true }
+        lineTwo: { type: Array, required: true },
+        appear: { type: Boolean, required: true }
     },
     data: () => ({
+        appeared: false,
+        orderOfAppearance: [0, 3, 1, 2, 4],
         animScale: {},
         sticker: null,
         stickers: [],
@@ -71,6 +74,10 @@ export default {
         }
     },
     watch: {
+        appear(appear) {
+            if (!appear) return;
+            this.appearTl.play();
+        },
         scrollTop() {
             this.computeRect();
         },
@@ -93,6 +100,84 @@ export default {
     methods: {
         init() {
             this.stickers = this.$refs.sticker;
+            this.sticker = this.getStickerFromID(this.stickers[0].id);
+            this.appearTl = this.createAppearTimeline();
+        },
+        createAppearTimeline() {
+            const tl = gsap.timeline({
+                paused: true,
+                onComplete: () => {
+                    this.computeRect();
+                }
+            });
+            tl.addLabel('start');
+            this.stickers.forEach((stickerElement, index) => {
+                const sticker = this.getStickerFromID(stickerElement.id);
+                const position = `start+=${this.orderOfAppearance[index] * 0.1}`;
+
+                const startX = -1;
+                const startY = -1;
+                const offsetX = -8;
+                const offsetY = -8;
+
+                // const startX = random(-1, 1);
+                // const startY = random(-1, 1);
+                // const offsetX = startX < 0 ? -10 : 10;
+                // const offsetY = startY < 0 ? -10 : 10;
+
+                tl.to(
+                    sticker.sticker,
+                    {
+                        duration: 0.5,
+                        opacity: 1
+                    },
+                    position
+                );
+                tl.from(
+                    sticker.sticker,
+                    {
+                        duration: 2.5,
+                        y: offsetY,
+                        x: offsetX,
+                        ease: 'elastic.out(1.5, 0.3)'
+                    },
+                    position
+                );
+                tl.from(
+                    sticker.shadow,
+                    {
+                        duration: 2.5,
+                        x: 4 * startX,
+                        y: 3 * startY,
+                        rotationX: -15 * startY,
+                        rotationY: 15 * startX,
+                        ease: 'elastic.out(1.5, 0.3)'
+                    },
+                    position
+                );
+
+                tl.from(
+                    sticker.frame,
+                    {
+                        duration: 2.5,
+                        rotationX: -15 * startY,
+                        rotationY: 15 * startX,
+                        ease: 'elastic.out(1.5, 0.3)'
+                    },
+                    position
+                );
+                tl.from(
+                    sticker.stickerContent,
+                    {
+                        duration: 2.5,
+                        rotationX: -20 * startY,
+                        rotationY: 20 * startX,
+                        ease: 'elastic.out(1.5, 0.3)'
+                    },
+                    position
+                );
+            });
+            return tl;
         },
         getStickerFromID(id) {
             const sticker = this.stickers.find(s => {
@@ -157,6 +242,7 @@ export default {
                     this.sticker.rect.height) *
                     2
             );
+
             this.XShadow = this.percentageX * 4;
             this.YShadow = this.percentageY * 3;
             this.rotXFrame = -this.percentageY * 15;
@@ -198,6 +284,8 @@ export default {
     position: relative;
     perspective: 500px;
     margin: 15px;
+    opacity: 0;
+    transform: translateY(0px) translateX(0px);
     &:hover {
         .shadow {
             background: $white;

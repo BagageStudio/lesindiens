@@ -5,16 +5,25 @@
                 <div class="container-small">
                     <div class="wrapper-cols">
                         <div class="col-small content-pad">
-                            <h1 class="studio-title">{{ studio.title }}</h1>
+                            <h1 ref="title" class="studio-title" v-html="$options.filters.split(studio.title)" />
                         </div>
                         <div class="col-large content-pad">
-                            <div class="studio-subtitle" v-html="subtitle" />
+                            <div ref="subtitle" class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-                    <Playlist v-if="currentTrack && currentTrack.url" class="studio-playlist" :track="currentTrack" />
+                    <Playlist
+                        class="studio-playlist"
+                        :track="currentTrack"
+                        :appear="playlistShow"
+                        @loaded="trackLoaded"
+                    />
                 </div>
                 <div v-if="isL">
-                    <Stickers :line-one="studio.stickers_line_one" :line-two="studio.stickers_line_two" />
+                    <Stickers
+                        :line-one="studio.stickers_line_one"
+                        :line-two="studio.stickers_line_two"
+                        :appear="stickersShow"
+                    />
                 </div>
             </div>
         </div>
@@ -33,9 +42,14 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
+
+import { basic } from '~/assets/js/transitions';
+
 import tracks from '~/app/tracks.json';
 
 export default {
+    transition: basic,
     async asyncData({ app, $config, error }) {
         const studio = await app.$storyapi
             .get('cdn/stories/studio', {
@@ -66,7 +80,9 @@ export default {
         return { studio, services };
     },
     data: () => ({
-        currentTrack: null
+        currentTrack: null,
+        stickersShow: false,
+        playlistShow: false
     }),
     computed: {
         isL() {
@@ -80,10 +96,42 @@ export default {
             return tracks;
         }
     },
-    mounted() {
+    created() {
         this.currentTrack = this.tracks.find(track => {
             return track.uri === this.studio.spotify_id;
         });
+    },
+    methods: {
+        trackLoaded() {
+            this.trackIsLoaded = true;
+            const letters = this.$el.querySelectorAll('.studio-title .letter');
+            const subtitle = this.$el.getElementsByClassName('studio-subtitle')[0];
+
+            const tl = gsap.timeline();
+            tl.to(
+                letters,
+                {
+                    duration: 1.2,
+                    rotateX: 0,
+                    opacity: 1,
+                    ease: 'expo.out',
+                    stagger: 0.1
+                },
+                'title'
+            )
+                .to(
+                    subtitle,
+                    {
+                        duration: 1.2,
+                        opacity: 1
+                    },
+                    'title+=1'
+                )
+                .add(() => {
+                    this.playlistShow = true;
+                    this.stickersShow = true;
+                }, 'title+=1.5');
+        }
     }
 };
 </script>
@@ -98,6 +146,13 @@ export default {
     font-size: 3.5rem;
     line-height: 42px;
     margin: 0;
+    perspective: 500px;
+    ::v-deep .letter {
+        display: inline-block;
+        transform-origin: 100% 50% -20px;
+        transform: rotateX(80deg);
+        opacity: 0;
+    }
 }
 .studio-subtitle {
     font-family: $telegraf;
@@ -105,6 +160,7 @@ export default {
     font-size: 2.5rem;
     line-height: 32px;
     margin-top: 20px;
+    opacity: 0;
 }
 .studio-playlist {
     margin-top: 40px;

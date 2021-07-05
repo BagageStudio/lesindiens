@@ -7,6 +7,10 @@ export const map = (num, min1, max1, min2, max2, round = false) => {
     return num2;
 };
 
+export const random = (min, max) => {
+    return Math.random() * (max - min) + min;
+};
+
 export const clamp = (num, min, max) => {
     return Math.min(Math.max(num, min), max);
 };
