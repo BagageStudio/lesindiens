@@ -3,8 +3,13 @@
         <div class="type-hero">
             <div class="container">
                 <div class="container-small">
-                    <h1 class="type-title content-pad">{{ page[0].content.title }}</h1>
-                    <Playlist v-if="currentTrack && currentTrack.url" class="type-playlist" :track="currentTrack" />
+                    <h1 class="type-title content-pad" v-html="$options.filters.splitInWords(page[0].content.title)" />
+                    <Playlist
+                        class="type-playlist"
+                        :track="currentTrack"
+                        :appear="playlistShow"
+                        @loaded="trackLoaded"
+                    />
                 </div>
             </div>
         </div>
@@ -25,6 +30,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
 import tracks from '~/app/tracks.json';
 import { basic } from '~/assets/js/transitions';
 
@@ -51,14 +57,15 @@ export default {
         return { page };
     },
     data: () => ({
-        currentTrack: null
+        currentTrack: null,
+        playlistShow: false
     }),
     computed: {
         tracks() {
             return tracks;
         }
     },
-    mounted() {
+    created() {
         if (this.page[0].content.spotify_id) {
             this.currentTrack = this.tracks.find(track => {
                 return track.uri === this.page[0].content.spotify_id;
@@ -68,6 +75,25 @@ export default {
     methods: {
         resolveRichText(text) {
             return this.$storyapi.richTextResolver.render(text);
+        },
+        trackLoaded() {
+            const letters = this.$el.querySelectorAll('.type-title .word');
+            console.log('go');
+
+            const tl = gsap.timeline();
+            tl.to(
+                letters,
+                {
+                    duration: 1.2,
+                    rotateX: 0,
+                    opacity: 1,
+                    ease: 'expo.out',
+                    stagger: 0.2
+                },
+                'title'
+            ).add(() => {
+                this.playlistShow = true;
+            }, 'title+=0.9');
         }
     },
     head() {
@@ -89,6 +115,13 @@ export default {
     font-size: 6.5rem;
     line-height: 1;
     font-weight: 100;
+    perspective: 5000px;
+    ::v-deep .word {
+        display: inline-block;
+        transform-origin: 50% 50% -20px;
+        transform: rotateX(80deg);
+        opacity: 0;
+    }
 }
 .type-playlist {
     margin-top: 30px;

@@ -6,3 +6,10 @@ Vue.filter('split', function (value) {
 
     return charsWithSpans.join('');
 });
+
+Vue.filter('splitInWords', function (value) {
+    const words = value.split(' ');
+    const wordsWithSpans = words.map(word => `<span class="word">${word}&nbsp;</span>`);
+
+    return wordsWithSpans.join('');
+});
