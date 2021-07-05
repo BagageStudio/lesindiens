@@ -52,6 +52,7 @@
 
 <script>
 import tracks from '~/app/tracks.json';
+import { basic } from '~/assets/js/transitions';
 
 export default {
     asyncData({ app, $config, error }) {
@@ -81,6 +82,7 @@ export default {
             return tracks;
         }
     },
+    transition: basic,
     mounted() {
         this.changeTrack(this.story.content.projects[0].content.spotify_id);
     },

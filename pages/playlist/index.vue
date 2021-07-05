@@ -54,7 +54,10 @@
 </template>
 
 <script>
+import { basic } from '~/assets/js/transitions';
+
 export default {
+    transition: basic,
     async asyncData({ app, $config, error }) {
         const playlist = await app.$storyapi
             .get('cdn/stories/playlist', {

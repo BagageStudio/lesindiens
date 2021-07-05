@@ -1,5 +1,5 @@
 <template>
-    <div class="playlist" :class="{ show: ready }">
+    <div class="playlist" :class="{ show: appear }">
         <div class="disque">
             <div ref="jaquette" class="jaquettes">
                 <div class="jaquette" :style="{ backgroundImage: `url(${jaquetteUrl})` }" />
@@ -48,6 +48,10 @@ export default {
     props: {
         track: {
             type: Object,
+            required: true
+        },
+        appear: {
+            type: Boolean,
             required: true
         }
     },
@@ -104,7 +108,9 @@ export default {
             this.$refs.player.muted = this.mute;
         },
         track(newTrack, prevTrack) {
-            this.nextTrack(1);
+            if (prevTrack) {
+                this.nextTrack(1);
+            }
         }
     },
     mounted() {
@@ -138,6 +144,7 @@ export default {
         },
         readyToPlay() {
             if (this.trackUrl === '' || !this.$refs.player) return;
+            this.$emit('loaded');
             let playPromise = this.$refs.player.play() || Promise.reject(new Error('fail'));
             playPromise
                 .then(() => {
