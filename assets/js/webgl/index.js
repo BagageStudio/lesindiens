@@ -199,16 +199,17 @@ class WebglApp {
         if (this.textures.length) return Promise.resolve();
 
         const promises = [];
-        this.textures = this.images.map(img => {
-            const image = new Image();
+        this.textures = this.images.map(({ image, id }) => {
+            const img = new Image();
 
-            image.crossOrigin = 'Anonymous';
-            image.src = img.image;
+            img.crossOrigin = 'Anonymous';
+            img.src = image;
             const loadPromise = new Promise((resolve, reject) => {
-                image.onload = _ => {
-                    const { naturalWidth, naturalHeight } = image;
+                img.onload = _ => {
+                    const { naturalWidth, naturalHeight } = img;
                     resolve({
-                        image,
+                        id,
+                        image: img,
                         naturalWidth,
                         naturalHeight
                     });
