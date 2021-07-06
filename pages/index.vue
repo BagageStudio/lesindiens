@@ -5,33 +5,25 @@
                 <div class="container-small">
                     <div class="wrapper-cols-home">
                         <div class="col-large-home content-pad">
-                            <Button v-slot="scope" class="primary color-secondary huge home-sticker">
-                                <div class="wrapper-illus-txt">
-                                    <Sprite
-                                        class="cat"
-                                        :cols="60"
-                                        :rows="1"
-                                        :interval="0.03"
-                                        :loop="true"
-                                        url="img/cat.png"
-                                        @load="scope.computeRect"
-                                    />
-                                    <img src="~static/img/hello.svg" alt="Hello !" @load="scope.computeRect" />
-                                </div>
-                            </Button>
-                            <h1 class="home-title" v-html="$storyapi.richTextResolver.render(story.content.title)" />
+                            <Hello class="primary color-secondary huge home-sticker" :appear="appearHello" />
+                            <h1 class="home-title" v-html="homeTitle" />
                             <div class="expertises">
                                 <div
                                     v-for="expertise in story.content.expertises"
                                     :key="expertise.id"
-                                    class="expertise"
+                                    class="expertise-wrapper"
                                 >
-                                    {{ expertise.name }}
+                                    <div class="expertise">
+                                        <span ref="expertises" class="expertise-inner">
+                                            {{ expertise.name }}
+                                        </span>
+                                    </div>
+                                    <span ref="expertisesLines" class="expertise-line" />
                                 </div>
                             </div>
                         </div>
                         <div class="col-small-home content-pad">
-                            <Slider :projects="story.content.projects" @change="changeTrack" />
+                            <Slider :projects="story.content.projects" :appear="appearSlider" @change="changeTrack" />
                         </div>
                     </div>
                 </div>
@@ -41,7 +33,7 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist v-if="currentTrack && currentTrack.url" :track="currentTrack" :appear="false" />
+                        <Playlist :track="currentTrack" :appear="false" @loaded="trackLoaded" />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
@@ -51,6 +43,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
 import tracks from '~/app/tracks.json';
 import { basic } from '~/assets/js/transitions';
 
@@ -75,15 +68,20 @@ export default {
             });
     },
     data: () => ({
-        currentTrack: null
+        currentTrack: null,
+        appearHello: false,
+        appearSlider: false
     }),
     computed: {
         tracks() {
             return tracks;
+        },
+        homeTitle() {
+            return this.$options.filters.splitInWords(this.$storyapi.richTextResolver.render(this.story.content.title));
         }
     },
     transition: basic,
-    mounted() {
+    created() {
         this.changeTrack(this.story.content.projects[0].content.spotify_id);
     },
     methods: {
@@ -91,6 +89,47 @@ export default {
             this.currentTrack = this.tracks.find(track => {
                 return track.uri === uri;
             });
+        },
+        trackLoaded() {
+            this.appearHello = true;
+            const letters = this.$el.querySelectorAll('.home-title .word');
+
+            const tl = gsap.timeline({ delay: 0.7 });
+            tl.to(
+                letters,
+                {
+                    duration: 1.2,
+                    rotateX: 0,
+                    opacity: 1,
+                    ease: 'expo.out',
+                    stagger: 0.03
+                },
+                'title'
+            );
+            tl.to(
+                this.$refs.expertises,
+                {
+                    duration: 1.2,
+                    rotateX: 0,
+                    opacity: 1,
+                    ease: 'expo.out',
+                    stagger: 0.15
+                },
+                'title+=0.8'
+            );
+            tl.to(
+                this.$refs.expertisesLines,
+                {
+                    duration: 1.2,
+                    scaleX: 1,
+                    ease: 'expo.out',
+                    stagger: 0.15
+                },
+                'title+=1'
+            );
+            tl.add(() => {
+                this.appearSlider = true;
+            }, 'title+=1');
         }
     }
 };
@@ -111,22 +150,22 @@ export default {
 }
 .home-sticker {
     margin-bottom: 50px;
-    .wrapper-illus-txt {
-        display: flex;
-        align-items: center;
-    }
 }
-.cat {
-    flex: 0 0 auto;
-    width: 59px;
-    height: 87px;
-    margin: -40px 20px 0 0;
-}
+
 .home-title {
     font-family: $telegraf;
     font-weight: 400;
     font-size: 3.5rem;
     line-height: 42px;
+    perspective: 5000px;
+    ::v-deep .word {
+        display: inline-block;
+        transform-origin: 50% 50% -20px;
+        transform: rotateX(80deg);
+        opacity: 0;
+        backface-visibility: hidden;
+        // will-change: transform;
+    }
     ::v-deep b,
     ::v-deep strong {
         font-weight: 400;
@@ -139,13 +178,35 @@ export default {
 .expertises {
     margin-top: 65px;
 }
-.expertise {
-    padding: 20px 0;
+.expertise-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     font-family: $telegraf;
     font-weight: 400;
     font-size: 1.6rem;
     line-height: 17px;
-    border-bottom: 1px solid #313131;
+}
+
+.expertise {
+    perspective: 100px;
+    perspective-origin: 50% 50%;
+    padding: 20px 0;
+}
+.expertise-inner {
+    display: inline-block;
+    transform-origin: 50% 50% -8px;
+    transform: rotateX(80deg);
+    opacity: 0;
+}
+
+.expertise-line {
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: #313131;
+    transform-origin: 0% 0%;
+    transform: scaleX(0);
 }
 
 @media (min-width: $tablet) {

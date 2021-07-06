@@ -20,8 +20,8 @@
         <div class="nav">
             <div ref="nav" class="inner-nav">
                 <nuxt-link :to="projects[current].full_slug" class="nav-link">
-                    <span class="name">{{ projects[current].name }}</span>
-                </nuxt-link>
+                    <span class="name" v-html="$options.filters.splitInWords(projects[current].name)"
+                /></nuxt-link>
                 <div class="wrapper-buttons">
                     <button
                         class="btn-prev arrow-button"
@@ -53,6 +53,10 @@ export default {
     props: {
         projects: {
             type: Array,
+            required: true
+        },
+        appear: {
+            type: Boolean,
             required: true
         }
     },
@@ -95,6 +99,59 @@ export default {
         }
     },
     watch: {
+        appear(appear) {
+            if (!appear) return;
+            const currentImage = this.$refs.image[this.current];
+            const currentInner = currentImage.querySelector('.js-image-inner');
+            const title = this.$refs.nav.querySelectorAll('.name .word');
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    this.timeoutAutoplay();
+                }
+            });
+
+            tl.fromTo(
+                currentInner,
+                {
+                    scale: 1.2
+                },
+                {
+                    duration: 1.2,
+                    ease: 'expo.out',
+                    scale: 1
+                },
+                'start'
+            );
+            tl.fromTo(
+                currentImage,
+                {
+                    opacity: 0,
+                    x: '100%'
+                },
+                {
+                    duration: 1.2,
+                    opacity: 1,
+                    ease: 'expo.out',
+                    x: 0
+                },
+                'start'
+            );
+            tl.fromTo(
+                title,
+                {
+                    rotateX: 80,
+                    opacity: 0
+                },
+                {
+                    duration: 0.8,
+                    stagger: 0.2,
+                    rotateX: 0,
+                    opacity: 1,
+                    ease: 'expo.out'
+                },
+                'start+=0.8'
+            );
+        },
         isL(is) {
             if (!is) {
                 if (this.autoPlayTimeout) {
@@ -124,7 +181,6 @@ export default {
     },
     mounted() {
         this.rect = this.$refs.slider.getBoundingClientRect();
-        this.initSlider();
     },
     methods: {
         unify(e) {
@@ -196,18 +252,6 @@ export default {
             this.$store.commit('cursor/setIcon', 'arrow-long');
             this.$store.commit('cursor/setShowCursor', true);
             this.setDirection();
-        },
-        initSlider() {
-            const img = this.$refs.image[this.current];
-            gsap.set(img, {
-                opacity: 1
-            });
-            gsap.set(img.querySelector('.js-image-inner'), {
-                scale: 1
-            });
-            this.$nextTick(() => {
-                this.timeoutAutoplay();
-            });
         },
         arrowChangeSlide(direction) {
             if (this.autoPlayTimeout) clearRequestTimeout(this.autoPlayTimeout);
@@ -286,7 +330,7 @@ export default {
             });
         },
         navTimeline(dir = 'out') {
-            const title = this.$refs.nav.querySelector('.name');
+            const title = this.$refs.nav.querySelectorAll('.name .word');
             const tl = gsap.timeline({
                 paused: true,
                 onComplete:
@@ -296,18 +340,18 @@ export default {
                           }
                         : null
             });
-            const txts = [title].filter(el => el);
-            if (dir === 'in') txts.reverse();
+            const txts = [...title].filter(el => el);
+            if (dir === 'out') txts.reverse();
             tl.fromTo(
                 txts,
                 {
-                    y: dir === 'in' ? 10 : 0,
+                    rotateX: dir === 'in' ? 80 : 0,
                     opacity: dir === 'in' ? 0 : 1
                 },
                 {
                     duration: 0.8,
                     stagger: 0.1,
-                    y: dir === 'out' ? 10 : 0,
+                    rotateX: dir === 'out' ? -80 : 0,
                     opacity: dir === 'out' ? 0 : 1,
                     ease: 'power3.out'
                 }
@@ -412,6 +456,12 @@ export default {
     }
 }
 
+.fast-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .nav {
     padding: 25px 0;
 }
@@ -423,11 +473,19 @@ export default {
     text-decoration: none;
 }
 .name {
+    display: inline-block;
     text-decoration: none;
     font-family: $object;
     font-weight: 400;
     font-size: 1.6rem;
-    line-height: 30px;
+    perspective: 500px;
+    line-height: 1;
+    ::v-deep .word {
+        display: inline-block;
+        opacity: 0;
+        transform-origin: 50% 38% -8px;
+        transform: rotateX(80deg);
+    }
 }
 
 .wrapper-buttons {
