@@ -94,6 +94,7 @@ export default {
                 img.onload = () => {
                     this.imagePath = img.src;
                     this.$emit('load');
+                    resolve();
                 };
                 img.src = this.url;
             });

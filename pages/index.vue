@@ -41,7 +41,7 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist v-if="currentTrack && currentTrack.url" :track="currentTrack" />
+                        <Playlist v-if="currentTrack && currentTrack.url" :track="currentTrack" :appear="false" />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
