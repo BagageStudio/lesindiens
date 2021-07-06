@@ -78,7 +78,6 @@ export default {
         },
         trackLoaded() {
             const letters = this.$el.querySelectorAll('.type-title .word');
-            console.log('go');
 
             const tl = gsap.timeline();
             tl.to(

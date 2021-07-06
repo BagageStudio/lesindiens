@@ -172,12 +172,10 @@ export default {
             this.cursorIsShown = false;
         },
         onScrollStart() {
-            console.log('on scroll start');
             this.scrolling = true;
             this.hideCursor();
         },
         onSelected(s) {
-            console.log('on selected');
             this.scrolling = false;
             const projectIndex = s % this.projects.length;
             const project = this.projects[projectIndex];

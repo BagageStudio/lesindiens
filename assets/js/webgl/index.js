@@ -218,7 +218,6 @@ class WebglApp {
             promises.push(loadPromise);
         });
         this.textures = await Promise.all(promises);
-        console.log('all images loaded');
     }
 
     appear() {
