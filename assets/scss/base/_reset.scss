@@ -61,7 +61,7 @@ html {
 
 a {
     background-color: transparent;
-    &:focus {
+    &:focus-visible {
         outline: thin dotted;
     }
     &:active,
