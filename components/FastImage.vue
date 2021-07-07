@@ -54,6 +54,7 @@ export default {
     methods: {
         loadedListener() {
             this.loaded = true;
+            this.$emit('loaded');
         },
         transformImage(image, option) {
             if (!image) return '';

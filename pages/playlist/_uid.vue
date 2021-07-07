@@ -4,31 +4,40 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-project-title">
-                        <h1 class="project-title content-pad" v-html="title" />
+                        <h1 class="project-title content-pad" v-html="$options.filters.splitInWords(title)" />
                     </div>
                     <div class="project-hero-details">
                         <div class="project-infos content-pad">
                             <div class="project-info">
-                                <span class="info-title">Client</span>
-                                <span class="info-content">{{ currentProject.content.name }}</span>
+                                <span class="info-title info-item">Client</span>
+                                <span class="info-content info-item">{{ currentProject.content.name }}</span>
                             </div>
                             <div class="project-info">
-                                <span class="info-title">Expertise</span>
+                                <span class="info-title info-item">Expertise</span>
                                 <Tags :tags="currentProject.content.expertises" />
                             </div>
                         </div>
                         <div class="project-song content-pad">
                             <Playlist
-                                v-if="currentTrack && currentTrack.url"
+                                :appear="showPlaylist"
                                 class="project-playlist"
                                 :track="currentTrack"
+                                @loaded="trackIsLoaded = true"
                             />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <FastImage :image="currentProject.content.image" full-width />
+        <div class="big-image">
+            <FastImage
+                ref="bigImage"
+                :image="currentProject.content.image"
+                full-width
+                loading="eager"
+                @loaded="imageIsLoaded = true"
+            />
+        </div>
         <div class="wrapper-project-details">
             <div class="container">
                 <div class="container-details container-small">
@@ -72,6 +81,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
 import tracks from '~/app/tracks.json';
 import { basic } from '~/assets/js/transitions';
 
@@ -111,7 +121,10 @@ export default {
         return { currentProject, twoOtherProjects };
     },
     data: () => ({
-        currentTrack: null
+        currentTrack: null,
+        imageIsLoaded: false,
+        trackIsLoaded: false,
+        showPlaylist: false
     }),
     computed: {
         title() {
@@ -124,10 +137,64 @@ export default {
             return tracks;
         }
     },
-    mounted() {
+    watch: {
+        trackIsLoaded(loaded) {
+            if (loaded && this.imageIsLoaded) this.appear();
+        },
+        imageIsLoaded(loaded) {
+            if (loaded && this.imageIsLoaded) this.appear();
+        }
+    },
+    created() {
         this.currentTrack = this.tracks.find(track => {
             return track.uri === this.currentProject.content.spotify_id;
         });
+    },
+    methods: {
+        appear() {
+            const tl = gsap.timeline();
+            const title = this.$el.querySelectorAll('.project-title .word');
+            const infos = this.$el.querySelectorAll('.info-item, .project-info .tag');
+            const image = this.$refs.bigImage.$el;
+            console.log(image);
+
+            tl.to(
+                title,
+                {
+                    duration: 1.2,
+                    ease: 'expo.out',
+                    stagger: 0.05,
+                    opacity: 1,
+                    rotateX: 0
+                },
+                'title'
+            );
+            tl.add(() => {
+                this.showPlaylist = true;
+            }, 'title+=0.6');
+
+            tl.to(
+                infos,
+                {
+                    duration: 0.8,
+                    rotateX: 0,
+                    opacity: 1,
+                    stagger: 0.1,
+                    ease: 'power3.out'
+                },
+                'title+=0.6'
+            );
+            tl.to(
+                image,
+                {
+                    duration: 1.8,
+                    scale: 1,
+                    opacity: 1,
+                    ease: 'power3.out'
+                },
+                'title+=0.8'
+            );
+        }
     }
 };
 </script>
@@ -141,12 +208,27 @@ export default {
 }
 .project-info {
     margin-top: 10px;
+    ::v-deep .tag,
+    .info-item {
+        display: block;
+        opacity: 0;
+        // transform: translateY(-10px);
+        transform-origin: 50% 50% -6px;
+        opacity: 0;
+        transform: perspective(1000px) rotateX(80deg);
+    }
 }
 .project-title {
     font-family: $telegraf;
     font-size: 6.5rem;
     line-height: 1;
     font-weight: 100;
+    ::v-deep .word {
+        display: inline-block;
+        transform-origin: 50% 50% -25px;
+        opacity: 0;
+        transform: perspective(1000px) rotateX(80deg);
+    }
 }
 .info-title {
     display: block;
@@ -185,6 +267,17 @@ export default {
 }
 .project-link {
     margin-top: 60px;
+}
+.big-image {
+    overflow: hidden;
+    ::v-deep picture.fast-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: scale(1.1);
+        transition: none;
+    }
 }
 
 @media (min-width: $tablet) {
