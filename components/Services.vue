@@ -1,7 +1,7 @@
 <template>
     <div class="services">
         <div v-for="service in data" :key="service._uid" class="service">
-            <Reveal name="service" class="container">
+            <Reveal name="service" class="container" :offset="{ top: 270, bottom: 250 }">
                 <div class="container-small">
                     <div class="service-content">
                         <div class="wrapper-cols service-title-intro">
@@ -69,17 +69,17 @@ export default {
     .to-anim {
         opacity: 1;
         transform: scale(1);
-        transition: 0.3s ease-out;
+        transition: 0.8s ease-out;
         &.service-intro {
-            transition-delay: 0.1s;
+            transition-delay: 0.3s;
         }
         &.service-sidebar {
-            transition-delay: 0.2s;
+            transition-delay: 0.6s;
         }
     }
     .service-content {
         &::before {
-            transition: transform 0.3s ease-out, opacity 0.1s ease-out;
+            transition: transform 0.6s ease-out, opacity 0.3s ease-out;
             opacity: 1;
             transform: scaleX(1);
         }
