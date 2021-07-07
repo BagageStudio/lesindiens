@@ -68,6 +68,9 @@ export default {
         .wrapper-img {
             clip-path: polygon(0 28px, 100% 0, 100% 100%, 0 calc(100% - 20px));
         }
+        .project-image {
+            transform: scale(1.03);
+        }
     }
 }
 .project-details {
