@@ -1,8 +1,8 @@
 <template>
-    <div class="playlist" :class="{ show: appear }">
-        <div class="disque">
+    <div class="playlist">
+        <div ref="disque" class="disque">
             <div ref="jaquette" class="jaquettes">
-                <div class="jaquette" :style="{ backgroundImage: `url(${jaquetteUrl})` }" />
+                <div ref="jaquetteImg" class="jaquette" :style="{ backgroundImage: `url(${jaquetteUrl})` }" />
                 <div
                     ref="nextJaquette"
                     class="jaquette next-jaquette"
@@ -27,7 +27,7 @@
                 <span ref="artist" class="artist">{{ artistName }}</span>
                 <span ref="name" class="name">{{ trackName }}</span>
             </div>
-            <button aria-label="Son allumé ou muet" class="sound" @click="toggleMute">
+            <button ref="sound" aria-label="Son allumé ou muet" class="sound" @click="toggleMute">
                 <Icon v-show="mute" name="mute" />
                 <Icon v-show="!mute" name="sound" />
             </button>
@@ -92,6 +92,51 @@ export default {
     },
 
     watch: {
+        appear(appear) {
+            if (!appear) return;
+            const jaquetteImg = this.$refs.jaquetteImg;
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    this.playTrack();
+                }
+            });
+            tl.to(
+                jaquetteImg,
+                {
+                    duration: 1.8,
+                    rotation: '-=360',
+                    ease: 'expo.out'
+                },
+                'start'
+            );
+            tl.to(
+                this.$refs.disque,
+                {
+                    opacity: 1,
+                    duration: 0.5
+                },
+                'start'
+            );
+            tl.to(
+                this.$refs.circle,
+                {
+                    strokeDashoffset: this.circum,
+                    duration: 1.8,
+                    ease: 'expo.out'
+                },
+                'start'
+            );
+            tl.to(
+                [this.$refs.name, this.$refs.artist, this.$refs.sound],
+                {
+                    duration: 1.2,
+                    opacity: 1,
+                    rotateX: 0,
+                    ease: 'expo.out'
+                },
+                'start'
+            );
+        },
         isL(l) {
             if (!l) {
                 this.ready = false;
@@ -145,6 +190,9 @@ export default {
         readyToPlay() {
             if (this.trackUrl === '' || !this.$refs.player) return;
             this.$emit('loaded');
+            if (this.appear) this.playTrack();
+        },
+        playTrack() {
             let playPromise = this.$refs.player.play() || Promise.reject(new Error('fail'));
             playPromise
                 .then(() => {
@@ -240,11 +288,20 @@ export default {
                     'begin'
                 )
                 .to(
-                    [this.$refs.artist, this.$refs.name],
+                    this.$refs.name,
                     {
                         duration: 0.5,
-                        stagger: 0.1,
-                        y: 10,
+                        rotateX: -80,
+                        opacity: 0,
+                        ease: 'power3.out'
+                    },
+                    'begin'
+                )
+                .to(
+                    this.$refs.artist,
+                    {
+                        duration: 0.5,
+                        rotateX: 80,
                         opacity: 0,
                         ease: 'power3.out'
                     },
@@ -259,8 +316,7 @@ export default {
                     [this.$refs.artist, this.$refs.name],
                     {
                         duration: 0.5,
-                        stagger: 0.1,
-                        y: 0,
+                        rotateX: 0,
                         opacity: 1,
                         ease: 'power3.out'
                     },
@@ -281,11 +337,6 @@ button {
     align-items: center;
     max-width: 100%;
     padding: 0;
-    opacity: 0;
-    transition: opacity 1s cubic-bezier(0.165, 0.84, 0.44, 1);
-    &.show {
-        opacity: 1;
-    }
 }
 .disque {
     position: relative;
@@ -296,6 +347,7 @@ button {
     height: 70px;
     flex: 0 0 70px;
     margin-right: 10px;
+    opacity: 0;
     &::after {
         content: '';
         position: absolute;
@@ -370,23 +422,29 @@ button {
 }
 
 .sound {
+    display: inline-block;
     position: relative;
     width: 16px;
     height: 11px;
     margin: 4px 0 6px;
-    transition: opacity 0.3s ease-in-out;
     border: none;
+    transform-origin: 50% 50% -6px;
+    opacity: 0;
+    transform: perspective(500px) rotateX(-80deg);
     .icon {
         position: absolute;
         left: 0;
         top: 0;
         width: 16px;
         height: 11px;
+        transition: opacity 0.3s ease-in-out;
         fill: var(--secondary);
     }
     &:hover,
     &:focus {
-        opacity: 0.7;
+        .icon {
+            opacity: 0.7;
+        }
     }
 }
 
@@ -405,11 +463,21 @@ button {
 
     // 213.62830044410595 is the circumference of the circle (radius * 2 * PI)
     stroke-dasharray: 213.62830044410595 213.62830044410595;
-    stroke-dashoffset: 213.62830044410595;
+    stroke-dashoffset: 0;
+    // stroke-dashoffset: 213.62830044410595;
     stroke: var(--secondary);
 }
 
 .artist {
     color: #787878;
+    transform-origin: 50% 50% -6px;
+    opacity: 0;
+    transform: perspective(500px) rotateX(80deg);
+}
+
+.name {
+    transform-origin: 50% 50% -6px;
+    opacity: 0;
+    transform: perspective(500px) rotateX(-80deg);
 }
 </style>

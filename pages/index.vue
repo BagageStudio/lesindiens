@@ -33,7 +33,7 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist :track="currentTrack" :appear="false" @loaded="trackLoaded" />
+                        <Playlist :track="currentTrack" :appear="appearTrack" @loaded="trackLoaded" />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
@@ -70,7 +70,8 @@ export default {
     data: () => ({
         currentTrack: null,
         appearHello: false,
-        appearSlider: false
+        appearSlider: false,
+        appearTrack: false
     }),
     computed: {
         tracks() {
@@ -129,6 +130,7 @@ export default {
             );
             tl.add(() => {
                 this.appearSlider = true;
+                this.appearTrack = true;
             }, 'title+=1');
         }
     }
