@@ -1,4 +1,4 @@
-import { gsap } from 'gsap';
+import { wait } from '~/assets/js/utils';
 
 export const basic = {
     name: 'basic',
@@ -7,11 +7,9 @@ export const basic = {
     css: false,
     beforeLeave(el) {},
     async leave(el, done) {
-        const loading = el.querySelector('.overlay');
-        await gsap.to(loading, {
-            duration: 0.5,
-            autoAlpha: 1
-        });
+        this.$store.commit('layout/setOverlay', true);
+        // Wait for the overlay transition
+        await wait(300);
         this.$store.commit('layout/setHeader', false);
         this.$store.commit('layout/setFooter', false);
         done();
@@ -19,10 +17,7 @@ export const basic = {
     afterLeave(el) {},
     beforeEnter(el) {},
     enter(el, done) {
-        const loading = el.querySelector('.overlay');
-        gsap.set(loading, {
-            autoAlpha: 0
-        });
+        done();
     },
     afterEnter(el) {}
 };

@@ -153,6 +153,12 @@ export default {
     },
     methods: {
         appear() {
+            const loading = this.$el.querySelector('.overlay');
+            gsap.set(loading, {
+                autoAlpha: 0
+            });
+
+            this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setFooter', true);
             const tl = gsap.timeline();

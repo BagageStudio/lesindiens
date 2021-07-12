@@ -78,6 +78,7 @@ export default {
             return this.$storyapi.richTextResolver.render(text);
         },
         trackLoaded() {
+            this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setFooter', true);
 

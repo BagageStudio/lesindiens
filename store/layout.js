@@ -1,6 +1,7 @@
 export const state = () => ({
     showHeader: false,
-    showFooter: false
+    showFooter: false,
+    showOverlay: true
 });
 
 // export const getters = () => {};
@@ -11,5 +12,8 @@ export const mutations = {
     },
     setFooter(state, showFooter) {
         state.showFooter = showFooter;
+    },
+    setOverlay(state, showOverlay) {
+        state.showOverlay = showOverlay;
     }
 };

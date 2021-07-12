@@ -94,6 +94,7 @@ export default {
         },
         trackLoaded() {
             this.appearHello = true;
+            this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setFooter', true);
             const letters = this.$el.querySelectorAll('.home-title .word');

@@ -5,6 +5,7 @@
         <CustomCursor />
         <Grid v-if="$config.isDevEnv" />
         <Svgs />
+        <Overlay />
     </div>
 </template>
 <script>

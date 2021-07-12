@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
 import { basic } from '~/assets/js/transitions';
 
 export default {
@@ -189,6 +190,7 @@ export default {
             this.percentage = move < 0 ? 100 + move : move;
         },
         onLoaded() {
+            this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setFooter', true);
             this.showInfo = true;
@@ -198,9 +200,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-canvas {
-    background-color: red;
-}
 .playlist {
     position: relative;
     display: flex;
