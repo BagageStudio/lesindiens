@@ -1,25 +1,36 @@
 <template>
     <div class="work">
-        <div class="container">
+        <Reveal name="work" class="container" :offset="{ top: 270, bottom: 250 }" hook>
             <div class="container-small">
                 <div class="work-content">
-                    <h4 class="work-title content-pad" v-html="resolveRichText(data.work_title)" />
+                    <hr ref="separator" />
+                    <h4 ref="title" class="work-title content-pad" v-html="resolveRichText(data.work_title)" />
                     <div class="wrapper-cols">
-                        <SidebarItems v-if="isL" class="col-small content-pad" :data="data.work_sidebar_items" />
+                        <div v-if="isL" ref="sidebar">
+                            <SidebarItems class="col-small content-pad" :data="data.work_sidebar_items" />
+                        </div>
                         <div class="col-large content-pad">
-                            <div class="work-intro" v-html="resolveRichText(data.work_intro)" />
-                            <SidebarItems v-if="!isL" :data="data.work_sidebar_items" />
+                            <div ref="intro" class="work-intro" v-html="resolveRichText(data.work_intro)" />
+                            <div v-if="!isL" ref="sidebar">
+                                <SidebarItems :data="data.work_sidebar_items" />
+                            </div>
                             <Values :data="data.values" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Reveal>
     </div>
 </template>
 
 <script>
+import { gsap } from 'gsap';
+import Reveal from '~/components/Reveal';
+
 export default {
+    components: {
+        Reveal
+    },
     props: {
         data: { type: Object, required: true }
     },
@@ -31,9 +42,76 @@ export default {
         }
     },
     watch: {},
+    mounted() {
+        gsap.set([this.$refs.title, this.$refs.intro, this.$refs.sidebar, this.$refs.projects], {
+            opacity: 0
+        });
+        gsap.set(this.$refs.separator, {
+            scaleX: 0.7,
+            opacity: 0
+        });
+
+        this.tl = gsap.timeline({ paused: true });
+        this.tl.addLabel('start');
+        this.tl.to(
+            this.$refs.separator,
+            {
+                duration: 0.3,
+                opacity: 1
+            },
+            'start'
+        );
+        this.tl.to(
+            this.$refs.separator,
+            {
+                duration: 0.6,
+                scaleX: 1
+            },
+            'start'
+        );
+        this.tl.to(
+            this.$refs.title,
+            {
+                duration: 0.8,
+                scale: 1,
+                opacity: 1
+            },
+            'start'
+        );
+        this.tl.to(
+            this.$refs.intro,
+            {
+                duration: 0.8,
+                delay: 0.2,
+                opacity: 1
+            },
+            'start'
+        );
+        this.tl.to(
+            this.$refs.sidebar,
+            {
+                duration: 0.8,
+                delay: 0.2,
+                opacity: 1
+            },
+            'start'
+        );
+        this.tl.to(
+            this.$refs.projects,
+            {
+                duration: 0.8,
+                delay: 0.4,
+                opacity: 1
+            },
+            'start'
+        );
+    },
     methods: {
         resolveRichText(text) {
             return this.$storyapi.richTextResolver.render(text);
+        },
+        workIn() {
+            this.tl.play();
         }
     }
 };
@@ -46,13 +124,15 @@ export default {
 .work-content {
     position: relative;
     padding: 36px 0 0;
-    &::before {
+    hr {
         content: '';
         position: absolute;
         top: 0;
+        max-width: 100%;
         left: $gutter;
         right: $gutter;
-        border-top: 1px solid $grey-2;
+        border-top: 1px solid $grey-5;
+        background: none;
     }
 }
 .work-title {

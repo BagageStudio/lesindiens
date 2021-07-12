@@ -1,6 +1,6 @@
 <template>
     <div class="service">
-        <Reveal ref="service" name="service" class="container" :offset="{ top: 270, bottom: 250 }" hook>
+        <Reveal name="service" class="container" :offset="{ top: 270, bottom: 250 }" hook>
             <div class="container-small">
                 <div class="service-content">
                     <hr ref="separator" />
@@ -14,7 +14,7 @@
                     </div>
                     <div class="wrapper-cols service-sidebar-projects">
                         <div ref="sidebar" class="service-sidebar col-small content-pad to-anim">
-                            <SidebarItems class="" :data="data.sidebar_items" />
+                            <SidebarItems :data="data.sidebar_items" />
                         </div>
                         <div ref="projects" class="col-large content-pad to-anim">
                             <Projects :data="data.projects" />
@@ -29,12 +29,10 @@
 <script>
 import { gsap } from 'gsap';
 import Reveal from '~/components/Reveal';
-import SidebarItems from '~/components/SidebarItems';
 
 export default {
     components: {
-        Reveal,
-        SidebarItems
+        Reveal
     },
     props: {
         data: { type: Object, required: true }
