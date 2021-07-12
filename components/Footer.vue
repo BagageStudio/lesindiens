@@ -35,7 +35,7 @@
                     <nuxt-link
                         v-for="footerLink in content.footer_links"
                         :key="footerLink.id"
-                        :to="footerLink.link.story.full_slug"
+                        :to="'/' + footerLink.link.story.full_slug"
                         class="footer-link"
                         >{{ footerLink.label }}</nuxt-link
                     >
