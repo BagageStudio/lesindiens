@@ -50,6 +50,7 @@
                 </div>
             </div>
         </div>
+        <Overlay />
     </div>
 </template>
 
@@ -188,6 +189,8 @@ export default {
             this.percentage = move < 0 ? 100 + move : move;
         },
         onLoaded() {
+            this.$store.commit('layout/setHeader', true);
+            this.$store.commit('layout/setFooter', true);
             this.showInfo = true;
         }
     }

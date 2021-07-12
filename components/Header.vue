@@ -105,6 +105,9 @@ export default {
         };
     },
     computed: {
+        show() {
+            return this.$store.state.layout.showHeader;
+        },
         isMobile() {
             return this.ww <= this.$breakpoints.list.l;
         },
@@ -113,6 +116,18 @@ export default {
         }
     },
     watch: {
+        show(show) {
+            if (show) {
+                gsap.to(this.$el, {
+                    duration: 1,
+                    opacity: 1
+                });
+            } else {
+                gsap.set(this.$el, {
+                    opacity: 0
+                });
+            }
+        },
         $route(r) {
             if (this.isMobile && this.showMenuMobile) {
                 this.toggleMenuMobile();
@@ -183,6 +198,7 @@ export default {
     right: 0;
     height: 116px;
     z-index: 10;
+    opacity: 0;
 }
 
 .container,

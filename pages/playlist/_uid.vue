@@ -77,6 +77,7 @@
                 </div>
             </div>
         </div>
+        <Overlay />
     </div>
 </template>
 
@@ -152,11 +153,12 @@ export default {
     },
     methods: {
         appear() {
+            this.$store.commit('layout/setHeader', true);
+            this.$store.commit('layout/setFooter', true);
             const tl = gsap.timeline();
             const title = this.$el.querySelectorAll('.project-title .word');
             const infos = this.$el.querySelectorAll('.info-item, .project-info .tag');
             const image = this.$refs.bigImage.$el;
-            console.log(image);
 
             tl.to(
                 title,

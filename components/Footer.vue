@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
+
 export default {
     props: {
         theme: { type: String, default: '' }
@@ -66,13 +68,31 @@ export default {
             content: {}
         };
     },
-    computed: {},
-    watch: {},
+    computed: {
+        show() {
+            return this.$store.state.layout.showHeader;
+        }
+    },
+    watch: {
+        show(show) {
+            if (show) {
+                gsap.to(this.$el, {
+                    duration: 1,
+                    opacity: 1
+                });
+            } else {
+                gsap.set(this.$el, {
+                    opacity: 0
+                });
+            }
+        }
+    },
     methods: {}
 };
 </script>
 <style scoped lang="scss">
 .footer {
+    opacity: 0;
     padding: 38px 0;
 }
 .wrapper-contact {

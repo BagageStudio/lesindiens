@@ -38,6 +38,7 @@
                 </div>
             </div>
         </div>
+        <Overlay />
     </div>
 </template>
 
@@ -104,6 +105,8 @@ export default {
     methods: {
         trackLoaded() {
             this.trackIsLoaded = true;
+            this.$store.commit('layout/setHeader', true);
+            this.$store.commit('layout/setFooter', true);
             const letters = this.$el.querySelectorAll('.studio-title .letter');
             const subtitle = this.$el.getElementsByClassName('studio-subtitle')[0];
 

@@ -26,6 +26,7 @@
                 </div>
             </div>
         </div>
+        <Overlay />
     </div>
 </template>
 
@@ -77,6 +78,9 @@ export default {
             return this.$storyapi.richTextResolver.render(text);
         },
         trackLoaded() {
+            this.$store.commit('layout/setHeader', true);
+            this.$store.commit('layout/setFooter', true);
+
             const letters = this.$el.querySelectorAll('.type-title .word');
 
             const tl = gsap.timeline();

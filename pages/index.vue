@@ -39,6 +39,7 @@
                 </div>
             </div>
         </div>
+        <Overlay />
     </div>
 </template>
 
@@ -93,6 +94,8 @@ export default {
         },
         trackLoaded() {
             this.appearHello = true;
+            this.$store.commit('layout/setHeader', true);
+            this.$store.commit('layout/setFooter', true);
             const letters = this.$el.querySelectorAll('.home-title .word');
 
             const tl = gsap.timeline({ delay: 0.7 });
