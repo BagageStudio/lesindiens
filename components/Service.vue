@@ -107,16 +107,6 @@ export default {
             },
             'start'
         );
-        // tl.from(
-        //     this.sticker.sticker,
-        //     {
-        //         duration: 2.5,
-        //         y: offsetY,
-        //         x: offsetX,
-        //         ease: 'elastic.out(1.9, 0.25)'
-        //     },
-        //     'start'
-        // );
     },
     methods: {
         resolveRichText(text) {
