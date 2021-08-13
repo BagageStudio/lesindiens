@@ -134,7 +134,7 @@ export default {
     hr {
         content: '';
         position: absolute;
-        top: 0;
+        top: -46px;
         max-width: 100%;
         left: $gutter;
         right: $gutter;
@@ -160,6 +160,11 @@ export default {
     }
     .service-title-intro {
         padding-top: 45px;
+    }
+    .service-content {
+        hr {
+            top: 0;
+        }
     }
 }
 @media (min-width: $desktop) {
