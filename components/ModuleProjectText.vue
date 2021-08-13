@@ -1,31 +1,87 @@
 <template>
     <div class="module-text" :class="{ 'is-white': data.white_bg }">
-        <div class="container">
+        <Reveal name="projectText" class="container" :offset="{ top: 270, bottom: 250 }" hook>
             <div class="container-small">
                 <div class="wrapper-text">
+                    <div ref="border" class="border" />
                     <div class="module-text-title content-pad">
-                        <h3 class="title">{{ data.title }}</h3>
+                        <h3 class="title" v-html="$options.filters.splitInWords(data.title)" />
                     </div>
-                    <div class="module-text-content content-pad" v-html="richtext" />
+                    <div ref="content" class="module-text-content content-pad" v-html="richtext" />
                 </div>
             </div>
-        </div>
+        </Reveal>
     </div>
 </template>
 
 <script>
+import { gsap } from 'gsap';
+import Reveal from '~/components/Reveal';
+
 export default {
+    components: {
+        Reveal
+    },
     props: {
         data: { type: Object, required: true }
     },
-    data: () => ({}),
+    data: () => ({ tl: null }),
     computed: {
         richtext() {
             return this.$storyapi.richTextResolver.render(this.data.text);
         }
     },
     watch: {},
-    methods: {}
+    mounted() {
+        const letters = this.$el.querySelectorAll('.title .word');
+
+        gsap.set(this.$refs.content, {
+            opacity: 0
+        });
+
+        gsap.set(letters, {
+            opacity: 0,
+            rotateX: 80
+        });
+
+        gsap.set(this.$refs.border, {
+            scaleX: 0
+        });
+
+        this.tl = gsap.timeline({ paused: true }).addLabel('start');
+
+        this.tl.to(this.$refs.border, {
+            duration: 1.2,
+            ease: 'expo.out',
+            scaleX: 1
+        });
+
+        this.tl.to(
+            letters,
+            {
+                duration: 1.2,
+                rotateX: 0,
+                opacity: 1,
+                ease: 'expo.out',
+                stagger: 0.2
+            },
+            'start'
+        );
+
+        this.tl.to(
+            this.$refs.content,
+            {
+                duration: 0.8,
+                opacity: 1
+            },
+            'start+=0.65'
+        );
+    },
+    methods: {
+        projectTextIn() {
+            this.tl.play();
+        }
+    }
 };
 </script>
 
@@ -36,8 +92,8 @@ export default {
         color: $black;
         background: $white;
         .wrapper-text {
-            &::before {
-                border-color: $grey-5;
+            .border {
+                background-color: $grey-5;
             }
         }
     }
@@ -45,13 +101,14 @@ export default {
 .wrapper-text {
     position: relative;
     padding: 35px 0 0;
-    &::before {
-        content: '';
+    .border {
         position: absolute;
         top: 0;
         left: $gutter;
         right: $gutter;
-        border-top: 1px solid $white;
+        height: 1px;
+        background-color: $white;
+        transform-origin: 0% 0%;
     }
 }
 .module-text-title {
@@ -62,6 +119,11 @@ export default {
     font-weight: 400;
     font-size: 2.5rem;
     line-height: 32px;
+    ::v-deep .word {
+        display: inline-block;
+        transform-origin: 50% 50% -20px;
+        transform: perspective(500px);
+    }
 }
 
 @media (min-width: $desktop-small) {
