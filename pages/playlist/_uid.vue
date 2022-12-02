@@ -38,31 +38,7 @@
                 @loaded="imageIsLoaded = true"
             />
         </div>
-        <div class="wrapper-project-details">
-            <div class="container">
-                <div class="container-details container-small">
-                    <div class="project-details content-pad">
-                        <div v-for="detail in currentProject.content.details" :key="detail._uid" class="project-detail">
-                            <span class="project-detail-title">{{ detail.title }}</span>
-                            <span class="project-detail-content">{{ detail.content }}</span>
-                        </div>
-                    </div>
-                    <div class="project-intro content-pad">
-                        <div v-html="intro" />
-                        <Button
-                            v-if="currentProject.content.website_link.url"
-                            icon
-                            class="primary project-link"
-                            :link="currentProject.content.website_link.url"
-                            target="_blank"
-                            rel="noopener nofollow noreferrer"
-                        >
-                            Voir le site
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ProjectIntro :project="currentProject" />
         <component
             :is="module.component"
             v-for="module in currentProject.content.modules"
@@ -130,9 +106,6 @@ export default {
     computed: {
         title() {
             return this.$storyapi.richTextResolver.render(this.currentProject.content.song_title);
-        },
-        intro() {
-            return this.$storyapi.richTextResolver.render(this.currentProject.content.intro);
         },
         tracks() {
             return tracks;
@@ -257,25 +230,6 @@ export default {
     margin-top: 115px;
 }
 
-.wrapper-project-details {
-    padding: 80px 0;
-}
-.project-detail {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 35px;
-    font-family: $object;
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 20px;
-}
-.project-detail-title {
-    margin-bottom: 10px;
-    color: $grey-3;
-}
-.project-link {
-    margin-top: 60px;
-}
 .big-image {
     overflow: hidden;
     ::v-deep picture.fast-image {

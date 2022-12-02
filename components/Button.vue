@@ -47,7 +47,8 @@ export default {
         rotXFrame: 0,
         rotYFrame: 0,
         rotXIllus: 0,
-        rotYIllus: 0
+        rotYIllus: 0,
+        appearTl: null
     }),
     computed: {
         scrollTop() {
@@ -78,6 +79,7 @@ export default {
     methods: {
         init() {
             this.button = this.$refs.button;
+            this.sticker = this.getStickerFromButton(this.button);
         },
         getStickerFromButton(button) {
             const sticker = button;
@@ -160,6 +162,84 @@ export default {
         },
         computeRect() {
             this.stickerRect = this.button.getBoundingClientRect();
+        },
+        createAppearTimeline() {
+            const tl = gsap.timeline({
+                paused: true,
+                onComplete: () => {
+                    this.computeRect();
+                }
+            });
+            tl.addLabel('start');
+
+            const startX = 0;
+            const startY = -1;
+            const offsetX = 0;
+            const offsetY = -8;
+
+            gsap.set(this.sticker.sticker, {
+                opacity: 0
+            });
+
+            tl.to(
+                this.sticker.sticker,
+                {
+                    duration: 0.5,
+                    opacity: 1
+                },
+                'start'
+            );
+            tl.from(
+                this.sticker.sticker,
+                {
+                    duration: 1.5,
+                    y: offsetY,
+                    x: offsetX,
+                    ease: 'elastic.out(1.9, 0.25)'
+                },
+                'start'
+            );
+            tl.from(
+                this.sticker.shadow,
+                {
+                    duration: 1.5,
+                    x: 4 * startX,
+                    y: 3 * startY,
+                    rotationX: -15 * startY,
+                    rotationY: 15 * startX,
+                    ease: 'elastic.out(1.9, 0.25)'
+                },
+                'start'
+            );
+
+            tl.from(
+                this.sticker.frame,
+                {
+                    duration: 1.5,
+                    rotationX: -15 * startY,
+                    rotationY: 15 * startX,
+                    ease: 'elastic.out(1.9, 0.25)'
+                },
+                'start'
+            );
+            tl.from(
+                this.sticker.stickerContent,
+                {
+                    duration: 1.5,
+                    rotationX: -20 * startY,
+                    rotationY: 20 * startX,
+                    ease: 'elastic.out(1.9, 0.25)'
+                },
+                'start'
+            );
+            return tl;
+        },
+        hide() {
+            this.appearTl = this.createAppearTimeline();
+        },
+        appear() {
+            console.log('btn appear');
+            this.appearTl.play();
         }
     }
 };

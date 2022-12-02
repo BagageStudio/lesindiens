@@ -136,7 +136,7 @@ export default {
     hr {
         content: '';
         position: absolute;
-        top: 0;
+        top: -46px;
         max-width: 100%;
         left: $gutter;
         right: $gutter;
@@ -202,6 +202,9 @@ export default {
     }
     .love-content {
         padding-top: 45px;
+        hr {
+            top: -46px;
+        }
     }
     .wrapper-love-title {
         margin-bottom: 0;
