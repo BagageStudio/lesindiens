@@ -97,6 +97,7 @@ export default {
         }
     },
     created() {
+        console.log(this.tracks, this.studio.spotify_id);
         this.currentTrack = this.tracks.find(track => {
             return track.uri === this.studio.spotify_id;
         });
