@@ -75,6 +75,9 @@ export default {
             return tracks;
         }
     },
+    mounted() {
+        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+    },
     methods: {
         resolveRichText(text) {
             return this.$storyapi.richTextResolver.render(text);

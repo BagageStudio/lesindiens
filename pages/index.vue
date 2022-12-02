@@ -91,6 +91,9 @@ export default {
     created() {
         this.changeTrack(this.story.content.projects[0].content.spotify_id);
     },
+    mounted() {
+        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+    },
     methods: {
         changeTrack(uri) {
             this.currentTrack = this.tracks.find(track => {

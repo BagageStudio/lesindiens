@@ -102,6 +102,9 @@ export default {
         }
     },
     methods: {
+        mounted() {
+            if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+        },
         trackLoaded() {
             this.trackIsLoaded = true;
             this.$store.commit('layout/setHeader', true);
