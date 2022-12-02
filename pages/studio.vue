@@ -11,7 +11,6 @@
                             <div ref="subtitle" class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-
                     <Playlist
                         class="studio-playlist"
                         :track="currentTrack"
@@ -78,7 +77,11 @@ export default {
             return service;
         });
 
-        return { studio, services };
+        const currentTrack = tracks.find(track => {
+            return track.uri === studio.spotify_id;
+        });
+
+        return { studio, services, currentTrack };
     },
     data: () => ({
         currentTrack: null,
@@ -96,12 +99,6 @@ export default {
         tracks() {
             return tracks;
         }
-    },
-    mounted() {
-        console.log(this.tracks, this.studio.spotify_id);
-        this.currentTrack = this.tracks.find(track => {
-            return track.uri === this.studio.spotify_id;
-        });
     },
     methods: {
         trackLoaded() {
