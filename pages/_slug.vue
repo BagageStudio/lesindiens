@@ -55,7 +55,15 @@ export default {
                     error({ statusCode: res.response.status, message: res.response.data });
                 }
             });
-        return { page };
+
+        let currentTrack = null;
+
+        if (page[0].content.spotify_id) {
+            currentTrack = tracks.find(track => {
+                return track.uri === page[0].content.spotify_id;
+            });
+        }
+        return { page, currentTrack };
     },
     data: () => ({
         currentTrack: null,
@@ -64,13 +72,6 @@ export default {
     computed: {
         tracks() {
             return tracks;
-        }
-    },
-    created() {
-        if (this.page[0].content.spotify_id) {
-            this.currentTrack = this.tracks.find(track => {
-                return track.uri === this.page[0].content.spotify_id;
-            });
         }
     },
     methods: {

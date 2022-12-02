@@ -95,7 +95,10 @@ export default {
             twoOtherProjects.push(otherProjects[random]);
             i++;
         }
-        return { currentProject, twoOtherProjects };
+        const currentTrack = tracks.find(track => {
+            return track.uri === currentProject.content.spotify_id;
+        });
+        return { currentProject, twoOtherProjects, currentTrack };
     },
     data: () => ({
         currentTrack: null,
@@ -119,11 +122,7 @@ export default {
             if (loaded && this.imageIsLoaded) this.appear();
         }
     },
-    created() {
-        this.currentTrack = this.tracks.find(track => {
-            return track.uri === this.currentProject.content.spotify_id;
-        });
-    },
+    created() {},
     methods: {
         appear() {
             const loading = this.$el.querySelector('.overlay');
