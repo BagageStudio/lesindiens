@@ -101,11 +101,12 @@ export default {
             return tracks;
         }
     },
+    mounted() {
+        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+    },
     methods: {
-        mounted() {
-            if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
-        },
         trackLoaded() {
+            console.log('track is loaded');
             this.trackIsLoaded = true;
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setOverlay', false);
