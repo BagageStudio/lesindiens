@@ -12,6 +12,7 @@
                         </div>
                     </div>
                     <Playlist
+                        v-if="currentTrack && currentTrack.url"
                         class="studio-playlist"
                         :track="currentTrack"
                         :appear="playlistShow"

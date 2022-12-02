@@ -33,7 +33,12 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist :track="currentTrack" :appear="appearTrack" @loaded="trackLoaded" />
+                        <Playlist
+                            v-if="currentTrack && currentTrack.url"
+                            :track="currentTrack"
+                            :appear="appearTrack"
+                            @loaded="trackLoaded"
+                        />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>

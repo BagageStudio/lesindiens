@@ -19,6 +19,7 @@
                         </div>
                         <div class="project-song content-pad">
                             <Playlist
+                                v-if="currentTrack && currentTrack.url"
                                 :appear="showPlaylist"
                                 class="project-playlist"
                                 :track="currentTrack"

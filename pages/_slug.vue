@@ -5,6 +5,7 @@
                 <div class="container-small">
                     <h1 class="type-title content-pad" v-html="$options.filters.splitInWords(page[0].content.title)" />
                     <Playlist
+                        v-if="currentTrack && currentTrack.url"
                         class="type-playlist"
                         :track="currentTrack"
                         :appear="playlistShow"
