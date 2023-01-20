@@ -19,6 +19,7 @@
                         </div>
                         <div class="project-song content-pad">
                             <Playlist
+                                v-if="currentTrack && currentTrack.url"
                                 :appear="showPlaylist"
                                 class="project-playlist"
                                 :track="currentTrack"
@@ -122,7 +123,9 @@ export default {
             if (loaded && this.imageIsLoaded) this.appear();
         }
     },
-    created() {},
+    mounted() {
+        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+    },
     methods: {
         appear() {
             const loading = this.$el.querySelector('.overlay');

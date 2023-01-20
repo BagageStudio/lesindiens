@@ -45,8 +45,20 @@ export default function (options) {
         const filePath = path.join('app', 'tracks.json');
         fs.ensureFileSync(filePath);
 
+        const staticFilePath = path.join('static', 'tracks.json');
+        fs.ensureFileSync(staticFilePath);
+
         await fs
             .writeJSON(filePath, tracks)
+            .then(() => {
+                logger.success('Tracks successfully extracted');
+            })
+            .catch(err => {
+                logger.error('Error writing tracks file', err);
+            });
+
+        await fs
+            .writeJSON(staticFilePath, tracks)
             .then(() => {
                 logger.success('Tracks successfully extracted');
             })

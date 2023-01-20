@@ -31,7 +31,12 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist :track="currentTrack" :appear="appearTrack" @loaded="trackLoaded" />
+                        <Playlist
+                            v-if="currentTrack && currentTrack.url"
+                            :track="currentTrack"
+                            :appear="appearTrack"
+                            @loaded="trackLoaded"
+                        />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
@@ -84,6 +89,9 @@ export default {
     transition: basic,
     created() {
         this.changeTrack(this.story.content.projects[0].content.spotify_id);
+    },
+    mounted() {
+        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
     },
     methods: {
         changeTrack(uri) {

@@ -11,6 +11,7 @@ export default {
     },
     watch: {
         show(show) {
+            console.log('oui');
             if (show) {
                 gsap.to(this.$el, {
                     duration: 0.5,
@@ -21,6 +22,13 @@ export default {
                     autoAlpha: 0
                 });
             }
+        }
+    },
+    mounted() {
+        if (!this.show) {
+            gsap.to(this.$el, {
+                autoAlpha: 0
+            });
         }
     }
 };
