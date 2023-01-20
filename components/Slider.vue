@@ -22,6 +22,11 @@
                 <nuxt-link :to="projects[current].full_slug" class="nav-link">
                     <span class="name" v-html="$options.filters.splitInWords(projects[current].name)"
                 /></nuxt-link>
+                <div class="wrapper-discover">
+                    <nuxt-link :to="projects[current].full_slug" class="discover-link">
+                        <span>{{ discoverLabel }}</span>
+                    </nuxt-link>
+                </div>
                 <div class="wrapper-buttons">
                     <button
                         class="btn-prev arrow-button"
@@ -57,6 +62,10 @@ export default {
         },
         appear: {
             type: Boolean,
+            required: true
+        },
+        discoverLabel: {
+            type: String,
             required: true
         }
     },
@@ -104,6 +113,7 @@ export default {
             const currentImage = this.$refs.image[this.current];
             const currentInner = currentImage.querySelector('.js-image-inner');
             const title = this.$refs.nav.querySelectorAll('.name .word');
+            const discoverlink = this.$refs.nav.querySelectorAll('.discover-link');
             const tl = gsap.timeline({
                 onComplete: () => {
                     this.timeoutAutoplay();
@@ -150,6 +160,15 @@ export default {
                     ease: 'expo.out'
                 },
                 'start+=0.8'
+            );
+            tl.to(
+                discoverlink,
+                {
+                    duration: 0.4,
+                    autoAlpha: 1,
+                    ease: 'power2.out'
+                },
+                'start+=1'
             );
         },
         isL(is) {
@@ -331,6 +350,7 @@ export default {
         },
         navTimeline(dir = 'out') {
             const title = this.$refs.nav.querySelectorAll('.name .word');
+            const discoverlink = this.$refs.nav.querySelectorAll('.discover-link');
             const tl = gsap.timeline({
                 paused: true,
                 onComplete:
@@ -356,6 +376,11 @@ export default {
                     ease: 'power3.out'
                 }
             );
+            tl.fromTo(discoverlink, {
+                duration: 0.8,
+                autoAlpha: dir === 'out' ? 0 : 1,
+                ease: 'power3.out'
+            });
             return tl;
         },
         slideTimeline(currentInner, currentImage, nextInner, nextImage, nextIndex, dir) {
@@ -428,12 +453,13 @@ export default {
 .slider {
     display: flex;
     flex-direction: column;
-    height: 335px;
 }
 
 .images {
     position: relative;
     flex: 0 1 100%;
+    width: 100%;
+    aspect-ratio: 1;
     overflow: hidden;
 }
 
@@ -463,7 +489,7 @@ export default {
 }
 
 .nav {
-    padding: 25px 0;
+    padding: 25px 0 0;
 }
 .inner-nav {
     display: flex;
@@ -483,11 +509,16 @@ export default {
     ::v-deep .word {
         display: inline-block;
         opacity: 0;
-        transform-origin: 50% 38% -8px;
+        transform-origin: 50% 50% -20px;
         transform: rotateX(80deg);
     }
 }
-
+.wrapper-discover {
+    display: none;
+}
+.discover-link {
+    opacity: 0;
+}
 .wrapper-buttons {
     display: flex;
     justify-content: flex-end;
@@ -498,25 +529,39 @@ export default {
     }
 }
 
-@media (min-width: $phone) {
-    .slider {
-        height: 435px;
-    }
-}
-@media (min-width: $tablet) {
-    .slider {
-        height: 535px;
-    }
-}
 @media (min-width: $desktop-small) {
-    .slider {
-        height: 100%;
+    .wrapper-discover {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: 30px;
     }
     .wrapper-buttons {
         display: none;
     }
     .images {
         cursor: none;
+    }
+    .nav {
+        padding-top: 38px;
+    }
+    .name {
+        font-size: 2.5rem;
+        line-height: 32px;
+    }
+    .discover-link {
+        font-size: 1.4rem;
+        line-height: 13px;
+        color: $grey-3;
+        text-decoration: none;
+        transition: 0.2s ease-in-out;
+        text-decoration: underline;
+        text-decoration-color: $black;
+        text-underline-offset: 4px;
+        &:hover {
+            color: $white;
+            text-decoration-color: $white;
+        }
     }
 }
 </style>

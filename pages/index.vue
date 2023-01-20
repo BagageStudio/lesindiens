@@ -21,7 +21,11 @@
                             </Button>
                         </div>
                         <div class="col-small-home content-pad">
-                            <Slider :projects="story.content.projects" :appear="appearSlider" />
+                            <Slider
+                                :projects="story.content.projects"
+                                :appear="appearSlider"
+                                :discover-label="story.content.discover_label"
+                            />
                         </div>
                     </div>
                 </div>
