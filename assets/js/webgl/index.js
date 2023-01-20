@@ -42,7 +42,7 @@ class WebglApp {
         this.scrolling = false;
         this.scrollEnded = true;
 
-        this.onResizeEvent = this.onResize.bind(this);
+        this.onResizeEvent = this.onResize.bind(this, { reset: true });
         this.onWheelEvent = this.onWheel.bind(this);
         this.onTouchDownEvent = this.onTouchDown.bind(this);
         this.onTouchMoveEvent = this.onTouchMove.bind(this);
@@ -414,7 +414,22 @@ class WebglApp {
         };
     }
 
-    onResize() {
+    onResize({ reset } = {}) {
+        if (reset) {
+            this.scroll = {
+                ease: 6.25,
+                current: 0,
+                target: 0,
+                last: 0,
+                speed: {
+                    ease: 10,
+                    current: 0,
+                    target: 0
+                }
+            };
+            this.readyToShowInfo = true;
+        }
+
         this.screen = {
             height: window.innerHeight,
             width: window.innerWidth
