@@ -5,22 +5,20 @@
                 <div class="container-small">
                     <div class="wrapper-cols-home">
                         <div class="col-large-home content-pad">
-                            <Hello class="primary color-secondary huge home-sticker" :appear="appearHello" />
-                            <h1 class="home-title" v-html="homeTitle" />
-                            <div class="expertises">
-                                <div
-                                    v-for="expertise in story.content.expertises"
-                                    :key="expertise.id"
-                                    class="expertise-wrapper"
-                                >
-                                    <div class="expertise">
-                                        <span ref="expertises" class="expertise-inner">
-                                            {{ expertise.name }}
-                                        </span>
-                                    </div>
-                                    <span ref="expertisesLines" class="expertise-line" />
-                                </div>
+                            <div class="wrapper-intro">
+                                <Hello class="primary color-secondary huge home-sticker" :appear="appearHello" />
+                                <h1 class="home-title" v-html="homeTitle" />
                             </div>
+                            <Button
+                                v-if="story.content.projects_link[0].link.story.full_slug"
+                                ref="projectLink"
+                                icon
+                                class="primary project-link"
+                                :link="story.content.projects_link[0].link.story.full_slug"
+                                large
+                            >
+                                {{ story.content.projects_link[0].label }}
+                            </Button>
                         </div>
                         <div class="col-small-home content-pad">
                             <Slider :projects="story.content.projects" :appear="appearSlider" @change="changeTrack" />
@@ -53,7 +51,8 @@ export default {
         return app.$storyapi
             .get('cdn/stories/home', {
                 version: $config.sBlokVersion,
-                resolve_relations: 'home.projects,home.expertises'
+                resolve_relations: 'home.projects',
+                resolve_links: 'url'
             })
             .then(res => {
                 return res.data;
@@ -112,25 +111,14 @@ export default {
                 'title'
             );
             tl.to(
-                this.$refs.expertises,
+                '.project-link',
                 {
                     duration: 1.2,
                     rotateX: 0,
                     opacity: 1,
-                    ease: 'expo.out',
-                    stagger: 0.15
+                    ease: 'expo.out'
                 },
                 'title+=0.8'
-            );
-            tl.to(
-                this.$refs.expertisesLines,
-                {
-                    duration: 1.2,
-                    scaleX: 1,
-                    ease: 'expo.out',
-                    stagger: 0.15
-                },
-                'title+=1'
             );
             tl.add(() => {
                 this.appearSlider = true;
@@ -170,7 +158,6 @@ export default {
         transform: rotateX(80deg);
         opacity: 0;
         backface-visibility: hidden;
-        // will-change: transform;
     }
     ::v-deep b,
     ::v-deep strong {
@@ -181,38 +168,8 @@ export default {
         display: none;
     }
 }
-.expertises {
-    margin-top: 65px;
-}
-.expertise-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-family: $telegraf;
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 17px;
-}
-
-.expertise {
-    perspective: 100px;
-    perspective-origin: 50% 50%;
-    padding: 20px 0;
-}
-.expertise-inner {
-    display: inline-block;
-    transform-origin: 50% 50% -8px;
-    transform: rotateX(80deg);
+.project-link {
     opacity: 0;
-}
-
-.expertise-line {
-    display: block;
-    height: 1px;
-    width: 100%;
-    background-color: #313131;
-    transform-origin: 0% 0%;
-    transform: scaleX(0);
 }
 
 @media (min-width: $tablet) {
@@ -223,18 +180,22 @@ export default {
 @media (min-width: $desktop-small) {
     .wrapper-cols-home {
         display: flex;
-        // align-items: flex-start;
         align-items: stretch;
         justify-content: space-between;
     }
     .col-large-home {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
         width: percentage(4/8);
-        margin-bottom: 80px;
+        margin-bottom: 0;
     }
     .col-small-home {
         width: percentage(3/8);
     }
     .home-title {
+        width: 100%;
         font-size: 4.6rem;
         font-weight: 100;
         line-height: 59px;

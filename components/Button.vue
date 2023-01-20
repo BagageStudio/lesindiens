@@ -3,6 +3,7 @@
         :is="link !== '#' ? 'a' : 'span'"
         ref="button"
         :href="link"
+        :class="{ 'large-btn': large }"
         @mousemove="mouseMove"
         @mouseenter="mouseEnter"
         @mouseleave="mouseLeave"
@@ -33,6 +34,11 @@ export default {
             type: String,
             required: false,
             default: '#'
+        },
+        large: {
+            required: false,
+            default: false,
+            type: Boolean
         }
     },
     data: () => ({
@@ -273,6 +279,12 @@ export default {
         }
         .frame {
             border-color: var(--secondary);
+        }
+    }
+    &.large-btn {
+        font-size: 1.6rem;
+        .icon {
+            margin-left: 80px;
         }
     }
     .icon {
