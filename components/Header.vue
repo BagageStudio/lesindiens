@@ -139,6 +139,14 @@ export default {
             }
         }
     },
+    mounted() {
+        if (this.show) {
+            gsap.to(this.$el, {
+                duration: 1,
+                opacity: 1
+            });
+        }
+    },
     methods: {
         async toggleMenuMobile() {
             if (this.$store.state.scroll.scrollTop > 0) await gsap.to(window, { duration: 0.1, scrollTo: 0 });

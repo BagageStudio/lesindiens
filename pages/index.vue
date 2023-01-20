@@ -25,7 +25,6 @@
                                 :projects="story.content.projects"
                                 :appear="appearSlider"
                                 :discover-label="story.content.discover_label"
-                                @change="changeTrack"
                             />
                         </div>
                     </div>
@@ -36,7 +35,6 @@
             <div class="container">
                 <div class="container-small">
                     <div class="wrapper-footer content-pad">
-                        <Playlist :track="currentTrack" :appear="appearTrack" @loaded="trackLoaded" />
                         <Footer theme="ultra-light" />
                     </div>
                 </div>
@@ -48,9 +46,7 @@
 
 <script>
 import { gsap } from 'gsap';
-import tracks from '~/app/tracks.json';
 import { basic } from '~/assets/js/transitions';
-
 export default {
     asyncData({ app, $config, error }) {
         return app.$storyapi
@@ -73,30 +69,20 @@ export default {
             });
     },
     data: () => ({
-        currentTrack: null,
         appearHello: false,
-        appearSlider: false,
-        appearTrack: false
+        appearSlider: false
     }),
     computed: {
-        tracks() {
-            return tracks;
-        },
         homeTitle() {
             return this.$options.filters.splitInWords(this.$storyapi.richTextResolver.render(this.story.content.title));
         }
     },
-    transition: basic,
-    created() {
-        this.changeTrack(this.story.content.projects[0].content.spotify_id);
+    mounted() {
+        this.reveal();
     },
+    transition: basic,
     methods: {
-        changeTrack(uri) {
-            this.currentTrack = this.tracks.find(track => {
-                return track.uri === uri;
-            });
-        },
-        trackLoaded() {
+        reveal() {
             this.appearHello = true;
             this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setHeader', true);
@@ -127,7 +113,6 @@ export default {
             );
             tl.add(() => {
                 this.appearSlider = true;
-                this.appearTrack = true;
             }, 'title+=1');
         }
     }

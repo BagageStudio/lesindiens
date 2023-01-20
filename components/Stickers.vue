@@ -41,7 +41,7 @@
 
 <script>
 import { gsap } from 'gsap';
-import { round, random } from '~/assets/js/utils';
+import { round } from '~/assets/js/utils';
 
 export default {
     props: {

@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import { gsap } from 'gsap';
 import { basic } from '~/assets/js/transitions';
 
 export default {

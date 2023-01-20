@@ -87,7 +87,14 @@ export default {
             }
         }
     },
-    methods: {}
+    mounted() {
+        if (this.show) {
+            gsap.to(this.$el, {
+                duration: 1,
+                opacity: 1
+            });
+        }
+    }
 };
 </script>
 <style scoped lang="scss">
