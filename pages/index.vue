@@ -21,7 +21,12 @@
                             </Button>
                         </div>
                         <div class="col-small-home content-pad">
-                            <Slider :projects="story.content.projects" :appear="appearSlider" @change="changeTrack" />
+                            <Slider
+                                :projects="story.content.projects"
+                                :appear="appearSlider"
+                                :discover-label="story.content.discover_label"
+                                @change="changeTrack"
+                            />
                         </div>
                     </div>
                 </div>
