@@ -13,13 +13,6 @@
                     <div class="content-txt content-pad">
                         <h2 class="e404-subtitle" v-html="subtitle" />
                     </div>
-                    <div class="content-playlist">
-                        <Playlist
-                            v-if="currentTrack && currentTrack.url"
-                            class="error-playlist"
-                            :track="currentTrack"
-                        />
-                    </div>
                 </div>
                 <div class="e404-btn content-pad">
                     <Button icon class="primary" :link="'/'"> Retour à l'accueil </Button>
@@ -30,8 +23,6 @@
 </template>
 
 <script>
-import tracks from '~/app/tracks.json';
-
 export default {
     async fetch() {
         const errorPage = await this.$storyapi
@@ -43,22 +34,14 @@ export default {
         this.errorPage = errorPage;
     },
     data: () => ({
-        currentTrack: null,
         errorPage: null
     }),
     computed: {
         subtitle() {
             return this.$storyapi.richTextResolver.render(this.errorPage.subtitle);
-        },
-        tracks() {
-            return tracks;
         }
     },
     mounted() {
-        this.currentTrack = this.tracks.find(track => {
-            return track.uri === this.errorPage.spotify_id;
-        });
-
         // clone title
         const title = this.$refs.title;
         const titleCopy = title.cloneNode(true);
@@ -99,10 +82,6 @@ export default {
     animation: scrollText 30s infinite linear;
 }
 
-.error-playlist {
-    padding: 0 $gutter;
-}
-
 @keyframes scrollText {
     from {
         transform: translate3d(0%, 0, 0);
@@ -137,11 +116,6 @@ export default {
         display: none;
     }
 }
-.content-playlist {
-    display: flex;
-    justify-content: center;
-    margin: 30px 0 40px;
-}
 .e404-btn {
     display: flex;
     justify-content: center;
@@ -165,18 +139,11 @@ export default {
     .content-txt {
         width: percentage(4/8);
     }
-    .content-playlist {
-        width: percentage(4/8);
-        margin: 0;
-    }
     .e404-subtitle {
         text-align: left;
         > br {
             display: block;
         }
-    }
-    .content-playlist {
-        justify-content: flex-start;
     }
     .e404-btn {
         justify-content: flex-start;
@@ -204,9 +171,6 @@ export default {
     .content-txt {
         width: percentage(5/10);
     }
-    .content-playlist {
-        width: percentage(5/10);
-    }
 }
 
 @media (min-width: $desktop-large) {
@@ -218,9 +182,6 @@ export default {
     .e404-subtitle {
         font-size: 3.5rem;
         line-height: 42px;
-    }
-    .content-playlist {
-        padding-right: calc(#{percentage(2/10)} + #{$gutter});
     }
 }
 </style>

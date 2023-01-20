@@ -17,15 +17,6 @@
                                 <Tags :tags="currentProject.content.expertises" />
                             </div>
                         </div>
-                        <div class="project-song content-pad">
-                            <Playlist
-                                v-if="currentTrack && currentTrack.url"
-                                :appear="showPlaylist"
-                                class="project-playlist"
-                                :track="currentTrack"
-                                @loaded="trackIsLoaded = true"
-                            />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -40,12 +31,7 @@
             />
         </div>
         <ProjectIntro :project="currentProject" />
-        <component
-            :is="module.component"
-            v-for="module in currentProject.content.modules"
-            :key="module.id"
-            :data="module"
-        />
+        <component :is="mod.component" v-for="mod in currentProject.content.modules" :key="mod.id" :data="mod" />
         <LinkedProjects :projects="twoOtherProjects" />
         <div class="container">
             <div class="container-small">
@@ -60,7 +46,6 @@
 
 <script>
 import { gsap } from 'gsap';
-import tracks from '~/app/tracks.json';
 import { basic } from '~/assets/js/transitions';
 
 export default {
@@ -96,38 +81,26 @@ export default {
             twoOtherProjects.push(otherProjects[random]);
             i++;
         }
-        const currentTrack = tracks.find(track => {
-            return track.uri === currentProject.content.spotify_id;
-        });
-        return { currentProject, twoOtherProjects, currentTrack };
+        return { currentProject, twoOtherProjects };
     },
     data: () => ({
-        currentTrack: null,
-        imageIsLoaded: false,
-        trackIsLoaded: false,
-        showPlaylist: false
+        imageIsLoaded: false
     }),
     computed: {
         title() {
             return this.$storyapi.richTextResolver.render(this.currentProject.content.song_title);
-        },
-        tracks() {
-            return tracks;
         }
     },
     watch: {
-        trackIsLoaded(loaded) {
-            if (loaded && this.imageIsLoaded) this.appear();
-        },
         imageIsLoaded(loaded) {
-            if (loaded && this.imageIsLoaded) this.appear();
+            if (loaded && this.imageIsLoaded) this.reveal();
         }
     },
     mounted() {
-        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+        if (this.imageIsLoaded) this.reveal();
     },
     methods: {
-        appear() {
+        reveal() {
             const loading = this.$el.querySelector('.overlay');
             gsap.set(loading, {
                 autoAlpha: 0
@@ -152,9 +125,6 @@ export default {
                 },
                 'title'
             );
-            tl.add(() => {
-                this.showPlaylist = true;
-            }, 'title+=0.6');
 
             tl.to(
                 infos,

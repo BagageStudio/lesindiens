@@ -11,13 +11,6 @@
                             <div ref="subtitle" class="studio-subtitle" v-html="subtitle" />
                         </div>
                     </div>
-                    <Playlist
-                        v-if="currentTrack && currentTrack.url"
-                        class="studio-playlist"
-                        :track="currentTrack"
-                        :appear="playlistShow"
-                        @loaded="trackLoaded"
-                    />
                 </div>
                 <div v-if="isL">
                     <Stickers
@@ -46,8 +39,6 @@
 import { gsap } from 'gsap';
 
 import { basic } from '~/assets/js/transitions';
-
-import tracks from '~/app/tracks.json';
 
 export default {
     transition: basic,
@@ -78,16 +69,10 @@ export default {
             return service;
         });
 
-        const currentTrack = tracks.find(track => {
-            return track.uri === studio.spotify_id;
-        });
-
-        return { studio, services, currentTrack };
+        return { studio, services };
     },
     data: () => ({
-        currentTrack: null,
-        stickersShow: false,
-        playlistShow: false
+        stickersShow: false
     }),
     computed: {
         isL() {
@@ -96,18 +81,13 @@ export default {
         },
         subtitle() {
             return this.$storyapi.richTextResolver.render(this.studio.subtitle);
-        },
-        tracks() {
-            return tracks;
         }
     },
     mounted() {
-        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+        this.reveal();
     },
     methods: {
-        trackLoaded() {
-            console.log('track is loaded');
-            this.trackIsLoaded = true;
+        reveal() {
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setFooter', true);
@@ -135,7 +115,6 @@ export default {
                     'title+=1'
                 )
                 .add(() => {
-                    this.playlistShow = true;
                     this.stickersShow = true;
                 }, 'title+=1.5');
         }
@@ -168,10 +147,6 @@ export default {
     line-height: 32px;
     margin-top: 20px;
     opacity: 0;
-}
-.studio-playlist {
-    margin-top: 40px;
-    padding: 0 $gutter;
 }
 @media (min-width: $tablet) {
     .studio-hero {

@@ -4,13 +4,6 @@
             <div class="container">
                 <div class="container-small">
                     <h1 class="type-title content-pad" v-html="$options.filters.splitInWords(page[0].content.title)" />
-                    <Playlist
-                        v-if="currentTrack && currentTrack.url"
-                        class="type-playlist"
-                        :track="currentTrack"
-                        :appear="playlistShow"
-                        @loaded="trackLoaded"
-                    />
                 </div>
             </div>
         </div>
@@ -33,7 +26,6 @@
 
 <script>
 import { gsap } from 'gsap';
-import tracks from '~/app/tracks.json';
 import { basic } from '~/assets/js/transitions';
 
 export default {
@@ -56,33 +48,17 @@ export default {
                     error({ statusCode: res.response.status, message: res.response.data });
                 }
             });
-
-        let currentTrack = null;
-
-        if (page[0].content.spotify_id) {
-            currentTrack = tracks.find(track => {
-                return track.uri === page[0].content.spotify_id;
-            });
-        }
-        return { page, currentTrack };
+        return { page };
     },
-    data: () => ({
-        currentTrack: null,
-        playlistShow: false
-    }),
-    computed: {
-        tracks() {
-            return tracks;
-        }
-    },
+
     mounted() {
-        if (!this.currentTrack || !this.currentTrack.url) this.trackLoaded();
+        this.reveal();
     },
     methods: {
         resolveRichText(text) {
             return this.$storyapi.richTextResolver.render(text);
         },
-        trackLoaded() {
+        reveal() {
             this.$store.commit('layout/setOverlay', false);
             this.$store.commit('layout/setHeader', true);
             this.$store.commit('layout/setFooter', true);
@@ -100,9 +76,7 @@ export default {
                     stagger: 0.2
                 },
                 'title'
-            ).add(() => {
-                this.playlistShow = true;
-            }, 'title+=0.9');
+            );
         }
     },
     head() {
@@ -132,10 +106,6 @@ export default {
         opacity: 0;
     }
 }
-.type-playlist {
-    margin-top: 30px;
-    padding: 0 $gutter;
-}
 @media (min-width: $tablet) {
     .type-hero {
         padding: 180px 0 50px;
@@ -148,9 +118,6 @@ export default {
 @media (min-width: $desktop-small) {
     .type-hero {
         padding: 245px 0 50px;
-    }
-    .type-playlist {
-        margin-top: 50px;
     }
 }
 </style>

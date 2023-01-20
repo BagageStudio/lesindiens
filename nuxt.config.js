@@ -141,7 +141,6 @@ export default {
     buildModules: [
         '@nuxtjs/proxy',
         '@nuxtjs/axios',
-        '~/modules/tracks',
         // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         '@nuxtjs/style-resources',
