@@ -62,12 +62,12 @@ class GL {
 
     createFXAA() {
         this.post = new Post(this.gl);
-        this.fxaa = this.post.addPass({
-            fragment: fxaa,
-            uniforms: {
-                uResolution: this.resolution
-            }
-        });
+        // this.fxaa = this.post.addPass({
+        //     fragment: fxaa,
+        //     uniforms: {
+        //         uResolution: this.resolution
+        //     }
+        // });
     }
 
     onTouchMove(e) {
@@ -115,11 +115,11 @@ class GL {
     }
 
     createRenderer() {
-        this.renderer = new Renderer();
+        this.renderer = new Renderer({ alpha: true });
 
         this.gl = this.renderer.gl;
 
-        this.gl.clearColor(0.063, 0.063, 0.067, 1);
+        this.gl.clearColor(0, 0, 0, 0);
 
         this.dom.appendChild(this.gl.canvas);
     }

@@ -13,10 +13,13 @@
                 </div>
             </div>
         </div>
-        <FunGL v-if="isL" :data="{ title: data.fun_title, photos: data.fun_photos }" />
+        <FunGL
+            v-if="isL"
+            :data="{ title: data.fun_title, photos: data.fun_photos, placeholderPhotos: data.fun_placeholder_photos }"
+        />
         <div v-else class="container">
             <div class="mobile-img content-pad">
-                <FastImage :image="data.fun_photos[0]" />
+                <FastImage :image="data.fun_placeholder_photos[0]" />
             </div>
         </div>
     </div>
