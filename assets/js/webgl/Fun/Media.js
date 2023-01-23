@@ -10,9 +10,8 @@ const TIME_TO_APPEAR = 0.8;
 const TIME_TO_DISAPPEAR = 1;
 
 export class Media {
-    constructor({ geometry, gl, texture, inertia, index, scene, screen, viewport, width, height, id, y, x }) {
+    constructor({ geometry, gl, texture, inertia, index, scene, screen, width, height, id, y, x }) {
         this.screen = screen;
-        this.viewport = viewport;
         this.gl = gl;
 
         this.scene = scene;
@@ -89,7 +88,6 @@ export class Media {
                 uRotation: { value: this.rotation },
                 uDirectionOfRotation: { value: this.directionOfRotation },
                 uTransparency: { value: 0 },
-                uViewportSizes: { value: [this.viewport.width, this.viewport.height] },
                 uOpacity: { value: 1 },
                 uScale: { value: 0 },
                 uTime: { value: 0 }
@@ -109,12 +107,11 @@ export class Media {
 
     updateIndex(index) {
         this.index = index;
-        this.plane.position.z = this.index * 0.001;
+        this.plane.position.z = this.index;
     }
 
     update() {
         this.plane.scale.x = this.width;
-        // this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
         this.plane.program.uniforms.uOpacity.value = this.opacity;
         this.plane.program.uniforms.uScale.value = this.scale;
         this.plane.program.uniforms.uRotation.value = this.rotation;
@@ -128,15 +125,10 @@ export class Media {
 
         this.plane.position.x = this.x;
         this.plane.position.y = this.y;
-        this.plane.position.z = this.index * 0.001;
+        this.plane.position.z = this.index;
 
         if (screen) {
             this.screen = screen;
-        }
-
-        if (viewport) {
-            this.viewport = viewport;
-            this.plane.program.uniforms.uViewportSizes.value = [this.viewport.width, this.viewport.height];
         }
 
         this.plane.scale.y = this.height;

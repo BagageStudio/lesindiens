@@ -4,8 +4,8 @@ import { distance } from '../../utils';
 import fxaa from '../shaders/fxaa.glsl';
 import { Media } from './Media';
 
-const DELAY_BETWEEN_IMAGES = 0.1;
-const DISTANCE_BETWEEN_IMAGES = 4;
+const DELAY_BETWEEN_IMAGES = 0;
+const DISTANCE_BETWEEN_IMAGES = 0.45;
 
 class GL {
     async init({ dom, sizeElement, images }) {
@@ -90,8 +90,10 @@ class GL {
             x: e.x - this.domRect.width / 2
         };
 
-        const sceneX = (this.viewport.width * this.mousePos.x) / this.domRect.width;
-        const sceneY = (this.viewport.height * this.mousePos.y) / -this.domRect.height;
+        const aspect = this.gl.canvas.width / this.gl.canvas.height;
+
+        const sceneX = ((aspect * this.mousePos.x) / this.domRect.width) * 2;
+        const sceneY = (this.mousePos.y / -this.domRect.height) * 2;
 
         this.lastMouse.copy(this.mouse);
         this.mouse.set(sceneX, sceneY);
@@ -123,9 +125,14 @@ class GL {
     }
 
     createCamera() {
-        this.camera = new Camera(this.gl);
-        this.camera.fov = 45;
-        this.camera.position.z = 20;
+        const aspect = this.gl.canvas.width / this.gl.canvas.height;
+        this.camera = new Camera(this.gl, {
+            left: -1 * aspect,
+            right: 1 * aspect,
+            top: 1,
+            bottom: -1
+        });
+        this.camera.position.z = 60;
     }
 
     createScene() {
@@ -137,14 +144,9 @@ class GL {
     }
 
     computePlaneSize() {
-        const size = 320;
-
-        const height = (this.viewport.height * size) / this.domRect.height;
-        const width = (this.viewport.width * size) / this.domRect.width;
-
         return {
-            height,
-            width
+            height: 0.5,
+            width: 0.5
         };
     }
 
@@ -157,34 +159,16 @@ class GL {
 
         this.renderer.setSize(this.domRect.width, this.domRect.height);
 
-        this.camera.perspective({
-            aspect: this.gl.canvas.width / this.gl.canvas.height
+        const aspect = this.gl.canvas.width / this.gl.canvas.height;
+
+        this.camera.orthographic({
+            left: -1 * aspect,
+            right: 1 * aspect,
+            top: 1,
+            bottom: -1
         });
 
-        const fov = this.camera.fov * (Math.PI / 180);
-        const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
-        const width = height * this.camera.aspect;
-
-        this.viewport = {
-            height,
-            width
-        };
-
         this.resolution.value.set(this.gl.canvas.width, this.gl.canvas.height);
-
-        const { height: planeHeight, width: planeWidth } = this.computePlaneSize();
-
-        // if (this.medias.length) {
-        //     this.medias.forEach(media => {
-        //         media.onResize({
-        //             screen: this.screen,
-        //             viewport: this.viewport,
-        //             height: planeHeight,
-        //             width: planeWidth
-        //         });
-        //     });
-        // }
-
         this.post.resize();
     }
 
@@ -220,7 +204,6 @@ class GL {
             gl: this.gl,
             scene: this.scene,
             screen: this.screen,
-            viewport: this.viewport,
             height: planeHeight,
             width: planeWidth,
             texture,
