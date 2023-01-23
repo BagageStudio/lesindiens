@@ -8,8 +8,8 @@
                 <div class="project-title" v-html="resolveRichText(project.content.song_title)" />
                 <div class="project-infos">
                     <div class="project-info">
-                        <span class="info-title">Client</span>
-                        <span class="info-content">{{ project.content.name }}</span>
+                        <span class="info-title">{{ global.project_type_label }}</span>
+                        <span class="info-content">{{ project.content.project_type }}</span>
                     </div>
                     <div class="project-info">
                         <span class="info-title">Expertise</span>
@@ -24,7 +24,8 @@
 <script>
 export default {
     props: {
-        data: { type: Array, required: true }
+        data: { type: Array, required: true },
+        global: { type: Object, required: true }
     },
     data: () => ({}),
     watch: {},

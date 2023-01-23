@@ -15,9 +15,9 @@
                             <div class="title" v-html="projectTitle" />
                         </h1>
                         <div class="client detail">
-                            <span class="label detail-inner">Client</span>
+                            <span class="label detail-inner">{{ global.project_type_label }}</span>
                             <span v-if="currentProject" class="info detail-inner">{{
-                                currentProject.content.name
+                                currentProject.content.project_type
                             }}</span>
                         </div>
                         <div class="expertises detail">
@@ -60,6 +60,23 @@ import { basic } from '~/assets/js/transitions';
 export default {
     transition: basic,
     async asyncData({ app, $config, error }) {
+        const global = await app.$storyapi
+            .get('cdn/stories/global', {
+                version: $config.sBlokVersion
+            })
+            .then(res => {
+                return res.data.story.content;
+            })
+            .catch(res => {
+                if (!res.response) {
+                    console.error(res);
+                    error({ statusCode: 404, message: 'Failed to receive content form api' });
+                } else {
+                    console.error(res.response.data);
+                    error({ statusCode: res.response.status, message: res.response.data });
+                }
+            });
+
         const playlist = await app.$storyapi
             .get('cdn/stories/playlist', {
                 version: $config.sBlokVersion
@@ -78,7 +95,7 @@ export default {
                 console.error(res);
                 error({ statusCode: 404, message: 'Failed to receive content form api' });
             });
-        return { projects };
+        return { global, projects };
     },
     data() {
         return {
