@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div ref="sizeElement" class="size-element">
+        <div ref="sizeElement" class="size-element" @mouseenter="showCursor" @mouseleave="hideCursor">
             <div class="container big-title-container">
                 <p class="big-title">{{ data.title }}</p>
             </div>
@@ -26,6 +26,17 @@ export default {
             image: p.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
         }));
         this.funGL.init({ dom: this.$refs.webgl, sizeElement: this.$refs.sizeElement, images });
+    },
+    methods: {
+        showCursor() {
+            this.$store.commit('cursor/setIcon', 'eye');
+            this.$store.commit('cursor/setShowCursor', true);
+            this.cursorIsShown = true;
+        },
+        hideCursor() {
+            this.$store.commit('cursor/setShowCursor', false);
+            this.cursorIsShown = false;
+        }
     }
 };
 </script>
@@ -46,6 +57,7 @@ export default {
     height: 1000px;
     //to go just at the line of the footer
     margin-bottom: -199px;
+    cursor: none;
 }
 @media (min-width: $desktop-small) {
     .size-element {
