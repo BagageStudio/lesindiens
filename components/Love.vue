@@ -3,7 +3,6 @@
         <Reveal name="love" class="container" :offset="{ top: 270, bottom: 250 }" hook>
             <div class="container-small">
                 <div class="love-content">
-                    <hr ref="separator" />
                     <div class="wrapper-cols">
                         <div class="col-small content-pad wrapper-love-title">
                             <h4 ref="title" class="love-title" v-html="resolveRichText(data.love_title)" />
@@ -62,29 +61,9 @@ export default {
         gsap.set([this.$refs.title, this.$refs.intro, this.$refs.projects], {
             opacity: 0
         });
-        gsap.set(this.$refs.separator, {
-            scaleX: 0.7,
-            opacity: 0
-        });
 
         this.tl = gsap.timeline({ paused: true });
         this.tl.addLabel('start');
-        this.tl.to(
-            this.$refs.separator,
-            {
-                duration: 0.3,
-                opacity: 1
-            },
-            'start'
-        );
-        this.tl.to(
-            this.$refs.separator,
-            {
-                duration: 0.6,
-                scaleX: 1
-            },
-            'start'
-        );
         this.tl.to(
             this.$refs.title,
             {
@@ -129,20 +108,6 @@ export default {
     padding: 60px 0;
     color: $black;
     background-color: $white;
-}
-.love-content {
-    position: relative;
-    padding: 36px 0 0;
-    hr {
-        content: '';
-        position: absolute;
-        top: -46px;
-        max-width: 100%;
-        left: $gutter;
-        right: $gutter;
-        border-top: 1px solid $grey-5;
-        background: none;
-    }
 }
 .wrapper-love-title {
     margin-bottom: 40px;
@@ -200,12 +165,6 @@ export default {
     .love {
         padding: 100px 0;
     }
-    .love-content {
-        padding-top: 45px;
-        hr {
-            top: -46px;
-        }
-    }
     .wrapper-love-title {
         margin-bottom: 0;
     }
@@ -220,10 +179,7 @@ export default {
 }
 @media (min-width: $desktop) {
     .love {
-        padding: 160px 0;
-    }
-    .love-content {
-        padding-top: 80px;
+        padding: 140px 0;
     }
 }
 @media (min-width: $desktop-large) {

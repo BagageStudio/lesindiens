@@ -3,7 +3,6 @@
         <Reveal name="work" class="container" :offset="{ top: 270, bottom: 250 }" hook>
             <div class="container-small">
                 <div class="work-content">
-                    <hr ref="separator" />
                     <h4 ref="title" class="work-title content-pad" v-html="resolveRichText(data.work_title)" />
                     <div class="wrapper-cols">
                         <div v-if="isL" ref="sidebar">
@@ -16,7 +15,6 @@
                             </div>
                             <div class="values">
                                 <div v-for="value in data.values" :key="value._uid" class="value">
-                                    <hr ref="valueSeparator" />
                                     <div ref="valueContent" class="value-content">
                                         <FastImage class="value-icon" :image="value.icon" />
                                         <div class="value-title">{{ value.title }}</div>
@@ -58,29 +56,9 @@ export default {
                 opacity: 0
             }
         );
-        gsap.set([this.$refs.separator, this.$refs.valueSeparator], {
-            scaleX: 0.7,
-            opacity: 0
-        });
 
         this.tl = gsap.timeline({ paused: true });
         this.tl.addLabel('start');
-        this.tl.to(
-            this.$refs.separator,
-            {
-                duration: 0.3,
-                opacity: 1
-            },
-            'start'
-        );
-        this.tl.to(
-            this.$refs.separator,
-            {
-                duration: 0.6,
-                scaleX: 1
-            },
-            'start'
-        );
         this.tl.to(
             this.$refs.title,
             {
@@ -118,26 +96,6 @@ export default {
             'start'
         );
         this.tl.to(
-            this.$refs.valueSeparator,
-            {
-                duration: 0.3,
-                stagger: 0.1,
-                delay: 0.4,
-                opacity: 1
-            },
-            'start'
-        );
-        this.tl.to(
-            this.$refs.valueSeparator,
-            {
-                duration: 0.6,
-                stagger: 0.3,
-                delay: 0.4,
-                scaleX: 1
-            },
-            'start'
-        );
-        this.tl.to(
             this.$refs.valueContent,
             {
                 duration: 0.8,
@@ -163,22 +121,6 @@ export default {
 .work {
     padding: 60px 0 100px;
 }
-.work-content {
-    position: relative;
-    padding: 36px 0 0;
-    > hr {
-        position: absolute;
-        top: 0;
-    }
-    hr {
-        max-width: 100%;
-        left: $gutter;
-        right: $gutter;
-        margin: 0;
-        border-top: 1px solid $grey-5;
-        background: none;
-    }
-}
 .work-title {
     font-family: $telegraf;
     font-weight: 400;
@@ -193,18 +135,8 @@ export default {
     line-height: 30px;
     margin-bottom: 30px;
 }
-.values {
-    margin-top: 40px;
-}
 .value {
-    margin-bottom: 80px;
-    > hr {
-        margin-bottom: 33px;
-        border-top: 1px solid $white;
-    }
-    &:last-child {
-        margin-bottom: 0;
-    }
+    margin-top: 80px;
 }
 .value-title {
     font-family: $telegraf;
@@ -230,10 +162,7 @@ export default {
     }
     .value {
         width: calc(50% - #{2 * $gutter});
-        margin: 0 #{$gutter} 80px;
-        &:nth-last-child(-n + 2) {
-            margin-bottom: 0;
-        }
+        margin: 80px #{$gutter} 0;
     }
 }
 @media (min-width: $tablet) {
@@ -246,9 +175,6 @@ export default {
     .work {
         padding: 100px 0;
     }
-    .work-content {
-        padding-top: 45px;
-    }
     .work-title {
         font-size: 8rem;
         line-height: 80px;
@@ -260,10 +186,7 @@ export default {
 }
 @media (min-width: $desktop) {
     .work {
-        padding: 160px 0;
-    }
-    .work-content {
-        padding-top: 80px;
+        padding: 140px 0;
     }
 }
 @media (min-width: $desktop-xxl) {
