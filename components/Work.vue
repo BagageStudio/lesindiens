@@ -5,8 +5,8 @@
                 <div class="work-content">
                     <h4 ref="title" class="work-title content-pad" v-html="resolveRichText(data.work_title)" />
                     <div class="wrapper-cols">
-                        <div v-if="isL" ref="sidebar">
-                            <SidebarItems class="col-small content-pad" :data="data.work_sidebar_items" />
+                        <div v-if="isL" ref="sidebar" class="col-small content-pad">
+                            <SidebarItems :data="data.work_sidebar_items" />
                         </div>
                         <div class="col-large content-pad">
                             <div ref="intro" class="work-intro" v-html="resolveRichText(data.work_intro)" />
