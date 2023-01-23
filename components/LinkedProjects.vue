@@ -12,8 +12,8 @@
                 >
                     <h3 class="linked-project-title content-pad" v-html="resolveRichText(project.content.song_title)" />
                     <span class="linked-project-info content-pad">
-                        <span class="info-title">Client</span>
-                        <span class="info-content">{{ project.content.name }}</span>
+                        <span class="info-title">{{ global.project_type_label }}</span>
+                        <span class="info-content">{{ project.content.project_type }}</span>
                     </span>
                 </nuxt-link>
             </div>
@@ -24,7 +24,8 @@
 <script>
 export default {
     props: {
-        projects: { type: Array, required: true }
+        projects: { type: Array, required: true },
+        global: { type: Object, required: true }
     },
     computed: {},
     methods: {

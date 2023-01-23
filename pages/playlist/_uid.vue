@@ -9,8 +9,8 @@
                     <div class="project-hero-details">
                         <div class="project-infos content-pad">
                             <div class="project-info">
-                                <span class="info-title info-item">Client</span>
-                                <span class="info-content info-item">{{ currentProject.content.name }}</span>
+                                <span class="info-title info-item">{{ global.project_type_label }}</span>
+                                <span class="info-content info-item">{{ currentProject.content.project_type }}</span>
                             </div>
                             <div class="project-info">
                                 <span class="info-title info-item">Expertise</span>
@@ -32,7 +32,7 @@
         </div>
         <ProjectIntro :project="currentProject" />
         <component :is="mod.component" v-for="mod in currentProject.content.modules" :key="mod.id" :data="mod" />
-        <LinkedProjects :projects="twoOtherProjects" />
+        <LinkedProjects :projects="twoOtherProjects" :global="global" />
         <div class="container">
             <div class="container-small">
                 <div class="wrapper-footer content-pad">
@@ -51,6 +51,23 @@ import { basic } from '~/assets/js/transitions';
 export default {
     transition: basic,
     async asyncData({ app, $config, error, route }) {
+        const global = await app.$storyapi
+            .get('cdn/stories/global', {
+                version: $config.sBlokVersion
+            })
+            .then(res => {
+                return res.data.story.content;
+            })
+            .catch(res => {
+                if (!res.response) {
+                    console.error(res);
+                    error({ statusCode: 404, message: 'Failed to receive content form api' });
+                } else {
+                    console.error(res.response.data);
+                    error({ statusCode: res.response.status, message: res.response.data });
+                }
+            });
+
         const projects = await app.$storyapi
             .get('cdn/stories', {
                 starts_with: 'playlist/',
@@ -81,7 +98,7 @@ export default {
             twoOtherProjects.push(otherProjects[random]);
             i++;
         }
-        return { currentProject, twoOtherProjects };
+        return { global, currentProject, twoOtherProjects };
     },
     data: () => ({
         imageIsLoaded: false

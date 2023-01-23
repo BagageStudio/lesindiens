@@ -113,7 +113,7 @@ export default {
             const currentImage = this.$refs.image[this.current];
             const currentInner = currentImage.querySelector('.js-image-inner');
             const title = this.$refs.nav.querySelectorAll('.name .word');
-            const discoverlink = this.$refs.nav.querySelectorAll('.discover-link');
+            const discoverlink = this.$refs.nav.querySelectorAll('.wrapper-discover');
             const tl = gsap.timeline({
                 onComplete: () => {
                     this.timeoutAutoplay();
@@ -350,7 +350,7 @@ export default {
         },
         navTimeline(dir = 'out') {
             const title = this.$refs.nav.querySelectorAll('.name .word');
-            const discoverlink = this.$refs.nav.querySelectorAll('.discover-link');
+            const discoverlink = this.$refs.nav.querySelectorAll('.wrapper-discover');
             const tl = gsap.timeline({
                 paused: true,
                 onComplete:
@@ -374,13 +374,18 @@ export default {
                     rotateX: dir === 'out' ? -80 : 0,
                     opacity: dir === 'out' ? 0 : 1,
                     ease: 'power3.out'
-                }
+                },
+                'desc'
             );
-            tl.fromTo(discoverlink, {
-                duration: 0.8,
-                autoAlpha: dir === 'out' ? 0 : 1,
-                ease: 'power3.out'
-            });
+            tl.to(
+                discoverlink,
+                {
+                    duration: 0.8,
+                    autoAlpha: dir === 'out' ? 0 : 1,
+                    ease: 'power3.out'
+                },
+                'desc'
+            );
             return tl;
         },
         slideTimeline(currentInner, currentImage, nextInner, nextImage, nextIndex, dir) {
@@ -516,9 +521,6 @@ export default {
 .wrapper-discover {
     display: none;
 }
-.discover-link {
-    opacity: 0;
-}
 .wrapper-buttons {
     display: flex;
     justify-content: flex-end;
@@ -535,6 +537,8 @@ export default {
         justify-content: flex-end;
         align-items: center;
         margin-left: 30px;
+        opacity: 0;
+        visibility: hidden;
     }
     .wrapper-buttons {
         display: none;

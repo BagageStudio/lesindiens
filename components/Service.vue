@@ -17,7 +17,7 @@
                             <SidebarItems :data="data.sidebar_items" />
                         </div>
                         <div ref="projects" class="col-large content-pad to-anim">
-                            <Projects :data="data.projects" />
+                            <Projects :data="data.projects" :global="global" />
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,8 @@ export default {
         Reveal
     },
     props: {
-        data: { type: Object, required: true }
+        data: { type: Object, required: true },
+        global: { type: Object, required: true }
     },
     data: () => ({
         title: null,

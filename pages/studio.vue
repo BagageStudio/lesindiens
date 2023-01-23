@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <Services :data="services" />
+        <Services :data="services" :global="global" />
         <Work :data="studio" />
         <Love :data="studio" />
         <Fun :data="studio" />
@@ -43,6 +43,23 @@ import { basic } from '~/assets/js/transitions';
 export default {
     transition: basic,
     async asyncData({ app, $config, error }) {
+        const global = await app.$storyapi
+            .get('cdn/stories/global', {
+                version: $config.sBlokVersion
+            })
+            .then(res => {
+                return res.data.story.content;
+            })
+            .catch(res => {
+                if (!res.response) {
+                    console.error(res);
+                    error({ statusCode: 404, message: 'Failed to receive content form api' });
+                } else {
+                    console.error(res.response.data);
+                    error({ statusCode: res.response.status, message: res.response.data });
+                }
+            });
+
         const studio = await app.$storyapi
             .get('cdn/stories/studio', {
                 version: $config.sBlokVersion,
@@ -69,7 +86,7 @@ export default {
             return service;
         });
 
-        return { studio, services };
+        return { global, studio, services };
     },
     data: () => ({
         stickersShow: false
