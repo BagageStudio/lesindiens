@@ -31,15 +31,6 @@
                 </div>
             </div>
         </div>
-        <div class="home-footer">
-            <div class="container">
-                <div class="container-small">
-                    <div class="wrapper-footer content-pad">
-                        <Footer theme="ultra-light" />
-                    </div>
-                </div>
-            </div>
-        </div>
         <Overlay />
     </div>
 </template>
@@ -168,6 +159,14 @@ export default {
     }
 }
 @media (min-width: $desktop-small) {
+    .home {
+        padding-top: 110px;
+        justify-content: center;
+    }
+    .home-hero {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
     .wrapper-cols-home {
         display: flex;
         align-items: stretch;
