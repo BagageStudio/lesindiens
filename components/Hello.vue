@@ -83,6 +83,7 @@ export default {
         this.init();
         this.$nextTick(() => {
             this.computeRect();
+            if (this.appear) this.appearTl.play();
         });
     },
     methods: {
