@@ -171,10 +171,10 @@ export default {
 
 <style lang="scss" scoped>
 .project-hero {
-    padding: 110px 0 20px;
+    padding: 55px 0 45px;
 }
 .project-hero-details {
-    margin-top: 30px;
+    margin-top: 60px;
 }
 .project-info {
     margin-top: 10px;
@@ -182,11 +182,13 @@ export default {
     .info-item {
         display: block;
         opacity: 0;
-        // transform: translateY(-10px);
         transform-origin: 50% 50% -6px;
         opacity: 0;
         transform: perspective(1000px) rotateX(80deg);
     }
+}
+.wrapper-project-title {
+    padding-top: 100px;
 }
 .project-title {
     font-family: $telegraf;
@@ -230,13 +232,13 @@ export default {
 
 @media (min-width: $tablet) {
     .wrapper-project-title {
-        min-height: 472px;
-        padding-top: 75px;
+        padding-top: 120px;
     }
     .project-hero-details {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
+        margin-top: 90px;
     }
     .project-infos {
         width: percentage(4/8);
