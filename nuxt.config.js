@@ -18,15 +18,21 @@ const port = process.env.PORT || 3000;
 const netlifyEnv = process.env.NETLIFY_ENV;
 const isProdEnv = netlifyEnv === 'production';
 const websiteUrl = process.env.URL || `http://${host}:${port}`;
+const preview = process.env.SBLOK_VERSION === 'draft';
 
 export default {
     // Target (https://go.nuxtjs.dev/config-target)
     target: 'static',
 
+    generate: {
+        fallback: preview
+    },
+
     publicRuntimeConfig: {
         isDevEnv: process.env.NETLIFY_ENV === 'development',
         sBlokVersion: process.env.SBLOK_VERSION || 'published',
-        netlifyEnv: process.env.NETLIFY_ENV
+        netlifyEnv: process.env.NETLIFY_ENV,
+        preview
     },
 
     // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -132,7 +138,13 @@ export default {
     },
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-    plugins: ['~/plugins/globals', '~/plugins/webgl', '~/plugins/breakpoints', '~/plugins/stereorepo'],
+    plugins: [
+        '~/plugins/preview.client.js',
+        '~/plugins/globals',
+        '~/plugins/webgl',
+        '~/plugins/breakpoints',
+        '~/plugins/stereorepo'
+    ],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,
