@@ -357,7 +357,7 @@ class WebglApp {
     }
 
     createRenderer() {
-        this.renderer = new Renderer();
+        this.renderer = new Renderer({ dpr: 2 });
 
         this.gl = this.renderer.gl;
 
