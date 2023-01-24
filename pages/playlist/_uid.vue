@@ -215,9 +215,6 @@ export default {
     font-size: 1.6rem;
     line-height: 20px;
 }
-.project-song {
-    margin-top: 115px;
-}
 
 .big-image {
     overflow: hidden;
@@ -255,56 +252,15 @@ export default {
     .info-title {
         margin: 0 10px 0 0;
     }
-    .project-song {
-        margin-top: 0;
-        width: percentage(3/8);
-    }
-
-    .container-details {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
-    .project-details {
-        width: percentage(2/8);
-    }
-    .project-detail {
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-    .project-intro {
-        width: percentage(5/8);
-    }
-}
-@media (min-width: $desktop-small) {
-    .wrapper-project-details {
-        padding: 150px 0;
-    }
 }
 @media (min-width: $desktop) {
-    .wrapper-project-details {
-        padding: 240px 0;
-    }
-    .project-details {
-        width: percentage(3/10);
-    }
     .project-infos {
         width: percentage(5/10);
-    }
-    .project-song {
-        width: percentage(4/10);
-    }
-    .project-intro {
-        width: percentage(6/10);
     }
 }
 @media (min-width: $desktop-xxl) {
     .project-infos {
         width: percentage(6/10);
-    }
-    .project-song {
-        width: percentage(3/10);
     }
 }
 </style>

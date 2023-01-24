@@ -3,7 +3,6 @@
         <Reveal name="projectText" class="container" :offset="{ top: 270, bottom: 250 }" hook>
             <div class="container-small">
                 <div class="wrapper-text">
-                    <div ref="border" class="border" />
                     <div class="module-text-title content-pad">
                         <h3 class="title" v-html="$options.filters.splitInWords(data.title)" />
                     </div>
@@ -44,17 +43,7 @@ export default {
             rotateX: 80
         });
 
-        gsap.set(this.$refs.border, {
-            scaleX: 0
-        });
-
         this.tl = gsap.timeline({ paused: true }).addLabel('start');
-
-        this.tl.to(this.$refs.border, {
-            duration: 1.2,
-            ease: 'expo.out',
-            scaleX: 1
-        });
 
         this.tl.to(
             letters,
@@ -88,27 +77,15 @@ export default {
 <style lang="scss" scoped>
 .module-text {
     padding: 60px 0;
+    ::v-deep p {
+        color: $grey-4;
+    }
     &.is-white {
         color: $black;
         background: $white;
-        .wrapper-text {
-            .border {
-                background-color: $grey-5;
-            }
+        ::v-deep p {
+            color: $grey-2;
         }
-    }
-}
-.wrapper-text {
-    position: relative;
-    padding: 35px 0 0;
-    .border {
-        position: absolute;
-        top: 0;
-        left: $gutter;
-        right: $gutter;
-        height: 1px;
-        background-color: $white;
-        transform-origin: 0% 0%;
     }
 }
 .module-text-title {
@@ -134,7 +111,6 @@ export default {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        padding-top: 45px;
     }
     .module-text-title {
         width: percentage(2/8);
@@ -145,10 +121,7 @@ export default {
 }
 @media (min-width: $desktop) {
     .module-text {
-        padding: 160px 0;
-    }
-    .wrapper-text {
-        padding-top: 60px;
+        padding: 140px 0;
     }
     .module-text-title {
         width: percentage(3/10);

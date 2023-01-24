@@ -116,6 +116,26 @@ export default {
 .project-link {
     margin-top: 60px;
 }
+.project-intro {
+    ::v-deep h2 {
+        font-size: 2.4rem;
+        font-weight: 400;
+        margin: 0 0 25px;
+    }
+    ::v-deep p {
+        color: $grey-4;
+    }
+}
+
+@media (min-width: $phone) {
+    .project-intro {
+        ::v-deep h2 {
+            font-size: 3.5rem;
+            line-height: 42px;
+            margin-bottom: 60px;
+        }
+    }
+}
 @media (min-width: $tablet) {
     .container-details {
         display: flex;
@@ -136,13 +156,10 @@ export default {
 }
 @media (min-width: $desktop-small) {
     .wrapper-project-details {
-        padding: 150px 0;
+        padding: 140px 0;
     }
 }
 @media (min-width: $desktop) {
-    .wrapper-project-details {
-        padding: 240px 0;
-    }
     .project-details {
         width: percentage(3/10);
     }
