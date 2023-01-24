@@ -8,8 +8,8 @@ Vue.filter('split', function (value) {
 });
 
 Vue.filter('splitInWords', function (value) {
+    const text = value.replace('</p>', '').replace('<p>', '');
     if (value.includes('<br />')) {
-        const text = value.replace('</p>', '').replace('<p>', '');
         return text
             .split('<br />')
             .map(line => {
@@ -20,7 +20,7 @@ Vue.filter('splitInWords', function (value) {
             .join('<br />');
     }
 
-    const words = value.split(' ');
+    const words = text.split(' ');
     const wordsWithSpans = words.map(word => `<span class="word">${word}&nbsp;</span>`);
 
     return wordsWithSpans.join('');
