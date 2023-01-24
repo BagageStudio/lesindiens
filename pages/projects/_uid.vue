@@ -71,7 +71,7 @@ export default {
 
         const projects = await app.$storyapi
             .get('cdn/stories', {
-                starts_with: 'playlist/',
+                starts_with: 'projects/',
                 version: $config.sBlokVersion,
                 resolve_relations: 'expertises'
             })

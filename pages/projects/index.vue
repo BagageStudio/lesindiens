@@ -79,7 +79,7 @@ export default {
             });
 
         const playlist = await app.$storyapi
-            .get('cdn/stories/playlist', {
+            .get('cdn/stories/projects', {
                 version: $config.sBlokVersion
             })
             .then(res => res.data.story.content)
