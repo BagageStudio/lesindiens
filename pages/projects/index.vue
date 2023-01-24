@@ -57,6 +57,7 @@
 <script>
 import { basic } from '~/assets/js/transitions';
 import handleSeo from '~/assets/js/seo';
+import { Webgl } from '~/assets/js/webgl';
 
 export default {
     transition: basic,
@@ -100,6 +101,7 @@ export default {
     },
     data() {
         return {
+            webgl: null,
             percentage: 0,
             scrolling: true,
             showInfo: false,
@@ -133,31 +135,23 @@ export default {
         }
     },
     mounted() {
-        if (!this.$webgl.dom) {
-            this.initializeSlider();
-        } else {
-            this.setCallbackMethods();
-
-            this.$webgl.enable({
-                dom: this.$refs.glWrapper,
-                sizeElement: this.$refs.sizeElement
-            });
-            this.currentProject = this.projects[0];
-        }
+        this.webgl = new Webgl();
+        this.initializeSlider();
     },
     beforeDestroy() {
         this.hideCursor();
-        this.$webgl.disable();
+        this.webgl.disable();
+        this.webgl = null;
     },
     methods: {
         setCallbackMethods() {
-            this.$webgl.onSelected = this.onSelected.bind(this);
-            this.$webgl.onLoaded = this.onLoaded.bind(this);
-            this.$webgl.onScrollChange = this.onScrollChange.bind(this);
-            this.$webgl.onScrollStart = this.onScrollStart.bind(this);
-            this.$webgl.showCursor = this.showCursor.bind(this);
-            this.$webgl.hideCursor = this.hideCursor.bind(this);
-            this.$webgl.goToProject = this.goToProject.bind(this);
+            this.webgl.onSelected = this.onSelected.bind(this);
+            this.webgl.onLoaded = this.onLoaded.bind(this);
+            this.webgl.onScrollChange = this.onScrollChange.bind(this);
+            this.webgl.onScrollStart = this.onScrollStart.bind(this);
+            this.webgl.showCursor = this.showCursor.bind(this);
+            this.webgl.hideCursor = this.hideCursor.bind(this);
+            this.webgl.goToProject = this.goToProject.bind(this);
         },
         initializeSlider() {
             const images = this.projects.map(p => ({
@@ -165,7 +159,7 @@ export default {
                 image: p.content.thumbnail.filename.replace('a.storyblok', 's3.amazonaws.com/a.storyblok')
             }));
 
-            this.$webgl.init({
+            this.webgl.init({
                 dom: this.$refs.glWrapper,
                 sizeElement: this.$refs.sizeElement,
                 images
@@ -173,7 +167,7 @@ export default {
 
             this.setCallbackMethods();
 
-            this.$webgl.enable();
+            this.webgl.enable();
 
             this.currentProject = this.projects[0];
         },

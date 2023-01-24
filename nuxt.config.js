@@ -153,13 +153,7 @@ export default {
     },
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-    plugins: [
-        '~/plugins/preview.client.js',
-        '~/plugins/globals',
-        '~/plugins/webgl',
-        '~/plugins/breakpoints',
-        '~/plugins/stereorepo'
-    ],
+    plugins: ['~/plugins/preview.client.js', '~/plugins/globals', '~/plugins/breakpoints', '~/plugins/stereorepo'],
 
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,

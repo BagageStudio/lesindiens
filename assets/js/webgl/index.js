@@ -615,4 +615,4 @@ class WebglApp {
     }
 }
 
-export const Webgl = new WebglApp();
+export const Webgl = WebglApp;
