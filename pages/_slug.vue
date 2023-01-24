@@ -12,7 +12,7 @@
                 <div class="content-pad wysiwyg" v-html="resolveRichText(page[0].content.content)" />
             </div>
         </div>
-        <component :is="module.component" v-for="module in page[0].content.modules" :key="module._uid" :data="module" />
+        <component :is="mod.component" v-for="mod in page[0].content.modules" :key="mod._uid" :data="mod" />
         <div class="container container-footer">
             <div class="container-small">
                 <div class="wrapper-footer content-pad">
@@ -27,6 +27,7 @@
 <script>
 import { gsap } from 'gsap';
 import { basic } from '~/assets/js/transitions';
+import handleSeo from '~/assets/js/seo';
 
 export default {
     transition: basic,
@@ -80,7 +81,9 @@ export default {
         }
     },
     head() {
+        console.log();
         return {
+            ...handleSeo({ route: this.$route.fullPath, data: this.page[0].content }),
             htmlAttrs: {
                 class: 'lightmode'
             }

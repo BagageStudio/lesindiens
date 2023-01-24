@@ -38,6 +38,8 @@
 <script>
 import { gsap } from 'gsap';
 import { basic } from '~/assets/js/transitions';
+import handleSeo from '~/assets/js/seo';
+
 export default {
     asyncData({ app, $config, error }) {
         return app.$storyapi
@@ -71,7 +73,6 @@ export default {
     mounted() {
         this.reveal();
     },
-    transition: basic,
     methods: {
         reveal() {
             this.appearHello = true;
@@ -106,7 +107,13 @@ export default {
                 this.appearSlider = true;
             }, 'title+=1');
         }
-    }
+    },
+    head() {
+        return {
+            ...handleSeo({ route: this.$route.fullPath, data: this.story.content })
+        };
+    },
+    transition: basic
 };
 </script>
 

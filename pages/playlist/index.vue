@@ -56,6 +56,7 @@
 
 <script>
 import { basic } from '~/assets/js/transitions';
+import handleSeo from '~/assets/js/seo';
 
 export default {
     transition: basic,
@@ -95,7 +96,7 @@ export default {
                 console.error(res);
                 error({ statusCode: 404, message: 'Failed to receive content form api' });
             });
-        return { global, projects };
+        return { global, projects, playlist };
     },
     data() {
         return {
@@ -211,6 +212,11 @@ export default {
             this.$store.commit('layout/setFooter', true);
             this.showInfo = true;
         }
+    },
+    head() {
+        return {
+            ...handleSeo({ route: this.$route.fullPath, data: this.playlist })
+        };
     }
 };
 </script>

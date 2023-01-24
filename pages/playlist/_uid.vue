@@ -47,6 +47,7 @@
 <script>
 import { gsap } from 'gsap';
 import { basic } from '~/assets/js/transitions';
+import handleSeo from '~/assets/js/seo';
 
 export default {
     transition: basic,
@@ -165,6 +166,11 @@ export default {
                 'title+=0.8'
             );
         }
+    },
+    head() {
+        return {
+            ...handleSeo({ route: this.$route.fullPath, data: this.currentProject.content })
+        };
     }
 };
 </script>

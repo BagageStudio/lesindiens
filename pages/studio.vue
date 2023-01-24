@@ -40,6 +40,8 @@ import { gsap } from 'gsap';
 
 import { basic } from '~/assets/js/transitions';
 
+import handleSeo from '~/assets/js/seo';
+
 export default {
     transition: basic,
     async asyncData({ app, $config, error }) {
@@ -135,6 +137,11 @@ export default {
                     this.stickersShow = true;
                 }, 'title+=1.5');
         }
+    },
+    head() {
+        return {
+            ...handleSeo({ route: this.$route.fullPath, data: this.studio })
+        };
     }
 };
 </script>

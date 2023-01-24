@@ -48,6 +48,11 @@ export default {
                 content: 'Les Indiens, branding et digital à Nantes'
             },
             {
+                hid: 'og:description',
+                property: 'og:description',
+                content: ''
+            },
+            {
                 hid: 'og:site_name',
                 property: 'og:site_name',
                 content: 'Les Indiens'
@@ -96,6 +101,16 @@ export default {
                 hid: 'twitter:creator',
                 name: 'twitter:creator',
                 content: '@LesIndiens'
+            },
+            {
+                hid: 'twitter:title',
+                name: 'twitter:title',
+                content: 'Les Indiens, branding et digital à Nantes'
+            },
+            {
+                hid: 'twitter:description',
+                property: 'twitter:description',
+                content: ''
             },
             {
                 hid: 'twitter:image',
