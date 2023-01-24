@@ -1,5 +1,5 @@
 <template>
-    <div class="module-image">
+    <div class="module-image" :class="{ 'is-white': data.white_bg }">
         <FastImage :image="data.image" full-width />
     </div>
 </template>
@@ -16,4 +16,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.module-image.is-white {
+    background: $white;
+}
+.fast-image {
+    display: block;
+}
+</style>
