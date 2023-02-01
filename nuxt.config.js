@@ -37,20 +37,26 @@ export default {
 
     // Global page headers (https://go.nuxtjs.dev/config-head)
     head: {
-        title: 'Les Indiens, branding et digital à Nantes',
+        title: 'Les Indiens : Studio de Branding et de Product Design à Nantes',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { hid: 'description', name: 'description', content: '' },
+            {
+                hid: 'description',
+                name: 'description',
+                content:
+                    'Le Studio Les Indiens est un duo de créatif expert dans le Branding et le Product Design. Nous accompagnons des startups à concevoir des identités visuelles fortes et des produits performants.'
+            },
             {
                 hid: 'og:title',
                 property: 'og:title',
-                content: 'Les Indiens, branding et digital à Nantes'
+                content: 'Les Indiens : Studio de Branding et de Product Design à Nantes'
             },
             {
                 hid: 'og:description',
                 property: 'og:description',
-                content: ''
+                content:
+                    'Le Studio Les Indiens est un duo de créatif expert dans le Branding et le Product Design. Nous accompagnons des startups à concevoir des identités visuelles fortes et des produits performants.'
             },
             {
                 hid: 'og:site_name',
@@ -65,7 +71,7 @@ export default {
             {
                 hid: 'og:image',
                 property: 'og:image',
-                content: 'https://www.lesindiens.fr/share.jpg'
+                content: 'https://www.lesindiens.fr/share.png'
             },
             {
                 hid: 'og:image:width',
@@ -105,40 +111,38 @@ export default {
             {
                 hid: 'twitter:title',
                 name: 'twitter:title',
-                content: 'Les Indiens, branding et digital à Nantes'
+                content: 'Les Indiens : Studio de Branding et de Product Design à Nantes'
             },
             {
                 hid: 'twitter:description',
                 property: 'twitter:description',
-                content: ''
+                content:
+                    'Le Studio Les Indiens est un duo de créatif expert dans le Branding et le Product Design. Nous accompagnons des startups à concevoir des identités visuelles fortes et des produits performants.'
             },
             {
                 hid: 'twitter:image',
                 name: 'twitter:image',
-                content: 'https://www.lesindiens.fr/share.jpg'
+                content: 'https://www.lesindiens.fr/share.png'
             }
         ],
         link: [
             {
+                rel: 'icon',
+                href: '/favicon.ico',
+                sizes: 'any'
+            },
+            {
+                rel: 'icon',
+                href: '/icon.svg',
+                type: 'image/svg+xml'
+            },
+            {
                 rel: 'apple-touch-icon',
-                sizes: '180x180',
                 href: '/apple-touch-icon.png'
             },
             {
-                rel: 'icon',
-                sizes: '32x32',
-                href: '/favicon-32x32.png'
-            },
-            {
-                rel: 'icon',
-                type: 'image/png',
-                sizes: '16x16',
-                href: '/favicon-16x16.png'
-            },
-            {
-                rel: 'mask-icon',
-                href: '/safari-pinned-tab.svg',
-                color: '#5bbad5'
+                rel: 'manifest',
+                href: '/manifest.webmanifest'
             }
         ]
     },
