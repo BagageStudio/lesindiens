@@ -32,11 +32,11 @@
                                         <span class="project-name">{{ project.label }}</span>
                                     </nuxt-link>
                                     <a
-                                        v-else-if="project.external_link"
+                                        v-else-if="project.external_link.url !== ''"
                                         :href="project.external_link.url"
                                         target="_blank"
                                         rel="noopener nofollow noreferrer"
-                                        class="love-project-content"
+                                        class="love-project-content external"
                                     >
                                         <span class="project-name">{{ project.label }}</span>
                                     </a>
@@ -176,6 +176,15 @@ export default {
     display: inline-flex;
     max-width: 100%;
     text-decoration: none;
+    &.external {
+        transition: 0.2s ease-in-out;
+        text-decoration: underline;
+        text-decoration-color: $white;
+        text-underline-offset: 4px;
+        &:hover {
+            text-decoration-color: $black;
+        }
+    }
 }
 .project-name {
     font-family: $object;
