@@ -36,7 +36,7 @@ export default {
     font-weight: 400;
     font-size: 1.3rem;
     line-height: 1;
-    margin: 0 10px 10px 0;
+    margin: 0 10px 5px 0;
     padding: 5px 8px;
     border-radius: 2px;
     color: $white;
