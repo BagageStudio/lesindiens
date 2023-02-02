@@ -1,5 +1,5 @@
 <template>
-    <div ref="wrapper" class="cursor-wrapper" :class="{ show: showCursor }">
+    <div ref="wrapper" class="cursor-wrapper" :class="[{ show: showCursor }, { inverted }]">
         <div ref="shadowWrapper" class="shadow-wrapper">
             <div ref="shadow" class="shadow" />
         </div>
@@ -50,6 +50,9 @@ export default {
         },
         iconRotation() {
             return this.$store.state.cursor.iconRotation;
+        },
+        inverted() {
+            return this.$store.state.cursor.inverted;
         }
     },
     watch: {
@@ -161,6 +164,14 @@ export default {
     z-index: 10;
     &.show {
         opacity: 1;
+    }
+    &.inverted {
+        .shadow {
+            background: $black;
+        }
+        .round {
+            background: $white;
+        }
     }
 }
 

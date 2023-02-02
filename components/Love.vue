@@ -22,13 +22,27 @@
                             <div ref="intro" class="love-intro" v-html="resolveRichText(data.love_intro)" />
                             <div ref="projects" class="love-projects">
                                 <div v-for="project in data.love_projects" :key="project._uid" class="love-project">
-                                    <component
-                                        :is="project.link ? 'nuxt-link' : 'div'"
-                                        :to="project.link ? project.link.full_slug : ''"
+                                    <nuxt-link
+                                        v-if="project.link"
+                                        :to="project.link.full_slug"
+                                        class="love-project-content"
+                                        @mouseenter.native="showCursor(project)"
+                                        @mouseleave.native="hideCursor"
+                                    >
+                                        <span class="project-name">{{ project.label }}</span>
+                                    </nuxt-link>
+                                    <a
+                                        v-else-if="project.external_link"
+                                        :href="project.external_link.url"
+                                        target="_blank"
+                                        rel="noopener nofollow noreferrer"
                                         class="love-project-content"
                                     >
                                         <span class="project-name">{{ project.label }}</span>
-                                    </component>
+                                    </a>
+                                    <div v-else class="love-project-content">
+                                        <span class="project-name">{{ project.label }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -98,6 +112,18 @@ export default {
         },
         loveIn() {
             this.tl.play();
+        },
+        hideCursor() {
+            this.$store.commit('cursor/setShowCursor', false);
+        },
+        showCursor(project) {
+            if (!project.link.content.image) return;
+            this.$store.commit('cursor/setImage', {
+                image: project.link.content.image.filename,
+                size: ['66px', '54px']
+            });
+            this.$store.commit('cursor/setShowCursor', true);
+            this.$store.commit('cursor/setInverted', true);
         }
     }
 };

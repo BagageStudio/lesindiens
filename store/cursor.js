@@ -9,7 +9,8 @@ export const state = () => ({
     image: null,
     size: ['135px', '110px'],
     iconRotation: 0,
-    style: 'icon'
+    style: 'icon',
+    inverted: false
 });
 
 // export const getters = () => {};
@@ -36,5 +37,8 @@ export const mutations = {
         if (state.style !== 'image') state.style = 'image';
         state.image = image;
         state.size = size;
+    },
+    setInverted(state, isInverted) {
+        state.inverted = isInverted;
     }
 };

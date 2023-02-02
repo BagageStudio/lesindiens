@@ -43,6 +43,7 @@ export default {
             this.$store.commit('cursor/setIcon', 'eye');
             this.$store.commit('cursor/setShowCursor', true);
             this.cursorIsShown = true;
+            this.$store.commit('cursor/setInverted', false);
         },
         hideCursor() {
             this.$store.commit('cursor/setShowCursor', false);
