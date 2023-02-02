@@ -23,6 +23,7 @@ export default {
 .tags {
     display: flex;
     align-items: baseline;
+    flex-wrap: wrap;
     &.grey {
         .tag {
             color: $black;
