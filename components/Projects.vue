@@ -2,7 +2,7 @@
     <div class="projects">
         <nuxt-link v-for="project in data" :key="project.id" :to="project.full_slug" class="project">
             <div class="wrapper-img">
-                <FastImage class="project-image" :image="project.content.image" cover />
+                <FastImage class="project-image" :image="project.content.thumbnail" cover />
             </div>
             <div class="project-details">
                 <div class="project-title" v-html="resolveRichText(project.content.song_title)" />
