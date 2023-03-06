@@ -88,7 +88,7 @@ export default {
                 }
             });
         const currentProject = projects.find(element => element.slug === route.params.uid);
-        const otherProjects = projects.filter(element => element.slug !== route.params.uid);
+        const otherProjects = projects.filter(element => element.slug !== route.params.uid && !element.is_startpage);
         // Randomly pick 2 projects
         const twoOtherProjects = [];
         for (let i = 0; i < 2; ) {
