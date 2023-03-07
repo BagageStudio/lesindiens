@@ -308,7 +308,6 @@ export default {
         },
         nextSlide(direction) {
             const nextIndex = this.getNextIndex(direction);
-            this.$emit('change', this.projects[nextIndex].content.spotify_id);
 
             this.manageZindex(nextIndex);
             const nextImage = this.$refs.image[nextIndex];

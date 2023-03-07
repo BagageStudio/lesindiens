@@ -178,9 +178,6 @@ export default {
         ]
     ],
 
-    privateRuntimeConfig: {
-        spotifySecret: process.env.SPOTIFY_SECRET
-    },
     // Modules (https://go.nuxtjs.dev/config-modules)
     modules: [],
 
