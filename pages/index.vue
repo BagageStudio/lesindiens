@@ -158,6 +158,7 @@ export default {
 }
 .project-link {
     opacity: 0;
+    margin-top: 30px;
 }
 
 @media (min-width: $tablet) {
