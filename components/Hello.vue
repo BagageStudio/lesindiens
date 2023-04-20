@@ -288,11 +288,6 @@ export default {
         margin-left: 20px;
     }
 }
-.button-content {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-}
 .shadow {
     position: absolute;
     top: 0;
@@ -313,6 +308,13 @@ export default {
     border: 1px solid var(--quaternary);
     border-radius: 10px;
     transform-origin: 50% 50% -50px;
+    transform: translate3d(0, 0, 50px);
+}
+.button-content {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    transform: translate3d(0, 0, 100px);
 }
 .text {
     position: relative;
