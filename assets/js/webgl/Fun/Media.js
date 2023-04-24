@@ -1,10 +1,9 @@
-import { Texture, Program, Mesh } from 'ogl';
-
 import { gsap } from 'gsap';
 
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 import { FunGL } from './index';
+import { Texture, Program, Mesh } from '~/assets/js/ogl/index';
 
 const TIME_TO_APPEAR = 0.8;
 const TIME_TO_DISAPPEAR = 1;

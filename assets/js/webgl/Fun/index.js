@@ -1,8 +1,7 @@
-import { Renderer, Camera, Transform, Plane, Vec2, Post } from 'ogl';
-
 import { distance } from '../../utils';
 import fxaa from '../shaders/fxaa.glsl';
 import { Media } from './Media';
+import { Renderer, Camera, Transform, Plane, Vec2, Post } from '~/assets/js/ogl/index';
 
 const DELAY_BETWEEN_IMAGES = 0;
 const DISTANCE_BETWEEN_IMAGES = 0.45;

@@ -1,4 +1,3 @@
-import { Renderer, Camera, Transform, Plane, Vec2, Raycast, Post } from 'ogl';
 import { gsap } from 'gsap';
 
 import { BREAKPOINTS } from '../constants';
@@ -7,6 +6,7 @@ import { debounce, lerp, round } from '../utils';
 import { Media } from './Media';
 
 import fxaa from './shaders/fxaa.glsl';
+import { Renderer, Camera, Transform, Plane, Vec2, Raycast, Post } from '~/assets/js/ogl/index';
 
 class WebglApp {
     init({ dom, sizeElement }) {
