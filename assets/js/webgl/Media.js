@@ -1,11 +1,10 @@
-import { Texture, Program, Mesh } from 'ogl';
-
 import { gsap } from 'gsap';
 
 import { clamp, map, lerp } from '../utils';
 import { BREAKPOINTS } from '../constants';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
+import { Texture, Program, Mesh } from '~/assets/js/ogl/index';
 
 export class Media {
     constructor({ geometry, gl, texture, index, length, renderer, scene, screen, viewport, width, height, id, y }) {
