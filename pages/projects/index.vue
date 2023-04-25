@@ -224,7 +224,6 @@ export default {
     min-height: var(--windowHeight);
     width: 100vw;
     padding-top: 116px;
-    padding-bottom: 55px;
 }
 
 .canvas-size-wrapper {
@@ -269,9 +268,9 @@ export default {
         display: inline-block;
         font-family: $telegraf;
         font-weight: 100;
-        font-size: 4.2rem;
-        line-height: 45px;
-        margin-bottom: 30px;
+        font-size: 3.8rem;
+        line-height: 40px;
+        margin-bottom: 10px;
         perspective: 1000px;
         perspective-origin: 50% 50%;
     }
@@ -307,7 +306,7 @@ export default {
 
 .detail {
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
 }
 
 .detail-inner {
@@ -371,9 +370,39 @@ export default {
         transform-origin: 0% 50%;
     }
 }
+
+@media (max-width: $phone-small) {
+    .tags::v-deep .tag {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: $phone-small) {
+    .playlist {
+        padding-bottom: 55px;
+    }
+    .content-infos {
+        h1 {
+            font-size: 4.2rem;
+            line-height: 45px;
+            margin-bottom: 30px;
+        }
+    }
+    .detail {
+        flex-direction: row;
+        align-items: baseline;
+    }
+}
+
 @media (min-width: $tablet) {
     .playlist {
         padding-bottom: 0;
+    }
+}
+
+@media (max-height: 680px) {
+    .canvas-size {
+        margin: 10px auto 50px;
     }
 }
 </style>

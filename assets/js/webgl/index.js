@@ -395,13 +395,15 @@ class WebglApp {
             sizeFromWidth = 450;
         }
 
+        const marginTop = this.screen.height >= 680 ? 50 : 10;
+
         const size = Math.min(sizeFromHeight, sizeFromWidth);
 
         const height = (this.viewport.height * size) / this.screen.height;
         const width = (this.viewport.width * size) / this.screen.width;
 
         // - half of the window height + (size of header + size of margin) + half height of .canvas-size element
-        const verticalOffset = -this.screen.height / 2 + (116 + 50) + sizeFromHeight / 2;
+        const verticalOffset = -this.screen.height / 2 + (116 + marginTop) + sizeFromHeight / 2;
 
         const halfScreenIn3DSpace = (this.viewport.height * verticalOffset) / this.screen.height;
 
